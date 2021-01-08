@@ -2,7 +2,7 @@
   <div>
     <div id="app">
       <!-- 头部导航栏 -->
-      <router-view name="header"></router-view>
+      <HeadNavigation title="提示" left_text="提示" right_text="提示"></HeadNavigation>
       <router-view name="swipe"></router-view>
       <!-- 循环中绑定编号, 使用:key="index" -->
       <!-- <test
@@ -22,17 +22,16 @@
 
 <script>
 // 1.导入外部组件
+import HeadNavigation from './components/common/HeadNavigation'
 
 export default {
   name: "App",
   data() {
     return {
-      hotSangs: [
-      ],
     };
   },
   components: {
-    
+    HeadNavigation
   },
 };
 </script>

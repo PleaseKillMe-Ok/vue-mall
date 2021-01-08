@@ -1,14 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HeadNavigation from '@/components/HeadNavigation'
 import LeftNavigation from '@/components/LeftNavigation'
-import Footer from '@/components/Footer'
+import Footer from '@/components/common/Footer'
 import RightHelper from '@/components/RightHelper'
 import swipe from '@/components/Swipe'
 import RecommandGoods from '@/components/RecommandGoods'
 import UniversalGoods from '@/components/UniversalGoods'
-import test from '@/components/commonbase/test'
-import test2 from '../components/commonbase/test2'
 Vue.use(Router)
 
 export default new Router({
@@ -18,7 +15,6 @@ export default new Router({
             /* 组件群 */
             components: {
                 // name: component
-                header: HeadNavigation, // 头部导航栏
                 lefter: LeftNavigation, //左导航栏插槽
                 footer: Footer, //底部插槽
                 helper: RightHelper, // 右帮助栏插槽
@@ -28,15 +24,5 @@ export default new Router({
             },
         },
         /* 单个组件 */
-        {
-            path: 'sing',
-            name: 'sing',
-            component: test
-        },
-        {
-            path: 'sing2',
-            name: 'sing2',
-            component: test2
-        }
     ]
 })

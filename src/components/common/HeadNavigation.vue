@@ -1,9 +1,9 @@
 <template>
   <div class="HeadNavigation">
       <van-nav-bar
-        title="标题"
-        left-text="返回"
-        right-text="按钮"
+        :title="title"
+        :left-text="left_text"
+        :right-text="right_text"
         left-arrow
         @click-left="onClickLeft"
       />
@@ -22,7 +22,8 @@ export default {
     onClickLeft(){
       Toast('返回');
     }
-  }
+  },
+  props:['title', 'left_text', 'right_text']
 };
 </script>
 
