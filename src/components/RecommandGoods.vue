@@ -1,10 +1,17 @@
 <template>
-
+<div id="RecommanGoods">
+    {{content}}
+</div>
 </template>
 
 <script>
     export default {
-        name: "RecommandGoods"
+        name: "RecommandGoods",
+        data(){
+            return {
+                content:'推荐'
+            }
+        }
     }
 </script>
 

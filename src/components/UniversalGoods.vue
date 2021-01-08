@@ -1,10 +1,17 @@
 <template>
-
+<div id="UniversalGoods">
+    {{content}}
+</div>
 </template>
 
 <script>
     export default {
-        name: "UniversalGoods"
+        name: "UniversalGoods",
+        data(){
+            return {
+                content:'通用内容'
+            }
+        }
     }
 </script>
 

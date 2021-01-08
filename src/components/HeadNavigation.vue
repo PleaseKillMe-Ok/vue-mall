@@ -1,6 +1,8 @@
 <template>
   <div class="HeadLine">
     <h1>{{ msg }}</h1>
+
+
   </div>
 </template>
 
