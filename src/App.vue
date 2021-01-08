@@ -1,35 +1,38 @@
 <template>
   <div>
     <div id="app">
+      <!-- 头部导航栏 -->
+      <router-view name="header"></router-view>
+      <router-view name="swipe"></router-view>
+      <!-- 循环中绑定编号, 使用:key="index" -->
+      <!-- <test
+        v-for="(song, index) in hotSangs"
+        :key="index"
+        :name="song.name"
+        :artist="song.artist"
+        :rank="index + 1"
+        :rate="index + 2"
+      >
+      </test> -->
       <!-- 布局嵌套 -->
-      <el-container>
-        <el-header>头部</el-header>
-        <el-container>
-          <el-aside width="300px">轮播图</el-aside>
-          <el-container>
-            <el-main>
-              <router-view name="carouselmap"></router-view>
-              <router-view name="recommand"></router-view>
-            <router-view name="universal"></router-view>
-            </el-main>
-            <el-footer></el-footer>
-          </el-container>
-        </el-container>
-      </el-container>
+
     </div>
   </div>
 </template>
 
 <script>
+// 1.导入外部组件
 
 export default {
   name: "App",
   data() {
     return {
-      history: [],
+      hotSangs: [
+      ],
     };
   },
   components: {
+    
   },
 };
 </script>
@@ -45,47 +48,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background-color: red;
-}
-.el-header,
-.el-footer {
-  background-color: #b3c0d1;
-  color: #333;
-  text-align: center;
-  line-height: 60px;
-}
-
-.el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  text-align: center;
-  line-height: 200px;
-}
-
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
-}
-
-body > .el-container {
-  margin-bottom: 40px;
-}
-
-.el-container:nth-child(5) .el-aside,
-.el-container:nth-child(6) .el-aside {
-  line-height: 260px;
-}
-
-.el-container:nth-child(7) .el-aside {
-  line-height: 320px;
-}
-/* footer固定底部 */
-.el-footer {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  left: 0;
+  background-color: burlywood;
 }
 </style>

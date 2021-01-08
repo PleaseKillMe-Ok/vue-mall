@@ -3,10 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import ElementUI from 'element-ui'
-// import 'element-theme-chalk';
 
-Vue.use(ElementUI);
+
+// 移动端UI
+import Vant from 'vant'
+import 'vant/lib/index.css'
+
+// 作为中间件
+Vue.use(Vant)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
