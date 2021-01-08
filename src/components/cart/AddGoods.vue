@@ -46,8 +46,8 @@ export default {
   data() {
     return {
       name: "",
-      price: "",
-      number: "",
+      price: 0,
+      number: 0
     };
   },
   methods: {
@@ -66,10 +66,13 @@ export default {
     onSubmit() {
       let result = {
         name:this.name,
-        price:this.price,
-        number:this.number,
+        price:parseInt(this.price),  // 解析int类型
+        number:parseInt(this.number),
       }
-      this.$emit('new-commodity', result)
+      this.$emit('new-commodity', result);
+      this.name = '';
+      this.price = 0;
+      this.number = 0;
     },
   },
 };

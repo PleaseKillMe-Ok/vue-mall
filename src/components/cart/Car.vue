@@ -117,6 +117,7 @@ export default {
     // 增加商品
     add: function (item) {
       this.cart.push(item);
+      this.show = false;
     },
     // 删除商品
     delete_item: function (index) {

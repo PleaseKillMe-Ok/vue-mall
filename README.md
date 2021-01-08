@@ -23,4 +23,4 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 =======
 # vue-mall
 基于vue框架的前端商城
->>>>>>> acd73b35cbbaac96f268dd6723ac66e44dad8a95
+
