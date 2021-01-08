@@ -1,47 +1,52 @@
 <template>
   <div>
     <div id="app">
+      <!-- 头部导航栏 -->
+      <HeadNavigation title="提示" left_text="提示" right_text="提示"></HeadNavigation>
+      <router-view name="swipe"></router-view>
+      <!-- 循环中绑定编号, 使用:key="index" -->
+      <!-- <test
+        v-for="(song, index) in hotSangs"
+        :key="index"
+        :name="song.name"
+        :artist="song.artist"
+        :rank="index + 1"
+        :rate="index + 2"
+      >
+      </test> -->
+      <!-- 布局嵌套 -->
 
-      <Home></Home>
-      <router-view/>
     </div>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
+// 1.导入外部组件
+import HeadNavigation from './components/common/HeadNavigation'
 
-  import Footer from "./components/Footer"; // 底部栏
-
-  import Home from "./components/Home";  // 主页栏
-
-
-  export default {
-  name: 'App',
-  data(){
-    return{
-     history:[]
+export default {
+  name: "App",
+  data() {
+    return {
     };
   },
-  components:{
-    Footer,
-    Home
-  }
-}
-
+  components: {
+    HeadNavigation
+  },
+};
 </script>
 
 <style>
-*{
-    margin: 0px auto;
-    padding: 0px auto;
+* {
+  margin: 0px auto;
+  padding: 0px auto;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background-color: red;
+  background-color: burlywood;
 }
 </style>
