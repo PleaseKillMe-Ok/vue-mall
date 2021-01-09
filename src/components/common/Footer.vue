@@ -1,5 +1,5 @@
 <template>
-  <div id="footer" class="acea-row row-middle">
+  <div id="Footer">
     <!-- <router-link
       :to="item.url"
       class="item"
@@ -35,7 +35,6 @@ import { Toast } from "vant";
 
 export default {
   name: "Footer",
-  props: {},
   data: function () {
     // 数据域
     return {
@@ -86,9 +85,11 @@ export default {
     };
   },
   methods: {
-    /* 切换事件 */
+    /* 底部栏切换事件 */
     onChange(index) {
-      Toast.success("切换到了" + index);
+      let head_information = { title: this.footerList[index].name};
+      this.$emit("head_info", head_information);
+      // Toast.success("切换到了" + index);
     },
   },
 };

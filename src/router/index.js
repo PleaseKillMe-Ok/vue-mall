@@ -6,6 +6,7 @@ import RightHelper from '@/components/RightHelper'
 import swipe from '@/components/Swipe'
 import RecommandGoods from '@/components/RecommandGoods'
 import UniversalGoods from '@/components/UniversalGoods'
+import Search from '@/components/search/Search'
 Vue.use(Router)
 
 export default new Router({
@@ -23,6 +24,12 @@ export default new Router({
                 universal: UniversalGoods, // 通用商品列表
             },
         },
-        /* 单个组件 */
+        {
+            /* 单个组件 */
+            path: '/search',
+            components: {
+                search: Search
+            },
+        }
     ]
 })
