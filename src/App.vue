@@ -2,24 +2,13 @@
   <div>
     <div id="app">
       <!-- 头部导航栏 -->
-      <HeadNavigation title="提示" left_text="提示" right_text="提示"></HeadNavigation>
+      <HeadNavigation title="首页" left_text="提示" right_text="提示"></HeadNavigation>
       <router-view name="swipe"></router-view>
-  
       <!-- 循环中绑定编号, 使用:key="index" -->
-      <!-- <test
-        v-for="(song, index) in hotSangs"
-        :key="index"
-        :name="song.name"
-        :artist="song.artist"
-        :rank="index + 1"
-        :rate="index + 2"
-      >
-      </test> -->
-      
+      <!-- <Car></Car> -->
 
-      <!-- 购物车 -->
-      <Car></Car>
-
+      <!-- 尾部标签 -->
+      <router-view name="footer"></router-view>
     </div>
   </div>
 </template>
