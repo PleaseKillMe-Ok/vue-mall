@@ -1,6 +1,6 @@
 <template>
   <div id="footer" class="acea-row row-middle">
-    <router-link
+    <!-- <router-link
       :to="item.url"
       class="item"
       :class="{ on:item.url === $route.path }"
@@ -12,45 +12,85 @@
         :class="item.icon + ' ' +( item.url === $route.path ? item.iconName : '')"
       ></div>
       <div>{{ item.name }}</div>
-    </router-link>
+    </router-link> -->
+
+    <!-- vue-router跳转 -->
+    <van-tabbar v-model="active" @change="onChange" route>
+      <van-tabbar-item
+        replace
+        :to="item.url"
+        :icon="item.icon"
+        :badge="item.badge"
+        v-for="(item, index) in footerList"
+        :key="index"
+        >{{ item.name }}</van-tabbar-item
+      >
+    </van-tabbar>
   </div>
 </template>
 
+
 <script>
-    export default {
-      name: "Footer",
-      props:{},
-      data:function () {  // 数据域方法
-        return {
-          footerList:[
-            {
-              name: "首页",
-              icon: "",
-              iconName: "",
-              url: "/"
-            },
-            {
-              name: "消息",
-              icon: "",
-              iconName: "",
-              url: "/message"
-            },
-            {
-              name: "购物车",
-              icon: "",
-              iconName: "",
-              url: "/trolley"
-            },
-            {
-              name: "我的",
-              icon: "",
-              iconName: "",
-              url: "/user"
-            }
-          ]
-        };
-      },
-      methods:{}
+import { Toast } from "vant";
+
+export default {
+  name: "Footer",
+  props: {},
+  data: function () {
+    // 数据域
+    return {
+      active: 0,
+      home: "首页",
+      search: "搜索",
+      message: "消息",
+      cart: "购物车",
+      individual: "个人",
+      badge_message: 0,
+      badge_user: 5,
+      badge_cart: 19,
+      footerList: [
+        {
+          name: "首页",
+          icon: "home-o",
+          iconName: "",
+          url: "/",
+        },
+        {
+          name: "搜索",
+          icon: "search",
+          iconName: "",
+          url: "/search",
+        },
+        {
+          name: "消息",
+          icon: "chat-o",
+          iconName: "",
+          url: "/message",
+          badge: 10,
+        },
+        {
+          name: "购物车",
+          icon: "cart-o",
+          iconName: "",
+          url: "/trolley",
+          badge: 5,
+        },
+        {
+          name: "个人中心",
+          icon: "user-o",
+          iconName: "",
+          url: "/individual",
+          badge: 8,
+        },
+      ],
     };
+  },
+  methods: {
+    /* 切换事件 */
+    onChange(index) {
+      Toast.success("切换到了" + index);
+    },
+  },
+};
 </script>
 

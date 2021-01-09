@@ -8,13 +8,11 @@ import router from './router'
 // 移动端UI
 import Vant from 'vant'
 import 'vant/lib/index.css'
-
 // 作为中间件
 Vue.use(Vant)
 Vue.config.productionTip = false
-
-/* eslint-disable no-new */
-/* 生成Vue实例 */
+    /* eslint-disable no-new */
+    /* 生成Vue实例 */
 new Vue({
     el: '#app',
     router,
