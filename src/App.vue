@@ -6,7 +6,6 @@
         :title="title"
         :left_text="left_tip"
         :right_text="right_tip"
-        @head_info="set_head_info"
       ></HeadNavigation>
       <!-- 轮播图 -->
       <router-view name="swipe"></router-view>
@@ -15,7 +14,7 @@
       <!-- <Car></Car> -->
 
       <!-- 尾部标签 -->
-      <Footer></Footer>
+      <Footer @head_info="set_head_info"></Footer>
     </div>
   </div>
 </template>
@@ -42,9 +41,9 @@ export default {
     Car,
     Footer,
   },
-   methods: {
+  methods: {
     /* 获取子组件footer传递过来的信息,动态设置headline的信息 */
-    set_head_info:function(head_information) {
+    set_head_info: function (head_information) {
       this.title = head_information.title;
     },
   },
