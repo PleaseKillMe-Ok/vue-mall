@@ -6,6 +6,8 @@ import RightHelper from '@/components/RightHelper'
 import swipe from '@/components/Swipe'
 import RecommandGoods from '@/components/RecommandGoods'
 import UniversalGoods from '@/components/UniversalGoods'
+import Search from '@/components/search/Search'
+import SelectLable from '@/components/common/SelectLable'
 Vue.use(Router)
 
 export default new Router({
@@ -15,6 +17,7 @@ export default new Router({
             /* 组件群 */
             components: {
                 // name: component
+                select: SelectLable, // 首页头部选择标签群
                 lefter: LeftNavigation, //左导航栏插槽
                 footer: Footer, //底部插槽
                 helper: RightHelper, // 右帮助栏插槽
@@ -23,6 +26,12 @@ export default new Router({
                 universal: UniversalGoods, // 通用商品列表
             },
         },
-        /* 单个组件 */
+        {
+            /* 单个组件 */
+            path: '/search',
+            components: {
+                search: Search
+            },
+        }
     ]
 })
