@@ -18,7 +18,7 @@
     <van-tabbar v-model="active" @change="onChange" route>
       <van-tabbar-item
         replace
-        :to="item.url"
+        :to="item.to"
         :icon="item.icon"
         :badge="item.badge"
         v-for="(item, index) in footerList"
@@ -47,38 +47,39 @@ export default {
       badge_message: 0,
       badge_user: 5,
       badge_cart: 19,
+      cur_index:0,  // 跳转前一页
       footerList: [
         {
           name: "首页",
           icon: "home-o",
           iconName: "",
-          url: "/",
+          to: "/",
         },
         {
           name: "搜索",
           icon: "search",
           iconName: "",
-          url: "/search",
+          to: "/search",
         },
         {
           name: "消息",
           icon: "chat-o",
           iconName: "",
-          url: "/message",
+          to: "/message",
           badge: 10,
         },
         {
           name: "购物车",
           icon: "cart-o",
           iconName: "",
-          url: "/trolley",
+          to: "/trolley",
           badge: 5,
         },
         {
           name: "个人中心",
           icon: "user-o",
           iconName: "",
-          url: "/individual",
+          to: "/individual",
           badge: 8,
         },
       ],
@@ -87,9 +88,8 @@ export default {
   methods: {
     /* 底部栏切换事件 */
     onChange(index) {
-      let head_information = { title: this.footerList[index].name};
+      let head_information = { title: this.footerList[index].name, previous:this.footerList[index].to};
       this.$emit("head_info", head_information);
-      // Toast.success("切换到了" + index);
     },
   },
 };

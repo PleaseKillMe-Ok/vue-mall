@@ -6,7 +6,9 @@
         :title="title"
         :left_text="left_tip"
         :right_text="right_tip"
+        :previous="previous"
       ></HeadNavigation>
+      <SelectLable></SelectLable>
       <!-- 轮播图 -->
       <router-view name="swipe"></router-view>
 
@@ -20,12 +22,14 @@
 </template>
 
 <script>
-// 1.导入头部导航栏
+// 导入头部导航栏
 import HeadNavigation from "./components/common/HeadNavigation";
-// 2.导入购物车
+// 导入购物车
 import Car from "./components/cart/Car";
-// 3.导入底部栏
+// 导入底部栏
 import Footer from "./components/common/Footer";
+// 导入首页顶部标签群
+import SelectLable from "./components/common/SelectLable";
 
 export default {
   name: "App",
@@ -34,17 +38,20 @@ export default {
       title: "首页",
       left_tip: "返回",
       right_tip: "帮助",
+      previous: "/",
     };
   },
   components: {
     HeadNavigation,
     Car,
     Footer,
+    SelectLable,
   },
   methods: {
     /* 获取子组件footer传递过来的信息,动态设置headline的信息 */
     set_head_info: function (head_information) {
       this.title = head_information.title;
+      this.previous = head_information.previous;
     },
   },
 };
