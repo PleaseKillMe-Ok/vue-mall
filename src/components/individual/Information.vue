@@ -1,21 +1,20 @@
 <template>
   <div id="Information">
-      nihao
-    <FunctionGrid></FunctionGrid>
+      个人信息
   </div>
 </template>
 
 <script>
-import FunctionGrid from "./FunctionGrid";
 export default {
-  name: "Information",
-  components: { FunctionGrid },
-  data() {
-    return {};
-  },
-};
+    name:'Information',
+    data(){
+        return {
+
+        }
+    }
+}
 </script>
 
-
 <style>
+
 </style>

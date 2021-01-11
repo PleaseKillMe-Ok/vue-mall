@@ -1,14 +1,42 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import LeftNavigation from '@/components/LeftNavigation'
-import Footer from '@/components/common/Footer'
-import RightHelper from '@/components/RightHelper'
-import swipe from '@/components/Swipe'
-import RecommandGoods from '@/components/RecommandGoods'
-import UniversalGoods from '@/components/UniversalGoods'
-import Search from '@/components/search/Search'
-import SelectLable from '@/components/common/SelectLable'
-import Information from '@/components/individual/Information'
+
+/* 懒加载 */
+const LeftNavigation = () =>
+    import ('@/components/LeftNavigation')
+
+const Footer = () =>
+    import ('@/components/common/Footer')
+
+const RightHelper = () =>
+    import ('@/components/RightHelper')
+
+const swipe = () =>
+    import ('@/components/Swipe')
+
+const RecommandGoods = () =>
+    import ('@/components/RecommandGoods')
+
+const UniversalGoods = () =>
+    import ('@/components/UniversalGoods')
+
+const Search = () =>
+    import ('@/components/search/Search')
+
+const SelectLable = () =>
+    import ('@/components/common/SelectLable')
+
+const IndividualSpace = () =>
+    import ('@/components/individual/IndividualSpace')
+
+const HeadNavigation = () =>
+    import ('@/components/common/HeadNavigation')
+
+const Information = () =>
+    import ('@/components/individual/Information')
+
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -18,6 +46,7 @@ export default new Router({
             /* 组件群 */
             components: {
                 // name: component
+                header: HeadNavigation, // 头部导航栏
                 select: SelectLable, // 首页头部选择标签群
                 lefter: LeftNavigation, //左导航栏插槽
                 footer: Footer, //底部插槽
@@ -30,15 +59,17 @@ export default new Router({
         {
             /* 单个组件 */
             path: '/search',
-            components: {
-                search: Search
-            },
+            name: 'Search',
+            component: Search
         },
         {
             path: '/individual',
-            components: {
-                individual: Information
-            }
+            name: 'IndividualSpace',
+            component: IndividualSpace
+        }, {
+            path: '/individual/information',
+            name: 'Information',
+            component: Information
         }
     ]
 })
