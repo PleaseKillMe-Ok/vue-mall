@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       label: "label",
-      author: "司云中",
+      author: "司云中和他女票曾靖文",
       framework: "采用前后端分离Vue.js+Django进行开发",
       blog: "https://syzzjw.cn",
       github: "https://github.com/syz247179876",

@@ -8,12 +8,14 @@
         :right_text="right_tip"
         :previous="previous"
       ></HeadNavigation>
-      <SelectLable></SelectLable>
+      <!-- 标签 -->
+      <router-view name="select"></router-view>
       <!-- 轮播图 -->
       <router-view name="swipe"></router-view>
 
       <!-- 主要内容 -->
       <!-- <Car></Car> -->
+      <TestAxios></TestAxios>
 
       <!-- 尾部标签 -->
       <Footer @head_info="set_head_info"></Footer>
@@ -28,8 +30,9 @@ import HeadNavigation from "./components/common/HeadNavigation";
 import Car from "./components/cart/Car";
 // 导入底部栏
 import Footer from "./components/common/Footer";
-// 导入首页顶部标签群
-import SelectLable from "./components/common/SelectLable";
+
+// 测试Axios请求
+import TestAxios from "./components/common/TestAxios";
 
 export default {
   name: "App",
@@ -45,7 +48,7 @@ export default {
     HeadNavigation,
     Car,
     Footer,
-    SelectLable,
+    TestAxios,
   },
   methods: {
     /* 获取子组件footer传递过来的信息,动态设置headline的信息 */

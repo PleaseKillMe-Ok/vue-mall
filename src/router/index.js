@@ -8,6 +8,7 @@ import RecommandGoods from '@/components/RecommandGoods'
 import UniversalGoods from '@/components/UniversalGoods'
 import Search from '@/components/search/Search'
 import SelectLable from '@/components/common/SelectLable'
+import Information from '@/components/individual/Information'
 Vue.use(Router)
 
 export default new Router({
@@ -32,6 +33,12 @@ export default new Router({
             components: {
                 search: Search
             },
+        },
+        {
+            path: '/individual',
+            components: {
+                individual: Information
+            }
         }
     ]
 })
