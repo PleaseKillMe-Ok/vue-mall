@@ -65,11 +65,11 @@ export default new Router({
         {
             path: '/individual',
             name: 'IndividualSpace',
-            component: IndividualSpace
-        }, {
-            path: '/individual/information',
-            name: 'Information',
-            component: Information
+            component: IndividualSpace,
+            // 子组件
+            children: [
+                { path: 'information', component: Information }
+            ]
         }
     ]
 })
