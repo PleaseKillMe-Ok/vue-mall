@@ -22,7 +22,6 @@
     </van-nav-bar>
     <!-- 帮助文档 -->
     <van-dialog v-model="show" title="帮助文档" show-cancel-button>
-      <!-- 将子组件数据传出来 -->
       <Helper></Helper>
     </van-dialog>
   </div>
@@ -56,7 +55,8 @@ export default {
     },
     // 进入搜索详情界面
     toSearch() {
-      Toast.success("进入搜索详情界面");
+      // 路由跳转
+      this.$router.push("/search");
     },
   },
 };

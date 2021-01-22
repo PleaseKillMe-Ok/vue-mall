@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import { component } from 'vue/types/umd'
 const Footer =() => import('@/components/common/Footer')
 export default {
     name:'Index',
