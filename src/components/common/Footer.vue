@@ -1,18 +1,5 @@
 <template>
   <div id="Footer">
-    <!-- <router-link
-      :to="item.url"
-      class="item"
-      :class="{ on:item.url === $route.path }"
-      v-for="(item, index) in footerList"
-      :key="index"
-    >
-      <div
-        class="icon"
-        :class="item.icon + ' ' +( item.url === $route.path ? item.iconName : '')"
-      ></div>
-      <div>{{ item.name }}</div>
-    </router-link> -->
 
     <!-- vue-router跳转 -->
     <van-tabbar v-model="active" @change="onChange" route>
@@ -31,7 +18,6 @@
 
 
 <script>
-import { Toast } from "vant";
 
 export default {
   name: "Footer",
@@ -56,12 +42,6 @@ export default {
           to: "/",
         },
         {
-          name: "搜索",
-          icon: "search",
-          iconName: "",
-          to: "/search",
-        },
-        {
           name: "消息",
           icon: "chat-o",
           iconName: "",
@@ -72,7 +52,7 @@ export default {
           name: "购物车",
           icon: "cart-o",
           iconName: "",
-          to: "/trolley",
+          to: "/cart",
           badge: 5,
         },
         {

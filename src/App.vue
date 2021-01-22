@@ -1,35 +1,12 @@
 <template>
   <div>
     <div id="app">
-      <!-- 头部导航栏 -->
-      <router-view name="header"></router-view>
-      <!-- 标签 -->
-
-      <router-view name="select"></router-view>
-      <!-- 轮播图 -->
-      <router-view name="swipe"></router-view>
-
-      <!-- 主要内容 -->
-      <!-- <Car></Car> -->
-      <router-view />
-      <!-- <TestAxios></TestAxios> -->
-
-      <!-- 尾部标签 -->
-      <Footer @head_info="set_head_info"></Footer>
+      <router-view/>
     </div>
   </div>
 </template>
 
 <script>
-// 导入头部导航栏
-import HeadNavigation from "./components/common/HeadNavigation";
-// 导入购物车
-import Car from "./components/cart/Car";
-// 导入底部栏
-import Footer from "./components/common/Footer";
-
-// 测试Axios请求
-import TestAxios from "./components/common/TestAxios";
 
 export default {
   name: "App",
@@ -40,12 +17,6 @@ export default {
       right_tip: "帮助",
       previous: "/",
     };
-  },
-  components: {
-    HeadNavigation,
-    Car,
-    Footer,
-    TestAxios,
   },
   methods: {
     /* 获取子组件footer传递过来的信息,动态设置headline的信息 */
