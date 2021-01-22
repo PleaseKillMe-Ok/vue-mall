@@ -69,7 +69,7 @@ export default {
     /* 底部栏切换事件 */
     onChange(index) {
       let head_information = { title: this.footerList[index].name, previous:this.footerList[index].to};
-      this.$emit("head_info", head_information);
+      // this.$emit("head_info", head_information);
     },
   },
 };
