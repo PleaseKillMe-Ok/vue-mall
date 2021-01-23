@@ -1,13 +1,12 @@
 <template>
   <div>
     <div id="app">
-      <router-view/>
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "App",
   data() {
@@ -38,5 +37,12 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+.card {
+  margin-bottom: 24px;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 12px #ebedf0;
 }
 </style>
