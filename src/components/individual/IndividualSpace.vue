@@ -1,7 +1,8 @@
 <template>
-  <div id="Information">
+  <div id="IndividualSpace">
+    <!-- 头部导航栏 -->
     <IndividualHeader></IndividualHeader>
-    <!-- <FunctionGrid></FunctionGrid> -->
+    
   </div>
 </template>
 
@@ -9,7 +10,7 @@
 import FunctionGrid from "./FunctionGrid";
 import IndividualHeader from "./IndividualHeader";
 export default {
-  name: "Information",
+  name: "IndividualSpace",
   components: { FunctionGrid, IndividualHeader },
   data() {
     return {};
@@ -18,5 +19,6 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
+
 </style>
