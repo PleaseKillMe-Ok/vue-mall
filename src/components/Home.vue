@@ -8,6 +8,7 @@
       left-arrow
       @click-left="onClickLeft"
       @click-right="onClickRight"
+      fixed
     >
       <template #title>
         <van-search
@@ -24,11 +25,13 @@
     <van-dialog v-model="show" title="帮助文档" show-cancel-button>
       <Helper></Helper>
     </van-dialog>
+    <Swipe></Swipe>
   </div>
 </template>
 
 <script>
-import Helper from "@/components/common/Helper";
+const Helper = () => import("@/components/common/Helper");
+const Swipe = () => import("@/components/common/Swipe");
 import { Toast } from "vant";
 export default {
   name: "Home",
@@ -43,6 +46,7 @@ export default {
   },
   components: {
     Helper,
+    Swipe,
   },
   methods: {
     // 导航栏左侧点击事件

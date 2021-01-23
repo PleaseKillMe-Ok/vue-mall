@@ -7,6 +7,7 @@
       left-arrow
       @click-left="onClickLeft"
       @click-right="onClickRight"
+      fixed
     >
       <template #title>
         <van-search
@@ -65,7 +66,7 @@ export default {
         this.$http
           .get(this.url)
           .then((res) => {
-            let data = res.data  // 模拟获取到的数据
+            let data = res.data; // 模拟获取到的数据
             this.$emit("displayResult", true, data); // 传递给父组件,切换父组件的子组件,将数据传递给父组件,显示搜索结果
           })
           .catch((err) => {
@@ -82,7 +83,7 @@ export default {
         this.$http
           .get(this.url)
           .then((res) => {
-            let data = res.data
+            let data = res.data;
             this.$emit("displayResult", true, data);
           })
           .catch((err) => {
