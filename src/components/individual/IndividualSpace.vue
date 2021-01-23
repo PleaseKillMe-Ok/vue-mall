@@ -1,17 +1,20 @@
 <template>
   <div id="IndividualSpace">
-    <!-- 头部导航栏 -->
+    <!-- 头部组件 -->
     <IndividualHeader></IndividualHeader>
-    
+    <!-- 订单组件 -->
+    <OrderLine></OrderLine>
   </div>
 </template>
 
 <script>
-import FunctionGrid from "./FunctionGrid";
-import IndividualHeader from "./IndividualHeader";
+const IndividualHeader = () =>
+  import("@/components/individual/IndividualHeader");
+const OrderLine = () => import("@/components/order/OrderLine");
+
 export default {
   name: "IndividualSpace",
-  components: { FunctionGrid, IndividualHeader },
+  components: { IndividualHeader, OrderLine },
   data() {
     return {};
   },
@@ -20,5 +23,4 @@ export default {
 
 
 <style scoped>
-
 </style>
