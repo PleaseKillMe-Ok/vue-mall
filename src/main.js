@@ -14,7 +14,7 @@ Vue.use(Vant)
 Vue.config.productionTip = false
 
 // 引入axios,替换本来的Http模块
-// Vue.prototype.$http = axios
+Vue.prototype.$http = axios
 
 /* 导航守卫,校验是否登录 */
 router.beforeEach((to, from, next) => {

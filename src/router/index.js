@@ -47,6 +47,14 @@ const Login = () =>
 const Register = () =>
     import ('@/components/auth/Register')
 
+// 邮箱登录组件
+const EmailLogin = () =>
+    import ('@/components/auth/login/EmailLogin')
+
+// 手机登录组件
+const PhoneLogin = () =>
+    import ('@/components/auth/login/PhoneLogin')
+
 Vue.use(Router)
 
 export default new Router({
@@ -98,13 +106,17 @@ export default new Router({
             }
         },
         {
-            // 登录路由
+            path: '/login',
+            redirect: '/login/phone'
+        },
+        {
             path: '/login',
             name: 'Login',
             component: Login,
-            meta: {
-                title: '登录'
-            }
+            children: [
+                { path: 'email', component: EmailLogin, meta: { title: '邮箱登录' } },
+                { path: 'phone', component: PhoneLogin, meta: { title: '手机号登录' } }
+            ]
 
         }, {
             // 注册路由
