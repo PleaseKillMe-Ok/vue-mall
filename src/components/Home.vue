@@ -2,11 +2,8 @@
   <div id="Home">
     <!-- 头部导航栏 -->
     <van-nav-bar
-      :left-text="left_text"
       :right-text="right_text"
       v-model="previous"
-      left-arrow
-      @click-left="onClickLeft"
       @click-right="onClickRight"
       fixed
     >
@@ -38,7 +35,6 @@ export default {
     return {
       show: false,
       search_value: "",
-      left_text: "返回",
       right_text: "帮助",
       previous: "",
     };

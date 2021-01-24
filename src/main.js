@@ -18,11 +18,12 @@ Vue.config.productionTip = false
 
 /* 导航守卫,校验是否登录 */
 router.beforeEach((to, from, next) => {
-    // 根据meta中的属性动态添加title
+    console.log(to.meta)
+        // 根据meta中的属性动态添加title
     if (to.meta.title) {
         document.title = to.meta.title
     }
-    if (to.meta.loginRequire && !localStorage.getItem('user')) {
+    if (to.meta.loginRequire && !sessionStorage.getItem('user')) {
         next({ name: 'Login', query: { redirect: to.fullPath } }) // 未登录,跳转/login, 登入后,回跳到目标视图
     } else
         next() // 已经登录,进入视图界面
