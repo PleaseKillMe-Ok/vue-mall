@@ -39,6 +39,14 @@ const Message = () =>
 const Cart = () =>
     import ('@/components/cart/Cart')
 
+// 登录容器
+const Login = () =>
+    import ('@/components/auth/Login')
+
+// 注册容器
+const Register = () =>
+    import ('@/components/auth/Register')
+
 Vue.use(Router)
 
 export default new Router({
@@ -46,36 +54,66 @@ export default new Router({
     routes: [{
             // 路由重定向
             path: '/',
-            redirect: '/home'
+            redirect: '/home',
         },
-        { // 首页路由
+        { // 嵌套路由
             path: '/',
             component: Index,
             children: [
                 { path: 'home', component: Home, meta: { title: '首页' } },
-                { path: 'message', component: Message, meta: { title: '消息' } },
-                { path: 'cart', component: Cart, meta: { title: '购物车' } },
-                { path: 'individual', component: IndividualSpace, meta: { title: '个人中心' } }
-            ]
+                { path: 'message', component: Message, meta: { title: '消息', loginRequire: true } },
+                { path: 'cart', component: Cart, meta: { title: '购物车', loginRequire: true } },
+                { path: 'individual', component: IndividualSpace, meta: { title: '个人中心', loginRequire: true } }
+            ],
         },
         {
-            // 搜索路由
             path: '/search',
             name: 'Search',
-            component: Search
+            component: Search,
+            meta: {
+                loginRequire: true,
+                title: '搜索'
+            }
         },
         {
             path: '/personal',
-            redirect: '/personal/home'
+            redirect: '/personal/home',
+            meta: {
+                loginRequire: true,
+                title: '个人信息'
+            }
         },
-        { // 个人空间路由
+        {
+            // 个人空间路由
             path: '/personal',
             name: 'Personal',
             component: Personal,
             children: [
-                { path: 'data', component: PersonalData },
-                { path: 'home', component: PersonalHome }
-            ]
+                { path: 'data', component: PersonalData, meta: { loginRequire: true, title: '个人信息' } },
+                { path: 'home', component: PersonalHome, meta: { loginRequire: true, title: '个人主页' } }
+            ],
+            meta: {
+                loginRequire: true,
+                title: '个人空间'
+            }
+        },
+        {
+            // 登录路由
+            path: '/login',
+            name: 'Login',
+            component: Login,
+            meta: {
+                title: '登录'
+            }
+
+        }, {
+            // 注册路由
+            path: '/register',
+            name: 'Register',
+            component: Register,
+            meta: {
+                title: '注册'
+            }
         },
     ]
 })

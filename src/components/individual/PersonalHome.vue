@@ -17,7 +17,7 @@
     </van-nav-bar>
 
     <!-- 简要个人信息栏 -->
-    <van-row @click="toPersonal">
+    <van-row>
       <van-col span="8">
         <van-image
           class="head-image"
@@ -27,9 +27,12 @@
           src="https://img.yzcdn.cn/vant/cat.jpeg"
           round
       /></van-col>
-      <van-col span="10">
+      <van-col span="16">
         <p class="username">司云中</p>
-        <p class="account">帐号:syz999520</p>
+        <div class="button">
+          <van-button plain round type="info" @click="toDetail">编辑资料</van-button>
+          <van-button plain round type="info" @click="toSelf">隐私设置</van-button>
+        </div>
       </van-col>
     </van-row>
   </div>
@@ -42,7 +45,6 @@ export default {
   data() {
     return {
       show: false,
-      actions: [{ name: "选项一" }, { name: "选项二" }, { name: "选项三" }],
     };
   },
   components: {
@@ -55,15 +57,39 @@ export default {
     onClickRight() {
       this.show = true;
     },
-    // 进入个人资料页
-    toPersonal() {},
     // 关闭动作面板
     close() {
       this.show = false;
     },
+    // 进入个人资料界面
+    toDetail(){
+      
+    },
+    // 进入个人隐私设置界面
+    toSelf(){
+      
+    }
   },
 };
 </script>
 
 <style scoped>
+/* 头像 */
+.van-image{
+  margin: 20px;
+}
+.username{
+  float: left;
+  margin: 5px;
+  padding:15px;
+  font-size: 1.2rem;
+  font-weight: bolder;
+}
+.button{
+  float: left;
+}
+
+.van-button{
+  height: 30px;
+}
 </style>

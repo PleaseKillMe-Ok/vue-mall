@@ -32,7 +32,6 @@
 <script>
 const Helper = () => import("@/components/common/Helper");
 const Swipe = () => import("@/components/common/Swipe");
-import { Toast } from "vant";
 export default {
   name: "Home",
   data() {
