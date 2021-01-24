@@ -2,14 +2,9 @@
   <!-- 个人主页 -->
 
   <div id="PersonalHome">
-    <!-- 配置栏动作面版 -->
-    <van-action-sheet v-model="show" @select="onSelect">
-        <div class="content">内容</div>
-    </van-action-sheet>
-
+    <FunctionSheet :show="show" @close="close"></FunctionSheet>
     <van-nav-bar
       left-text="返回"
-      right-text="按钮"
       left-arrow
       @click-left="onClickLeft"
       @click-right="onClickRight"
@@ -41,6 +36,7 @@
 </template>
 
 <script>
+const FunctionSheet = () => import("@/components/common/FunctionSheet");
 export default {
   name: "PersonalHome",
   data() {
@@ -49,6 +45,9 @@ export default {
       actions: [{ name: "选项一" }, { name: "选项二" }, { name: "选项三" }],
     };
   },
+  components: {
+    FunctionSheet,
+  },
   methods: {
     onClickLeft() {
       this.$router.push("/individual");
@@ -56,18 +55,15 @@ export default {
     onClickRight() {
       this.show = true;
     },
-    // 选择配置动作栏的某一项后回调
-    onSelect(item) {
-      this.show = false;
-      Toast(item.name);
-    },
     // 进入个人资料页
     toPersonal() {},
+    // 关闭动作面板
+    close() {
+      this.show = false;
+    },
   },
 };
 </script>
 
 <style scoped>
-
-
 </style>
