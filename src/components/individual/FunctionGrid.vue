@@ -1,4 +1,5 @@
 <template>
+  <!-- 功能宫格栏 -->
   <div id="FunctionGrdi">
     <van-grid>
       <van-grid-item
@@ -6,7 +7,6 @@
         :key="index"
         :border="displayIcon"
         :to="item.url"
-        :url="item.url"
       >
         <template #default>
           <div class="data">

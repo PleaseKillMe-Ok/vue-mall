@@ -3,7 +3,7 @@
     <!-- 最顶部工具栏 -->
     <TopTool></TopTool>
     <!-- 简要个人信息栏 -->
-    <van-row>
+    <van-row @click="toPersonal">
       <van-col span="8">
         <van-image
           class="head-image"
@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import TopTool from "./TopTool";
+const TopTool = () => import("@/components/individual/TopTool");
 const FunctionGrid = () => import("@/components/individual/FunctionGrid");
-
+import { Toast } from "vant";
 export default {
   name: "IndividualHeader",
   components: {
@@ -37,7 +37,11 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    toPersonal() {
+      this.$router.push('/personal')
+    },
+  },
 };
 </script>
 

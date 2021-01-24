@@ -1,4 +1,5 @@
 <template>
+  <!-- 个人空间 -->
   <div id="IndividualSpace">
     <!-- 头部组件 -->
     <IndividualHeader></IndividualHeader>
