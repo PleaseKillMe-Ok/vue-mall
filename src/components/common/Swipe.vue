@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { Toast } from "vant";
 export default {
   name: "Swipe",
   data() {
@@ -36,7 +35,7 @@ export default {
           })
         // 失败的回调
         .catch((err) => {
-          Toast.fail("服务器有点累~");
+          this.$toast.fail("服务器有点累~");
         });
     },
     // 计算取数据的区间

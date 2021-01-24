@@ -12,8 +12,16 @@ const IndividualSpace = () =>
     import ('@/components/individual/IndividualSpace')
 
 // 个人信息组件
-const Information = () =>
-    import ('@/components/individual/Information')
+const PersonalData = () =>
+    import ('@/components/individual/PersonalData')
+
+// 个人容器
+const Personal = () =>
+    import ('@/components/individual/Personal')
+
+// 个人主页组件
+const PersonalHome = () =>
+    import ('@/components/individual/PersonalHome')
 
 // 总组件
 const Index = () =>
@@ -44,10 +52,10 @@ export default new Router({
             path: '/',
             component: Index,
             children: [
-                { path: 'home', component: Home },
-                { path: 'message', component: Message },
-                { path: 'cart', component: Cart },
-                { path: 'individual', component: IndividualSpace }
+                { path: 'home', component: Home, meta: { title: '首页' } },
+                { path: 'message', component: Message, meta: { title: '消息' } },
+                { path: 'cart', component: Cart, meta: { title: '购物车' } },
+                { path: 'individual', component: IndividualSpace, meta: { title: '个人中心' } }
             ]
         },
         {
@@ -56,13 +64,18 @@ export default new Router({
             name: 'Search',
             component: Search
         },
+        {
+            path: '/personal',
+            redirect: '/personal/home'
+        },
         { // 个人空间路由
-            path: '/individual',
-            name: 'IndividualSpace',
-            component: IndividualSpace,
+            path: '/personal',
+            name: 'Personal',
+            component: Personal,
             children: [
-                { path: 'information', component: Information }
+                { path: 'data', component: PersonalData },
+                { path: 'home', component: PersonalHome }
             ]
-        }
+        },
     ]
 })

@@ -14,7 +14,6 @@
 
 <script>
 const Footer = () => import("@/components/common/Footer");
-import { Toast } from "vant";
 export default {
   name: "Index",
   components: { Footer },

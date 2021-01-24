@@ -1,5 +1,7 @@
 <template>
+  <!-- 个人详细信息 -->
   <div id="Information">
+    个人详细信息
     <van-image
       round
       width="10rem"

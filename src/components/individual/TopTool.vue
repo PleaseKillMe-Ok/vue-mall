@@ -1,9 +1,10 @@
 <template>
+  <!-- 顶部工具栏 -->
   <div name="TopTool">
     <van-nav-bar
       title="个人中心"
       right-text="个人信息"
-      @click-right="disPlayInformation"
+      @click-right="setting"
     />
   </div>
 </template>
@@ -15,9 +16,9 @@ export default {
     return {};
   },
   methods: {
-    // 跳转到个人详细信息页
-    disPlayInformation() {
-        this.$router.push("/individual/information")
+    // 跳转到设置界面
+    setting() {
+      this.$router.push("/setting");
     },
   },
 };
