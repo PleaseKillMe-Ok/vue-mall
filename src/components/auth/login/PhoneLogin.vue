@@ -40,7 +40,7 @@
           :rules="[
             {
               required: true,
-              message: '请输入手机号',
+              message: '请输入验证码',
             },
             {
               validator: codeValidator,
@@ -52,7 +52,7 @@
           <template #button>
             <van-button
               size="small"
-              type="primary"
+              type="info"
               native-type="button"
               @click="sendCode"
               >发送验证码</van-button
@@ -92,7 +92,7 @@ export default {
   components: { TopTool },
   data() {
     return {
-      title: "用户注册",
+      title: "手机注册",
       phone: "",
       code: "",
       way: "",
@@ -179,29 +179,5 @@ export default {
 };
 </script>
 
-<style scoped>
-/* 登录表单样式 */
-.form {
-  padding-top: 30px;
-}
-/* 单元项样式 */
-.van-cell {
-  font-size: 20px;
-  margin-top: 20px;
-}
-.submitButton {
-  margin-top: 30px;
-}
-.utils {
-  margin-top: 40px;
-}
-/* 其他登录方式 */
-.otherWay {
-  margin-top: 30px;
-}
-
-/* 输入框字体 */
-.van-field__control {
-  font-size: 16px !important;
-}
+<style>
 </style>
