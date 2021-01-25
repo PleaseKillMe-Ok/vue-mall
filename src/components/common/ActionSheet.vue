@@ -39,8 +39,8 @@ export default {
   methods: {
     // 选择某项,进入某页
     onSelect(item) {
-      console.log(item.name);
       this.$emit("close");
+      this.$router.push(item.to);
     },
     // 回调父组件关闭事件
     onOverlay() {
