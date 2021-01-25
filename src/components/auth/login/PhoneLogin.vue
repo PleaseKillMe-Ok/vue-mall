@@ -86,7 +86,7 @@
 <script>
 const TopTool = () => import("@/components/auth/TopTool");
 import { phoneValidator, codeValidator } from "@/validators";
-
+import { sendRegister } from "@/api/code";
 export default {
   name: "PhoneLogin",
   components: { TopTool },
@@ -168,7 +168,13 @@ export default {
     sendCode() {
       if (this.phone != "" && phoneValidator(this.phone)) {
         // TODO: 倒计时60s
-        this.$toast.success("模拟发送成功");
+        sendRegister()
+          .then((res) => {
+            this.$toast.success("模拟发送成功");
+          })
+          .catch((err) => {
+            this.$toast.fail("服务器开开了会小差~");
+          });
       } else {
         this.$toast.fail("请检查手机号格式是否正确");
       }
