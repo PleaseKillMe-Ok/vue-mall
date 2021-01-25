@@ -1,6 +1,6 @@
 <template>
   <div id="PhoneLogin">
-    <TopTool :title="title"></TopTool>
+    <TopTool :title="title" :actionList="actionList"></TopTool>
     <div class="card">
       <van-image
         round
@@ -24,7 +24,7 @@
         />
         <div class="submitButton">
           <van-button round block type="warning" native-type="submit"
-            ><span style="font-size:20px">登录</span></van-button
+            ><span style="font-size: 20px">登录</span></van-button
           >
         </div>
         <van-row class="utils">
@@ -60,6 +60,7 @@ export default {
       way: "",
       password: "",
       show: false,
+      showSheet: false,
       otherWayList: [
         {
           way: "QQ登录",
@@ -71,6 +72,24 @@ export default {
         },
         {
           way: "微信登录",
+          to: "",
+        },
+      ],
+      actionList: [
+        {
+          name: "邮箱登录",
+          to: "",
+        },
+        {
+          name: "手机注册",
+          to: "",
+        },
+        {
+          name: "邮箱注册",
+          to: "",
+        },
+        {
+          name: "帮助",
           to: "",
         },
       ],

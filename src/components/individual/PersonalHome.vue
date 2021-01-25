@@ -2,7 +2,11 @@
   <!-- 个人主页 -->
 
   <div id="PersonalHome">
-    <FunctionSheet :show="show" @close="close"></FunctionSheet>
+    <FunctionSheet
+      :show="show"
+      :gridList="gridList"
+      @close="close"
+    ></FunctionSheet>
     <van-nav-bar
       left-text="返回"
       left-arrow
@@ -30,8 +34,12 @@
       <van-col span="16">
         <p class="username">司云中</p>
         <div class="button">
-          <van-button plain round type="info" @click="toDetail">编辑资料</van-button>
-          <van-button plain round type="info" @click="toSelf">隐私设置</van-button>
+          <van-button plain round type="info" @click="toDetail"
+            >编辑资料</van-button
+          >
+          <van-button plain round type="info" @click="toSelf"
+            >隐私设置</van-button
+          >
         </div>
       </van-col>
     </van-row>
@@ -45,6 +53,33 @@ export default {
   data() {
     return {
       show: false,
+      gridList: [
+        {
+          name: "首页",
+          icon: "cart",
+          to: "/",
+        },
+        {
+          name: "消息",
+          icon: "cart",
+          to: "/message",
+        },
+        {
+          name: "搜索",
+          icon: "cart",
+          to: "/search",
+        },
+        {
+          name: "我要反馈",
+          icon: "cart",
+          to: "/feedback",
+        },
+        {
+          name: "分享主页",
+          icon: "cart",
+          to: "",
+        },
+      ],
     };
   },
   components: {
@@ -62,34 +97,30 @@ export default {
       this.show = false;
     },
     // 进入个人资料界面
-    toDetail(){
-      
-    },
+    toDetail() {},
     // 进入个人隐私设置界面
-    toSelf(){
-      
-    }
+    toSelf() {},
   },
 };
 </script>
 
 <style scoped>
 /* 头像 */
-.van-image{
+.van-image {
   margin: 20px;
 }
-.username{
+.username {
   float: left;
   margin: 5px;
-  padding:15px;
+  padding: 15px;
   font-size: 1.2rem;
   font-weight: bolder;
 }
-.button{
+.button {
   float: left;
 }
 
-.van-button{
+.van-button {
   height: 30px;
 }
 </style>

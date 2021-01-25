@@ -1,15 +1,44 @@
 <template>
   <div id="TopTool">
-    <van-nav-bar :title="title" right-text="更多" @click-right="many" />
+    <van-nav-bar
+      :title="title"
+      right-text="更多"
+      @click-right="many"
+      left-arrow
+      @click-left="back"
+    />
+    <!-- 动作面板 -->
+    <ActionSheet
+      :actionList="actionList"
+      :show="show"
+      @close="close"
+    ></ActionSheet>
   </div>
 </template>
 
 <script>
+const ActionSheet = () => import("@/components/common/ActionSheet");
 export default {
   name: "TopTool",
-  props: ["title"],
+  props: ["title", "actionList"],
+  components: { ActionSheet },
+  data() {
+    return {
+      show: false,
+    };
+  },
   methods: {
-    many() {},
+    many() {
+      this.show = !this.show;
+    },
+    // 点击遮罩层关闭
+    close() {
+      this.show = false;
+    },
+    // 返回首页
+    back() {
+      this.$router.push("/");
+    },
   },
 };
 </script>
