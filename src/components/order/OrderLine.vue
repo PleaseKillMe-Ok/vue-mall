@@ -9,7 +9,6 @@
         <van-grid-item
           v-for="(item, index) in functionList"
           :key="index"
-          :border="displayIcon"
           :to="item.url"
         >
           <!-- 徽章 -->

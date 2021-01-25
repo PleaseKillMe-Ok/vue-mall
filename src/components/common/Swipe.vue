@@ -28,15 +28,7 @@ export default {
   methods: {
     // 请求API
     getSwipe() {
-      this.$http
-        .get("/api/banner/?type=2")
-        // 成功回调
-        .then((res) => {
-          })
-        // 失败的回调
-        .catch((err) => {
-          this.$toast.fail("服务器有点累~");
-        });
+     
     },
     // 计算取数据的区间
     computeRetrieve() {

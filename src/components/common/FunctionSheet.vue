@@ -1,5 +1,5 @@
 <template>
-  <!-- 功能直达面板 -->
+  <!-- 功能直达自定义面板 -->
   <div id="FunctionSheet">
     <!-- 配置栏动作面版 -->
     <van-action-sheet v-model="childShow" @click-overlay="onOverlay">
@@ -28,33 +28,6 @@ export default {
       gutter: 10,
       columnNumber: 3,
       childShow: false,
-      gridList: [
-        {
-          name: "首页",
-          icon: "cart",
-          to: "/",
-        },
-        {
-          name: "消息",
-          icon: "cart",
-          to: "/message",
-        },
-        {
-          name: "搜索",
-          icon: "cart",
-          to: "/search",
-        },
-        {
-          name: "我要反馈",
-          icon: "cart",
-          to: "/feedback",
-        },
-        {
-          name: "分享主页",
-          icon: "cart",
-          to: "",
-        },
-      ],
     };
   },
   watch: {
@@ -73,12 +46,16 @@ export default {
       type: Boolean,
       default: false,
     },
+    gridList: {
+      type: Array,
+      default: [],
+    },
   },
 };
 </script>
 
 <style scoped>
-.text{
+.text {
   font-size: 0.8rem;
 }
 </style>

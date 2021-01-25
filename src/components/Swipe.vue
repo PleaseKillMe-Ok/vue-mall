@@ -11,8 +11,6 @@
         v-for="(image, index) in swipe_list"
         @click="redirect(index)"
       >
-        <!-- TODO: CSS布局-->
-        <!-- <img :class="image_class" :src="image" /> -->
         {{ image.image_url }}
       </van-swipe-item>
     </van-swipe>

@@ -36,7 +36,6 @@
 
 
 <script>
-import { Toast } from "vant";
 import Helper from "../common/Helper";
 export default {
   name: "HeadNavigation",
@@ -54,7 +53,7 @@ export default {
   methods: {
     // 返回前一页
     onClickLeft() {
-      Toast.success(this.previous);
+      this.$router.push('/')
     },
     // 显示帮助栏
     onClickRight() {

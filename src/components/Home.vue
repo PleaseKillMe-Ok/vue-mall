@@ -2,11 +2,8 @@
   <div id="Home">
     <!-- 头部导航栏 -->
     <van-nav-bar
-      :left-text="left_text"
       :right-text="right_text"
       v-model="previous"
-      left-arrow
-      @click-left="onClickLeft"
       @click-right="onClickRight"
       fixed
     >
@@ -32,14 +29,12 @@
 <script>
 const Helper = () => import("@/components/common/Helper");
 const Swipe = () => import("@/components/common/Swipe");
-import { Toast } from "vant";
 export default {
   name: "Home",
   data() {
     return {
       show: false,
       search_value: "",
-      left_text: "返回",
       right_text: "帮助",
       previous: "",
     };
