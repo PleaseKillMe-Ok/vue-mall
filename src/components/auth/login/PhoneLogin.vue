@@ -85,22 +85,20 @@
 
 <script>
 const TopTool = () => import("@/components/auth/TopTool");
-import { universalValidator } from "@/utils";
+import { phoneValidator, codeValidator } from "@/validators";
 
 export default {
   name: "PhoneLogin",
   components: { TopTool },
   data() {
     return {
-      title: "手机注册",
+      title: "手机登录",
       phone: "",
       code: "",
       way: "",
       password: "",
       show: false,
       showSheet: false,
-      phoneRegex: /^1[3,4,5,7,8,9][0-9]{9}$/,
-      codeRegex: /^\w{6}$/,
       otherWayList: [
         {
           way: "QQ登录",
@@ -117,7 +115,7 @@ export default {
       ],
       actionList: [
         {
-          name: "邮箱登录",
+          name: "邮箱/用户名登录",
           to: "/login/email",
         },
         {
@@ -161,14 +159,14 @@ export default {
     },
     // 校验
     phoneValidator(value) {
-      return universalValidator(this.phoneRegex, value);
+      return phoneValidator(value);
     },
     codeValidator(value) {
-      return universalValidator(this.codeRegex, value);
+      return codeValidator(value);
     },
     // 发送验证码
     sendCode() {
-      if (this.phone != "" && this.phoneRegex.test(this.phone)) {
+      if (this.phone != "" && phoneValidator(this.phone)) {
         // TODO: 倒计时60s
         this.$toast.success("模拟发送成功");
       } else {

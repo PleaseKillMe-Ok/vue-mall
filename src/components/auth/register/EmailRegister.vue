@@ -1,22 +1,41 @@
 <template>
-  <div id="Register">
+  <div id="EmailRegister">
     <TopTool :title="title" :actionList="actionList"></TopTool>
     <van-form @submit="register">
       <van-field
-        v-model="phone"
-        name="手机号"
-        label="手机号"
-        placeholder="请输入手机号"
+        v-model="email"
+        name="邮箱"
+        label="邮箱号"
+        placeholder="请输入邮箱"
         clearable
         center
         :rules="[
           {
             required: true,
-            message: '请输入手机号',
+            message: '请输入邮箱',
           },
           {
-            validator: phoneValidator,
-            message: '请输入正确的手机号格式',
+            validator: emailValidator,
+            message: '请输入正确格式的邮箱',
+          },
+        ]"
+      />
+      <van-field
+        v-model="username"
+        name="用户名"
+        label="用户名"
+        placeholder="请输入用户名"
+        maxlength="20"
+        clearable
+        center
+        :rules="[
+          {
+            required: true,
+            message: '请输入用户名',
+          },
+          {
+            validator: usernameValidator,
+            message: '用户名不能包含非法字符,长度在1~20之间',
           },
         ]"
       />
@@ -81,16 +100,25 @@
 
 <script>
 const TopTool = () => import("@/components/auth/TopTool");
-import { phoneValidator, codeValidator, passwordValidator } from "@/validators";
+import {
+  emailValidator,
+  usernameValidator,
+  passwordValidator,
+  codeValidator,
+} from "@/validators";
 export default {
-  name: "Register",
+  name: "EmailRegister",
+  components: {
+    TopTool,
+  },
   data() {
     return {
-      way: "phone", // 注册方式
-      phone: "",
+      title: "邮箱注册",
+      way: "email",
+      username: "",
+      email: "",
       code: "",
       password: "",
-      title: "手机号注册",
       actionList: [
         {
           name: "手机登录",
@@ -101,8 +129,8 @@ export default {
           to: "/login/email",
         },
         {
-          name: "邮箱注册",
-          to: "/register/email",
+          name: "手机注册",
+          to: "/register/phone",
         },
         {
           name: "帮助",
@@ -111,30 +139,30 @@ export default {
       ],
     };
   },
-  components: {
-    TopTool,
-  },
   methods: {
-    // 注册
-    register() {},
-    // 校验
-    phoneValidator(value) {
-      return phoneValidator(value);
+    // 注册用户
+    register(values) {
+      this.$toast.success('模拟注册');
+    },
+    emailValidator(value) {
+      return emailValidator(value);
+    },
+    usernameValidator(value) {
+      return usernameValidator(value);
+    },
+    passwordValidator(value) {
+      return passwordValidator(value);
     },
     codeValidator(value) {
       return codeValidator(value);
     },
-    // 校验密码
-    passwordValidator(value) {
-      return passwordValidator(value);
-    },
     // 发送验证码
     sendCode() {
-      if (this.phone != "" && phoneValidator(this.phone)) {
+      if (this.email != "" && emailValidator(this.email)) {
         // TODO: 倒计时60s
         this.$toast.success("模拟发送成功");
       } else {
-        this.$toast.fail("请检查手机号格式是否正确");
+        this.$toast.fail("请检查邮箱格式是否正确");
       }
     },
   },
