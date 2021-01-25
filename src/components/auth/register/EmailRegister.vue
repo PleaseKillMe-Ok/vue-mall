@@ -4,7 +4,7 @@
     <van-form @submit="register">
       <van-field
         v-model="email"
-        name="邮箱"
+        name="email"
         label="邮箱号"
         placeholder="请输入邮箱"
         clearable
@@ -22,7 +22,7 @@
       />
       <van-field
         v-model="username"
-        name="用户名"
+        name="username"
         label="用户名"
         placeholder="请输入用户名"
         maxlength="20"
@@ -41,7 +41,7 @@
       />
       <van-field
         v-model="password"
-        name="密码"
+        name="password"
         label="密码"
         type="password"
         maxlength="20"
@@ -61,7 +61,7 @@
       />
       <van-field
         v-model="code"
-        name="验证码"
+        name="code"
         label="验证码"
         placeholder="验证码"
         clearable
@@ -100,6 +100,8 @@
 
 <script>
 const TopTool = () => import("@/components/auth/TopTool");
+import { sendRegister } from "@/api/code";
+import { register } from "@/api/user";
 import {
   emailValidator,
   usernameValidator,
@@ -142,7 +144,16 @@ export default {
   methods: {
     // 注册用户
     register(values) {
-      this.$toast.success('模拟注册');
+      values["way"] = this.way;
+      register(values)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.status === "success") this.$toast.success("注册成功");
+          else if (res.data.detail) this.$toast.fail(res.data.detail);
+        })
+        .catch((err) => {
+          this.$toast.fail("服务器开了会小差~");
+        });
     },
     emailValidator(value) {
       return emailValidator(value);
@@ -160,7 +171,18 @@ export default {
     sendCode() {
       if (this.email != "" && emailValidator(this.email)) {
         // TODO: 倒计时60s
-        this.$toast.success("模拟发送成功");
+        let data = {
+          email: this.email,
+          way: this.way,
+        };
+        sendRegister(data)
+          .then((res) => {
+            let data = res.data;
+            this.$toast.fail(data.msg);
+          })
+          .catch((err) => {
+            this.$toast.fail("服务器开开了会小差~");
+          });
       } else {
         this.$toast.fail("请检查邮箱格式是否正确");
       }

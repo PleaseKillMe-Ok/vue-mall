@@ -125,6 +125,7 @@
 
 <script>
 const TopTool = () => import("@/components/auth/TopTool");
+import { sendRegister } from "@/api/code";
 import {
   emailValidator,
   passwordValidator,
@@ -179,7 +180,6 @@ export default {
     };
   },
   methods: {
-    login(values) {},
     // 校验邮箱
     emailValidator(value) {
       return emailValidator(value);

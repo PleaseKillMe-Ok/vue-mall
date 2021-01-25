@@ -1,8 +1,8 @@
-import axios from './axios'
+import axios from '@/axios'
 
 /**
  * 发送验证码
  */
-export function register() {
-    return axios.get('', {})
+export function sendRegister(data) {
+    return axios.post('/universal/chsc/apis/verification-code/register/', data)
 }
