@@ -55,6 +55,14 @@ const EmailLogin = () =>
 const PhoneLogin = () =>
     import ('@/components/auth/login/PhoneLogin')
 
+// 邮箱注册组件
+const EmailRegister = () =>
+    import ('@/components/auth/register/EmailRegister')
+
+// 手机注册组件
+const PhoneRegister = () =>
+    import ('@/components/auth/register/PhoneRegister')
+
 Vue.use(Router)
 
 export default new Router({
@@ -123,9 +131,10 @@ export default new Router({
             path: '/register',
             name: 'Register',
             component: Register,
-            meta: {
-                title: '注册'
-            }
+            children: [
+                { path: 'email', component: EmailRegister, meta: { title: '邮箱注册' } },
+                { path: 'phone', component: PhoneRegister, meta: { title: '手机号注册' } }
+            ]
         },
     ]
 })

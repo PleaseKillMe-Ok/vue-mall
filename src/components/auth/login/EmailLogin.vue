@@ -160,6 +160,20 @@ export default {
           to: "/help",
         },
       ],
+      otherWayList: [
+        {
+          way: "QQ登录",
+          to: "/login/qq",
+        },
+        {
+          way: "微博登录",
+          to: "/login/wb",
+        },
+        {
+          way: "微信登录",
+          to: "/login/wx",
+        },
+      ],
     };
   },
   methods: {
