@@ -125,19 +125,21 @@
 
 <script>
 const TopTool = () => import("@/components/auth/TopTool");
-import { universalValidator } from "@/utils";
+import {
+  emailValidator,
+  passwordValidator,
+  usernameValidator,
+} from "@/validators";
+
 export default {
   name: "EmailLogin",
   components: { TopTool },
   data() {
     return {
-      title: "手机注册",
+      title: "邮箱/用户名登录",
       isEmail: true, // 默认为邮箱登录
       validateFirst: true, // 第一次验证失效就结束验证
       email: "",
-      emailRegex: /^([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+.[a-zA-Z]{2,3}$/,
-      passwordRegex: /^\w{8,20}$/,
-      usernameRegex: /^\w{1,20}$/,
       way: "email",
       password: "",
       username: "",
@@ -160,21 +162,35 @@ export default {
           to: "/help",
         },
       ],
+      otherWayList: [
+        {
+          way: "QQ登录",
+          to: "/login/qq",
+        },
+        {
+          way: "微博登录",
+          to: "/login/wb",
+        },
+        {
+          way: "微信登录",
+          to: "/login/wx",
+        },
+      ],
     };
   },
   methods: {
     login(values) {},
     // 校验邮箱
     emailValidator(value) {
-      return universalValidator(this.emailRegex, value);
+      return emailValidator(value);
     },
     // 校验密码
     passwordValidator(value) {
-      return universalValidator(this.passwordRegex, value);
+      return passwordValidator(value);
     },
     // 校验用户名
     usernameValidator(value) {
-      return universalValidator(this.usernameRegex, value);
+      return usernameValidator(value);
     },
     login(values) {
       console.log(values);
