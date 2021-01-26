@@ -1,4 +1,5 @@
 <template>
+  <!-- 顶部工具栏 -->
   <div id="TopTool">
     <van-nav-bar
       :title="title"
@@ -20,7 +21,16 @@
 const ActionSheet = () => import("@/components/common/ActionSheet");
 export default {
   name: "TopTool",
-  props: ["title", "actionList"],
+  props: {
+    title: {
+      type: String,
+      default: "用户操作",
+    },
+    actionList: {
+      type: Array,
+      default: [],
+    },
+  },
   components: { ActionSheet },
   data() {
     return {

@@ -1,5 +1,6 @@
 <template>
   <div id="PhoneLogin">
+    <ChoiceWay :show="showChoice" @hideChoiceWay="hideChoiceWay"></ChoiceWay>
     <TopTool :title="title" :actionList="actionList"></TopTool>
     <div class="card">
       <van-image
@@ -68,7 +69,7 @@
           <van-col span="12" @click="toForgetPassword">忘记密码 </van-col>
           <van-col span="12" @click="displayOtherWay">其他登录 </van-col>
         </van-row>
-        <van-row class="otherWay" v-if="show">
+        <van-row class="otherWay" v-if="showOther">
           <van-col
             span="8"
             v-for="(item, index) in otherWayList"
@@ -85,11 +86,12 @@
 
 <script>
 const TopTool = () => import("@/components/auth/TopTool");
+const ChoiceWay = () => import("@/components/auth/password/ChoiceWay");
 import { phoneValidator, codeValidator } from "@/validators";
 import { sendRegister } from "@/api/code";
 export default {
   name: "PhoneLogin",
-  components: { TopTool },
+  components: { TopTool, ChoiceWay },
   data() {
     return {
       title: "手机登录",
@@ -97,8 +99,8 @@ export default {
       code: "",
       way: "",
       password: "",
-      show: false,
-      showSheet: false,
+      showOther: false, // 显示其他登录方式
+      showChoice: false, // 显示忘记密码弹出框
       otherWayList: [
         {
           way: "QQ登录",
@@ -141,11 +143,12 @@ export default {
     },
     // 进入忘记密码
     toForgetPassword() {
-      this.$router.push("/forget-password");
+      // this.$router.push("/forget-password");
+      this.showChoice = true;
     },
     // 显示其他登录方式
     displayOtherWay() {
-      this.show = !this.show;
+      this.showOther = !this.showOther;
     },
     // 进入其他方式
     toOtherWay(index) {
@@ -178,6 +181,10 @@ export default {
       } else {
         this.$toast.fail("请检查手机号格式是否正确");
       }
+    },
+    // 隐藏找回密码弹框
+    hideChoiceWay() {
+      this.showChoice = false;
     },
   },
 };

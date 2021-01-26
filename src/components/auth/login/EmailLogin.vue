@@ -47,7 +47,7 @@
         </div>
         <div v-else>
           <van-field
-            v-model="email"
+            v-model="username"
             name="用户名"
             label="用户名"
             placeholder="请输入用户名"

@@ -147,7 +147,6 @@ export default {
       values["way"] = this.way;
       register(values)
         .then((res) => {
-          console.log(res.data);
           if (res.data.status === "success") this.$toast.success("注册成功");
           else if (res.data.detail) this.$toast.fail(res.data.detail);
         })
