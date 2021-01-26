@@ -63,6 +63,10 @@ const EmailRegister = () =>
 const PhoneRegister = () =>
     import ('@/components/auth/register/PhoneRegister')
 
+// 忘记密码组件
+const ForgetPassword = () =>
+    import ('@/components/auth/password/ForgetPassword')
+
 Vue.use(Router)
 
 export default new Router({
@@ -136,5 +140,11 @@ export default new Router({
                 { path: 'phone', component: PhoneRegister, meta: { title: '手机号注册' } }
             ]
         },
+        {
+            // 找回密码
+            path: '/forget-password',
+            name: 'Forget',
+            component: ForgetPassword,
+        }
     ]
 })
