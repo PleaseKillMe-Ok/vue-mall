@@ -10,15 +10,14 @@
     </div>
     <!-- 当到达某一步时,前一步骤成功时进入-->
     <div v-if="active === 0">
-      <FindPasswordFirst></FindPasswordFirst>
+      <FindPasswordFirst @stepSuccess="stepSuccess"></FindPasswordFirst>
     </div>
     <div v-else-if="active === 1 && stepList[active - 1]">
-      <FindPasswordSecond></FindPasswordSecond>
+      <FindPasswordSecond @stepSuccess="stepSuccess"></FindPasswordSecond>
     </div>
     <div v-else-if="active === 2 && stepList[active - 1]">
       <FindPasswordThird></FindPasswordThird>
     </div>
-    <button @click="next">下一步</button>
   </div>
 </template>
 
@@ -45,30 +44,36 @@ export default {
       title: "找回密码",
       active: 0,
       stepLen: 3,
+      allowWay: ["phone", "email", "protection"],
       stepList: [
         {
-          title: "第一步",
+          title: "验证用户",
         },
         {
-          title: "第二步",
+          title: "重置密码",
         },
         {
-          title: "第三步",
+          title: "成功",
         },
       ],
     };
   },
   created() {
+    console.log(this.$route.query.way);
+    this.redirect404();
     this.stepStatus = [false, false, false]; // 初始化步骤状态
   },
   methods: {
-    next() {
-      // TODO:发送请求,请求成功设定this.stepStatus[this.active] = true,否则提示错误
-
-      this.stepStatus[this.active] = true;
-      if (this.stepStatus[this.active]) {
-        this.active = (this.active + 1) % this.stepLen;
+    // 参数不正确,跳转404界面
+    redirect404() {
+      if (!this.allowWay.includes(this.$route.query.way)) {
+        this.$router.push("/404");
       }
+    },
+    // 每一步成功后回调的函数
+    stepSuccess(active) {
+      this.stepStatus[active] = true;
+      this.active++;
     },
   },
 };
@@ -78,8 +83,13 @@ export default {
 .step {
   text-align: left !important;
 }
-
+/* 步骤条字体 */
 .step-title {
   font-size: 0.9rem;
+}
+
+/* 步骤条样式 */
+.steps-style {
+  margin: 20px;
 }
 </style>>
