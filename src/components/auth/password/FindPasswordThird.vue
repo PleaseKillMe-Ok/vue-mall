@@ -1,5 +1,7 @@
 <template>
-  <div id="FindPasswordThird">第三步</div>
+  <div id="FindPasswordThird">
+    <h2 class="success">密码修改成功</h2>
+  </div>
 </template>
 
 <script>
@@ -8,5 +10,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.success {
+  color: green;
+}
 </style>
