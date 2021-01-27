@@ -1,7 +1,7 @@
 <template>
   <!-- 个人主页 -->
 
-  <div id="PersonalHome">
+  <div id="UserHome">
     <FunctionSheet
       :show="show"
       :gridList="gridList"
@@ -49,7 +49,7 @@
 <script>
 const FunctionSheet = () => import("@/components/common/FunctionSheet");
 export default {
-  name: "PersonalHome",
+  name: "UserHome",
   data() {
     return {
       show: false,
@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     onClickLeft() {
-      this.$router.push("/individual");
+      this.$router.push("/user");
     },
     onClickRight() {
       this.show = true;

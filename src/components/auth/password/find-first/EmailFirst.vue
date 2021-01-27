@@ -87,8 +87,16 @@ export default {
     },
     // 进入下一步
     next() {
+      let that = this
       // TODO:发送请求,请求成功回调emit,否则提示错误
-      this.$emit("stepSuccess", 0); // 第一步执行成功
+      this.$toast.loading({
+        message: "拼命加载中...",
+        forbidClick: true,
+        duration: 1000,
+        onClose: function () {
+          that.$emit("stepSuccess", 0); // 第一步执行成功
+        },
+      });
     },
   },
 };

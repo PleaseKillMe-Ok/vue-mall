@@ -8,20 +8,20 @@ const Search = () =>
     import ('@/components/search/Search')
 
 // 个人空间总组件
-const IndividualSpace = () =>
-    import ('@/components/individual/IndividualSpace')
-
-// 个人信息组件
-const PersonalData = () =>
-    import ('@/components/individual/PersonalData')
+const UserSpace = () =>
+    import ('@/components/user/UserSpace')
 
 // 个人容器
 const Personal = () =>
-    import ('@/components/individual/Personal')
+    import ('@/components/user/Personal')
 
 // 个人主页组件
-const PersonalHome = () =>
-    import ('@/components/individual/PersonalHome')
+const UserHome = () =>
+    import ('@/components/user/UserHome')
+
+// 个人设置
+const UserSettings = () =>
+    import ('@/components/user/UserSettings')
 
 // 总组件
 const Index = () =>
@@ -83,7 +83,7 @@ export default new Router({
                 { path: 'home', component: Home, meta: { title: '首页' } },
                 { path: 'message', component: Message, meta: { title: '消息', loginRequire: true } },
                 { path: 'cart', component: Cart, meta: { title: '购物车', loginRequire: true } },
-                { path: 'individual', component: IndividualSpace, meta: { title: '个人中心', loginRequire: true } }
+                { path: 'individual', component: UserSpace, meta: { title: '个人中心', loginRequire: true } }
             ],
         },
         {
@@ -109,8 +109,8 @@ export default new Router({
             name: 'Personal',
             component: Personal,
             children: [
-                { path: 'data', component: PersonalData, meta: { loginRequire: true, title: '个人信息' } },
-                { path: 'home', component: PersonalHome, meta: { loginRequire: true, title: '个人主页' } }
+                { path: 'setting', name: 'Setting', component: UserSettings, meta: { loginRequire: true, title: '用户设置' } },
+                { path: 'home', name: 'Home', component: UserHome, meta: { loginRequire: true, title: '个人主页' } }
             ],
             meta: {
                 loginRequire: true,

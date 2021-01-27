@@ -1,21 +1,21 @@
 <template>
   <!-- 个人空间 -->
-  <div id="IndividualSpace">
+  <div id="UserSpace">
     <!-- 头部组件 -->
-    <IndividualHeader></IndividualHeader>
+    <UserHeader></UserHeader>
     <!-- 订单组件 -->
     <OrderLine></OrderLine>
   </div>
 </template>
 
 <script>
-const IndividualHeader = () =>
-  import("@/components/individual/IndividualHeader");
+const UserHeader = () =>
+  import("@/components/user/UserHeader");
 const OrderLine = () => import("@/components/order/OrderLine");
 
 export default {
-  name: "IndividualSpace",
-  components: { IndividualHeader, OrderLine },
+  name: "UserSpace",
+  components: { UserHeader, OrderLine },
   data() {
     return {};
   },

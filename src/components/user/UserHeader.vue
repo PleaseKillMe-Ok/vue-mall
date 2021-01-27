@@ -1,7 +1,7 @@
 <template>
-  <div id="IndividualHeader">
+  <div id="UserHeader">
     <!-- 最顶部工具栏 -->
-    <TopTool></TopTool>
+    <TopTool :previousPage="previousPage"></TopTool>
     <!-- 简要个人信息栏 -->
     <van-row @click="toPersonal">
       <van-col span="8">
@@ -25,17 +25,19 @@
 </template>
 
 <script>
-const TopTool = () => import("@/components/individual/TopTool");
-const FunctionGrid = () => import("@/components/individual/FunctionGrid");
+const TopTool = () => import("@/components/user/TopTool");
+const FunctionGrid = () => import("@/components/user/FunctionGrid");
 import { Toast } from "vant";
 export default {
-  name: "IndividualHeader",
+  name: "UserHeader",
   components: {
     TopTool,
     FunctionGrid,
   },
   data() {
-    return {};
+    return {
+      previousPage:"/"
+    };
   },
   methods: {
     toPersonal() {

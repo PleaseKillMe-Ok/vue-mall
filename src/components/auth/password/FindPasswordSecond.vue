@@ -1,23 +1,32 @@
 <template>
   <div id="FindPasswordSecond">
-    第二步
-    <van-button
-      block
-      round
-      color="linear-gradient(to right, #ff6034, #ee0a24)"
-      size="large"
-      class="next-btn"
-      @click="next"
-      >下一步</van-button
-    >
+    <div v-if="$route.query.way === 'phone'">
+      <PhoneSecond @stepSuccess="stepSuccess"></PhoneSecond>
+    </div>
+    <div v-else-if="$route.query.way === 'email'">
+      <EmailSecond @stepSuccess="stepSuccess"></EmailSecond>
+    </div>
+    <div v-else-if="$route.query.way === 'protection'">
+      <ProtectionSecond></ProtectionSecond>
+    </div>
   </div>
 </template>
 
 <script>
+const PhoneSecond = () =>
+  import("@/components/auth/password/find-second/PhoneSecond");
+const EmailSecond = () =>
+  import("@/components/auth/password/find-second/EmailSecond");
+const ProtectionSecond = () =>
+  import("@/components/auth/password/find-second/ProtectionSecond");
 export default {
   name: "FindPasswordSecond",
+  components: { PhoneSecond, EmailSecond, ProtectionSecond },
   methods: {
     next() {},
+    stepSuccess(active) {
+      this.$emit("stepSuccess", active); // 通知父组件第二步执行成功
+    },
   },
 };
 </script>
