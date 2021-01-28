@@ -37,6 +37,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background-color: #f7f8fa;
+  height: 100vh; /* 屏幕即使没有元素也会张开100% */
 }
 .card {
   margin-bottom: 24px;
