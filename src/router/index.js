@@ -67,6 +67,14 @@ const PhoneRegister = () =>
 const ForgetPassword = () =>
     import ('@/components/auth/password/ForgetPassword')
 
+// 用户地址列表组件
+const UserAddress = () =>
+    import ('@/components/user/address/UserAddress')
+
+// 增加地址组件
+const UserAddressAdd = () =>
+    import ('@/components/user/address/UserAddressAdd')
+
 Vue.use(Router)
 
 export default new Router({
@@ -83,7 +91,7 @@ export default new Router({
                 { path: 'home', component: Home, meta: { title: '首页' } },
                 { path: 'message', component: Message, meta: { title: '消息', loginRequire: true } },
                 { path: 'cart', component: Cart, meta: { title: '购物车', loginRequire: true } },
-                { path: 'individual', component: UserSpace, meta: { title: '个人中心', loginRequire: true } }
+                { path: 'individual', name: 'Individual', component: UserSpace, meta: { title: '个人中心', loginRequire: true } }
             ],
         },
         {
@@ -110,7 +118,9 @@ export default new Router({
             component: Personal,
             children: [
                 { path: 'setting', name: 'Setting', component: UserSettings, meta: { loginRequire: true, title: '用户设置' } },
-                { path: 'home', name: 'Home', component: UserHome, meta: { loginRequire: true, title: '个人主页' } }
+                { path: 'home', name: 'Home', component: UserHome, meta: { loginRequire: true, title: '个人主页' } },
+                { path: 'address', name: 'Address', component: UserAddress, meta: { loginRequire: true, title: '地址设置' } },
+                { path: 'add', name: 'AddAddress', component: UserAddressAdd, meta: { loginRequire: true, title: '增加地址' } }
             ],
             meta: {
                 loginRequire: true,

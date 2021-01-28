@@ -1,8 +1,8 @@
 <template>
   <!-- 用户设置 -->
   <div id="UserSettings">
-    <TopTool :title="账户设置" :hasRight="false"></TopTool>
-    <van-cell-group>
+    <TopTool :title="title" :hasRight="false"></TopTool>
+    <van-cell-group class="cell-group">
       <van-cell is-link>
         <template #title>
           <span class="title"
@@ -14,7 +14,7 @@
           /></span>
         </template>
       </van-cell>
-      <van-cell is-link>
+      <van-cell is-link :to="{ name: 'Address' }">
         <template #title>
           <span class="title">地址管理</span>
         </template>
@@ -63,10 +63,18 @@ const TopTool = () => import("@/components/user/TopTool");
 export default {
   name: "UserSettings",
   components: { TopTool },
+  data() {
+    return {
+      title: "账户设置",
+    };
+  },
 };
 </script>
 
 <style scoped>
+#UserSettings {
+  background-color: #f7f8fa;
+}
 .title {
   float: left;
   font-size: 0.9rem;

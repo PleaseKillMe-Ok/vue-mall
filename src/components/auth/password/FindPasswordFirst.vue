@@ -29,7 +29,6 @@ export default {
   props: {},
   methods: {
     stepSuccess(active) {
-      console.log(222)
       this.$emit("stepSuccess", active); // 第一步执行成功
     },
   },

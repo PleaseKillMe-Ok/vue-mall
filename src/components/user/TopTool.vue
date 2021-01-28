@@ -2,7 +2,7 @@
   <!-- 顶部工具栏 -->
   <div name="TopTool">
     <van-nav-bar
-      title="个人中心"
+      :title="title"
       :left-arrow="hasLeft"
       @click-right="setting"
       @click-left="goBack"
@@ -35,7 +35,11 @@ export default {
     },
     previousPage: {
       type: String,
-      default: "/individual",
+      default: "Individual",
+    },
+    againConfirm: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
@@ -44,7 +48,7 @@ export default {
       this.$router.push({ name: "Setting" });
     },
     goBack() {
-      this.$router.push(this.previousPage);
+      this.$router.push({ name: this.previousPage });
     },
   },
 };
