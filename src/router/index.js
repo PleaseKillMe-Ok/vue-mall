@@ -72,8 +72,8 @@ const UserAddress = () =>
     import ('@/components/user/address/UserAddress')
 
 // 增加地址组件
-const UserAddressAdd = () =>
-    import ('@/components/user/address/UserAddressAdd')
+const UserAddressDetail = () =>
+    import ('@/components/user/address/UserAddressDetail')
 
 Vue.use(Router)
 
@@ -120,7 +120,7 @@ export default new Router({
                 { path: 'setting', name: 'Setting', component: UserSettings, meta: { loginRequire: true, title: '用户设置' } },
                 { path: 'home', name: 'Home', component: UserHome, meta: { loginRequire: true, title: '个人主页' } },
                 { path: 'address', name: 'Address', component: UserAddress, meta: { loginRequire: true, title: '地址设置' } },
-                { path: 'add', name: 'AddAddress', component: UserAddressAdd, meta: { loginRequire: true, title: '增加地址' } }
+                { path: 'address-detail', name: 'AddressDetail', component: UserAddressDetail, meta: { loginRequire: true, title: '增加地址' } }
             ],
             meta: {
                 loginRequire: true,

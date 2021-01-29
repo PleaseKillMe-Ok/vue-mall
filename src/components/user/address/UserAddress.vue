@@ -20,10 +20,9 @@
 
 <script>
 const TopTool = () => import("@/components/user/TopTool");
-const UserAddressAdd = () => import("@/components/user/address/UserAddressAdd");
 export default {
   name: "UserAddress",
-  components: { TopTool, UserAddressAdd },
+  components: { TopTool },
   data() {
     return {
       title: "地址管理",
@@ -54,12 +53,15 @@ export default {
     };
   },
   methods: {
-    // 新增地址
+    // 地址详细信息(增加)
     onAdd() {
-      this.$router.push({name:'AddAddress'})
+      this.$router.push({ name: "AddressDetail", query: { func: "add" } });
     },
-    // 编辑
-    onEdit(item, index) {},
+    // 地址详细信息(编辑)
+    onEdit(item, index) {
+      sessionStorage.setItem("aid", item.id); // 暂存id
+      this.$router.push({ name: "AddressDetail", query: { func: "modify" } });
+    },
     // 切换默认地址
     setDefault(item, index) {
       // 发送请求,切换默认地址

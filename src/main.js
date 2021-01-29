@@ -23,7 +23,7 @@ router.beforeEach((to, from, next) => {
     if (to.meta.title) {
         document.title = to.meta.title
     }
-    if (to.meta.loginRequire && !sessionStorage.getItem('user')) {
+    if (to.meta.loginRequire && !sessionStorage.getItem('Bearer-Token')) {
         next({ path: '/login', query: { redirect: to.fullPath } }) // 未登录,跳转/login, 登入后,回跳到目标视图
     } else
         next() // 已经登录,进入视图界面
