@@ -41,8 +41,9 @@ export default {
   height: 100vh; /* 屏幕即使没有元素也会张开100% */
 }
 .card {
-  margin-bottom: 24px;
-  padding: 24px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 8px 12px #ebedf0;
