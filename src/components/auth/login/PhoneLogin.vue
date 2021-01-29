@@ -13,7 +13,7 @@
       <van-form @submit="login" class="form">
         <van-field
           v-model="phone"
-          name="手机号"
+          name="phone"
           label="手机号"
           placeholder="请输入手机号"
           maxlength="11"
@@ -32,7 +32,7 @@
         />
         <van-field
           v-model="code"
-          name="验证码"
+          name="code"
           label="验证码"
           placeholder="验证码"
           clearable
@@ -89,6 +89,7 @@ const TopTool = () => import("@/components/auth/TopTool");
 const ChoiceWay = () => import("@/components/auth/password/ChoiceWay");
 import { phoneValidator, codeValidator } from "@/validators";
 import { sendRegister } from "@/api/code";
+import { login } from "@/api/user.js";
 export default {
   name: "PhoneLogin",
   components: { TopTool, ChoiceWay },
@@ -97,10 +98,11 @@ export default {
       title: "手机登录",
       phone: "",
       code: "",
-      way: "",
+      way: "phone",
       password: "",
       showOther: false, // 显示其他登录方式
       showChoice: false, // 显示忘记密码弹出框
+      isRemember: false, // 默认不记住用户名
       otherWayList: [
         {
           way: "QQ登录",
@@ -137,9 +139,32 @@ export default {
   },
   methods: {
     login(values) {
-      console.log(values);
-      // 发送请求
-      this.$toast.success("登录成功");
+      // 请求数据体
+      let loadToast = this.$toast.loading({
+        message: "请求中...",
+        forbidClick: true,
+      });
+      let postData = {
+        login_key: values.phone,
+        is_remember: this.isRemember,
+        way: "phone",
+        code: values.code,
+      };
+      login(postData)
+        .then((res) => {
+          let data = res.data;
+          if (data.detail) {
+            this.$toast.fail(data.detail);
+          } else {
+            sessionStorage.setItem("Bearer-Token", data.token);
+            loadToast.clear(); // 关闭加载框
+            this.$router.push(this.$route.query.redirect); // 加载先前页
+          }
+        })
+        .catch((err) => {
+          loadToast.clear(); // 关闭加载框
+          this.$toast.fail("服务器开开了会小差~");
+        });
     },
     // 进入忘记密码
     toForgetPassword() {
@@ -171,9 +196,17 @@ export default {
     sendCode() {
       if (this.phone != "" && phoneValidator(this.phone)) {
         // TODO: 倒计时60s
-        sendRegister()
+        let data = {
+          phone: this.phone,
+          way: this.way,
+        };
+        sendRegister(data)
           .then((res) => {
-            this.$toast.success("模拟发送成功");
+            let data = res.data;
+            if (data.code === 7 && data.status === "error")
+              this.$toast.fail(data.msg);
+            else if (data.code === 41 && data.status === "success")
+              this.$toast.success(data.msg);
           })
           .catch((err) => {
             this.$toast.fail("服务器开开了会小差~");

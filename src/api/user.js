@@ -10,8 +10,8 @@ export function register(data) {
 /**
  * 用户登录
  */
-export function login() {
-    return axios.get('/consumer/chsc/apis/auth/login/', {})
+export function login(data) {
+    return axios.post('/consumer/chsc/apis/auth/login/', data)
 }
 
 /**
