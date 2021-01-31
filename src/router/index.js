@@ -79,6 +79,10 @@ const UserAddressDetail = () =>
 const Safe = () =>
     import ('@/components/user/UserSafe')
 
+// 改绑手机组件
+const BindPhone = () =>
+    import ('@/components/user/BindPhone')
+
 Vue.use(Router)
 
 export default new Router({
@@ -125,7 +129,8 @@ export default new Router({
                 { path: 'home', name: 'Home', component: UserHome, meta: { loginRequire: true, title: '个人主页' } },
                 { path: 'address', name: 'Address', component: UserAddress, meta: { loginRequire: true, title: '地址设置' } },
                 { path: 'address-detail', name: 'AddressDetail', component: UserAddressDetail, meta: { loginRequire: true, title: '增加地址' } },
-                { path: 'safe', name: 'Safe', component: Safe, meta: { title: '账户安全', loginRequire: true } }
+                { path: 'safe', name: 'Safe', component: Safe, meta: { title: '账户安全', loginRequire: true } },
+                { path: 'bind-phone', name: "BindPhone", component: BindPhone, meta: { loginRequire: true, title: '换榜手机' } }
             ],
             meta: {
                 loginRequire: true,

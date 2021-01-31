@@ -19,7 +19,7 @@
       </template>
     </van-cell>
     <br />
-    <van-cell is-link :to="{name:'Safe'}">
+    <van-cell is-link :to="{ name: 'Safe' }">
       <template #title>
         <span class="title">账户与安全</span>
       </template>
@@ -41,7 +41,7 @@
         <span class="title">问题反馈</span>
       </template>
     </van-cell>
-    <van-cell is-link>
+    <van-cell is-link @click="helper">
       <template #title>
         <span class="title">关于吃货商城</span>
       </template>
@@ -58,18 +58,30 @@
         <span class="title blank">退出登录</span>
       </template>
     </van-cell>
+    <!-- 帮助文档 -->
+    <van-dialog v-model="showHelper" title="帮助文档" show-cancel-button>
+      <!-- 将子组件数据传出来 -->
+      <Helper></Helper>
+    </van-dialog>
   </div>
 </template>
 
 <script>
 const TopTool = () => import("@/components/user/TopTool");
+const Helper = () => import("@/components/common/Helper");
 export default {
   name: "UserSettings",
-  components: { TopTool },
+  components: { TopTool, Helper },
   data() {
     return {
       title: "账户设置",
+      showHelper: false,
     };
+  },
+  methods: {
+    helper() {
+      this.showHelper = true;
+    },
   },
 };
 </script>
