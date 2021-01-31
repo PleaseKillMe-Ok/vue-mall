@@ -88,8 +88,4 @@ export default {
   font-size: 0.9rem;
 }
 
-/* 步骤条样式 */
-.steps-style {
-  margin: 20px;
-}
 </style>>

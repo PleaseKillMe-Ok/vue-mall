@@ -88,7 +88,7 @@
 const TopTool = () => import("@/components/auth/TopTool");
 const ChoiceWay = () => import("@/components/auth/password/ChoiceWay");
 import { phoneValidator, codeValidator } from "@/validators";
-import { sendRegister } from "@/api/code";
+import { sendLogin } from "@/api/code";
 import { login } from "@/api/user.js";
 export default {
   name: "PhoneLogin",
@@ -201,7 +201,7 @@ export default {
           phone: this.phone,
           way: this.way,
         };
-        sendRegister(data)
+        sendLogin(data)
           .then((res) => {
             let data = res.data;
             if (data.code === 7 && data.status === "error")

@@ -106,7 +106,7 @@ export default {
 /* 居中布局 */
 .next-btn {
   margin-top: 30px;
-  width: 50%;
+  width: 60%;
   display: inline-block;
 }
 </style>
