@@ -75,6 +75,10 @@ const UserAddress = () =>
 const UserAddressDetail = () =>
     import ('@/components/user/address/UserAddressDetail')
 
+// 账户安全组件
+const Safe = () =>
+    import ('@/components/user/UserSafe')
+
 Vue.use(Router)
 
 export default new Router({
@@ -91,7 +95,7 @@ export default new Router({
                 { path: 'home', component: Home, meta: { title: '首页' } },
                 { path: 'message', component: Message, meta: { title: '消息', loginRequire: true } },
                 { path: 'cart', component: Cart, meta: { title: '购物车', loginRequire: true } },
-                { path: 'individual', name: 'Individual', component: UserSpace, meta: { title: '个人中心', loginRequire: true } }
+                { path: 'individual', name: 'Individual', component: UserSpace, meta: { title: '个人中心', loginRequire: true } },
             ],
         },
         {
@@ -120,7 +124,8 @@ export default new Router({
                 { path: 'setting', name: 'Setting', component: UserSettings, meta: { loginRequire: true, title: '用户设置' } },
                 { path: 'home', name: 'Home', component: UserHome, meta: { loginRequire: true, title: '个人主页' } },
                 { path: 'address', name: 'Address', component: UserAddress, meta: { loginRequire: true, title: '地址设置' } },
-                { path: 'address-detail', name: 'AddressDetail', component: UserAddressDetail, meta: { loginRequire: true, title: '增加地址' } }
+                { path: 'address-detail', name: 'AddressDetail', component: UserAddressDetail, meta: { loginRequire: true, title: '增加地址' } },
+                { path: 'safe', name: 'Safe', component: Safe, meta: { title: '账户安全', loginRequire: true } }
             ],
             meta: {
                 loginRequire: true,
