@@ -27,8 +27,8 @@
         :rules="[{ required: true }]"
       />
       <van-field
-        v-model="region"
-        name="region"
+        v-model="province"
+        name="province"
         label="地区"
         readonly
         placeholder="所在地区"
@@ -37,19 +37,18 @@
         @click="showRegion = true"
       />
       <van-popup v-model="showRegion" round position="bottom">
-        <van-cascader
-          v-model="cascaderValue"
-          title="请选择所在地区"
-          :options="regionOptions"
-          @close="showRegion = false"
-          @finish="onFinish"
+        <van-area
+          :title="areaTitle"
+          :area-list="provinceList"
+          @confirm="choiceProvince"
+          @cancel="cancelChoice"
         />
       </van-popup>
       <van-field
-        v-model="detailAddress"
+        v-model="region"
         rows="2"
         type="textarea"
-        name="detailAddress"
+        name="region"
         label="详细地址"
         placeholder="如道路,门排号,小区,楼栋号,单元室等"
         maxlength="50"
@@ -78,6 +77,16 @@
         </template>
       </van-field>
 
+      <div style="margin: 16px" v-if="$route.query.func === 'modify'">
+        <van-button
+          round
+          block
+          type="danger"
+          native-type="button"
+          @click="onDelete"
+          ><span class="btn">删除</span></van-button
+        >
+      </div>
       <div style="margin: 16px">
         <van-button round block type="info" native-type="submit"
           ><span class="btn">保存</span></van-button
@@ -89,6 +98,8 @@
 
 <script>
 const TopTool = () => import("@/components/user/TopTool");
+import { deleteAddress, getAddressDetail, modifyAddress } from "@/api/address";
+import AreaList from "@/utils/area"; // 导入地址json
 export default {
   name: "UserAddressDetail",
   components: { TopTool },
@@ -100,20 +111,20 @@ export default {
   },
   data() {
     return {
+      areaTitle: "选中省市区",
       hasRight: false,
       showRegion: false,
       title: "添加地址",
       previousPage: "Address",
-      recipients: "",
-      phone: "",
-      address: "",
-      cascaderValue: "",
-      region: "",
-      detailAddress: "",
+      recipients: "", // 收货人
+      phone: "", // 手机号
+      region: "", // 详细街道,地区
+      province: "", // 省市区
       addressTags: "", // 地址标签
       defaultAddress: false, // 是否是默认地址
       againConfirm: true, // 返回是否提示
       hasValidatedData: [],
+      provinceList: AreaList, // 省市区列表
       regionOptions: [
         {
           text: "浙江省",
@@ -131,15 +142,29 @@ export default {
   created() {
     let func = this.$route.query.func;
     if (func === "modify") {
-      let aid = sessionStorage.getItem("aid");
-      this.getAddressDetail(aid); // 请求API获取详细地址信息
+      this.aid = sessionStorage.getItem("aid");
+      this.getAddressDetail(this.aid); // 请求API获取详细地址信息
     }
   },
   methods: {
-    // 保存
+    // 修改地址
     onSave(values) {
       // 发送请求API
-      this.$router.push({ name: "Address" });
+      let load = this.$toast.loading({
+        message: "加载中...",
+        forbidClick: true,
+      });
+      modifyAddress(this.aid, values)
+        .then((res) => {
+          let data = res.data;
+          if (data.code === 36) {
+            load.clear();
+            this.$router.push({ name: "Address" });
+          }
+        })
+        .catch((err) => {
+          this.$toast.fail("服务器开了会小差~");
+        });
     },
     // 删除
     onDelete() {
@@ -149,24 +174,64 @@ export default {
           message: "您确认删除该地址吗?",
         })
         .then(() => {
-          console.log("删除成功!");
+          this.deleteAddress();
         })
         .catch(() => {});
     },
     // 获取详情地址
     getAddressDetail(aid) {
       // 请求API获取地址
-      this.phone = "13787833290";
-      this.recipients = "司云中";
-      this.region = "江苏/扬州/仪征";
-      this.detailAddress = "真州镇纤城小区9栋106";
-      this.addressTags = "1";
-      this.defaultAddress = true;
+      let load = this.$toast.loading({
+        message: "加载中...",
+        forbidClick: true,
+      });
+      getAddressDetail(aid)
+        .then((res) => {
+          let data = res.data;
+          this.phone = data.phone;
+          this.recipients = data.recipients;
+          this.region = data.region;
+          this.province = data.province;
+          this.addressTags = data.address_tags;
+          this.defaultAddress = data.default_address;
+          load.clear();
+        })
+        .catch((err) => {
+          this.$toast.fail("服务器开了会小差~");
+        });
     },
-    // 全部选项选择完毕后，会触发 finish 事件
-    onFinish({ selectedOptions }) {
+    // 删除该地址记录项
+    deleteAddress() {
+      let load = this.$toast.loading({
+        message: "加载中...",
+        forbidClick: true,
+      });
+
+      deleteAddress(parseInt(this.aid))
+        .then((res) => {
+          let data = res.data;
+          if (data.code === 55) {
+            load.clear();
+            this.$toast.success("删除地址成功");
+            this.$router.push({ name: "Address" });
+          }
+        })
+        .catch((err) => {
+          this.$toast.fail("服务器开了会小差~");
+        });
+    },
+
+    // 选中地址
+    choiceProvince(areaList) {
+      let tempList = [];
+      areaList.forEach((element) => {
+        tempList.push(element.name);
+      });
+      this.province = tempList.join("/");
       this.showRegion = false;
-      this.region = selectedOptions.map((option) => option.text).join("/");
+    },
+    cancelChoice() {
+      this.showRegion = false;
     },
   },
 };

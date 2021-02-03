@@ -20,7 +20,7 @@
 
 <script>
 const TopTool = () => import("@/components/user/TopTool");
-import { getAddress, setDefaultAddress } from "@/api/user";
+import { getAddress, setDefaultAddress } from "@/api/address";
 export default {
   name: "UserAddress",
   components: { TopTool },

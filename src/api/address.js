@@ -1,36 +1,36 @@
 import axios from '@/axios'
 
 /**
- * 添加收货地址
+ * 获取收货地址
  */
-export function addAddress() {
-    return axios.post('/api/consumer/chsc/apis/address/', {})
+export function getAddress() {
+    return axios.get('/consumer/chsc/apis/address/')
 }
 
 /**
- * 查询收货地址
+ * 设置默认地址
  */
-export function displayAddress() {
-    return axios.get('/api/consumer/address-chsc-api/', {})
+export function setDefaultAddress(pk) {
+    return axios.put('/consumer/chsc/apis/address/' + pk + '/default/')
 }
 
 /**
- * 修改默认收货地址
+ * 删除收货地址
  */
-export function modifyDefaultAddress() {
-    return axios.put('/api/consumer/chsc/apis/address/update_default_address/', {})
+export function deleteAddress(pk) {
+    return axios.delete('/consumer/chsc/apis/address/' + pk + '/')
 }
 
 /**
- * 修改地址信息
+ * 获取收货地址详情
  */
-export function modifyAddressDetail() {
-    return axios.put('/api/consumer/chsc/apis/address/', {})
+export function getAddressDetail(pk) {
+    return axios.get('/consumer/chsc/apis/address/' + pk + '/')
 }
 
 /**
- * 删除地址信息
+ * 修改收货地址信息
  */
-export function deleteAddress() {
-    return axios.delete('/api/consumer/address-chsc-api/', {})
+export function modifyAddress(pk, data) {
+    return axios.put('/consumer/chsc/apis/address/' + pk + '/', data)
 }
