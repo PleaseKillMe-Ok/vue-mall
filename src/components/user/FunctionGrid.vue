@@ -6,7 +6,7 @@
         v-for="(item, index) in functionList"
         :key="index"
         :border="displayIcon"
-        :to="item.url"
+        @click="toItemPage(item.to)"
       >
         <template #default>
           <div class="data">
@@ -28,26 +28,31 @@ export default {
       functionList: [
         {
           name: "足迹",
-          url: "/",
+          to: "/",
           value: 2,
         },
         {
           name: "收藏夹",
-          url: "",
+          to: "",
           value: 5,
         },
         {
           name: " 红包卡卷",
-          url: "",
+          to: "",
           value: 4,
         },
         {
           name: "收货地址",
-          url: "",
+          to: "Address",
           value: 0,
         },
       ],
     };
+  },
+  methods: {
+    toItemPage(routeName) {
+      this.$router.push({ name: routeName, query: { previous: "Individual" } });
+    },
   },
 };
 </script>
