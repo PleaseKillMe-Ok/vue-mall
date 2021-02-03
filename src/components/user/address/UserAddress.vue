@@ -20,6 +20,7 @@
 
 <script>
 const TopTool = () => import("@/components/user/TopTool");
+import { getAddress, setDefaultAddress } from "@/api/user";
 export default {
   name: "UserAddress",
   components: { TopTool },
@@ -28,29 +29,17 @@ export default {
       title: "地址管理",
       hasRight: false,
       previousPage: "Setting", // 上一页路由名
-      chosenAddressId: "1", // 选中的列表id
-      addressList: [
-        {
-          id: "1",
-          name: "司云中",
-          tel: "13787833290",
-          address: "江苏省扬州市纤城小区9栋106",
-          isDefault: true,
-        },
-        {
-          id: "2",
-          name: "李四",
-          tel: "1310000000",
-          address: "江苏省扬州市纤城小区9栋106",
-        },
-        {
-          id: "3",
-          name: "李四",
-          tel: "1310000000",
-          address: "江苏省扬州市纤城小区9栋106",
-        },
-      ],
+      chosenAddressId: -1, // 选中的列表id
+      addressList: [],
     };
+  },
+  created() {
+    if (this.$route.query.previous) {
+      this.previousPage = this.$route.query.previous;
+    }
+
+    // 获取收货地址
+    this.getAddress();
   },
   methods: {
     // 地址详细信息(增加)
@@ -65,10 +54,51 @@ export default {
     // 切换默认地址
     setDefault(item, index) {
       // 发送请求,切换默认地址
-      this.addressList.forEach((element) => {
-        element.isDefault = false;
+      let load = this.$toast.loading({
+        message: "加载中...",
+        forbidClic: true,
       });
-      item.isDefault = true;
+      setDefaultAddress(item.id)
+        .then((res) => {
+          if (res.status === 204) {
+            load.clear();
+            this.$toast.success("默认地址更换成功");
+            this.addressList.forEach((element) => {
+              element.isDefault = false;
+            });
+            item.isDefault = true;
+          }
+        })
+        .catch((err) => {
+          this.$toast.fail("服务器开了会小差~");
+        });
+    },
+    // 获取收货地址
+    getAddress() {
+      getAddress()
+        .then((res) => {
+          let data = res.data;
+          data.forEach((element) => {
+            this.addressList.push({
+              id: element.pk,
+              name: element.recipients,
+              tel: element.phone,
+              address: this.parseAddress(element.province, element.region),
+              isDefault: element.default_address,
+            });
+            // 设置默认选中的id
+            if (data.length > 0) {
+              this.chosenAddressId = this.addressList[0].id;
+            }
+          });
+        })
+        .catch((err) => {
+          this.$toast.fail("服务器开了会小差~");
+        });
+    },
+    // 解析地址字段
+    parseAddress(province, region) {
+      return province, region;
     },
   },
 };
