@@ -106,17 +106,3 @@ export function displayFoot() {
 export function addFavorites() {
     return axios.post('/consumer/chsc/apis/favorites/', {})
 }
-
-/**
- * 获取收货地址
- */
-export function getAddress() {
-    return axios.get('/consumer/chsc/apis/address/')
-}
-
-/**
- * 设置默认地址
- */
-export function setDefaultAddress(pk) {
-    return axios.put('/consumer/chsc/apis/address/' + pk + '/default/')
-}
