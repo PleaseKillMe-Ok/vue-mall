@@ -11,7 +11,7 @@
           direction="horizontal"
           :border="false"
         >
-          <van-grid-item icon="star-o" text="收藏" @click="addFacorites" />
+          <van-grid-item icon="star-o" text="收藏" />
           <van-grid-item
             icon="delete-o"
             text="删除"
@@ -45,6 +45,7 @@
         <span v-else>{{ day }}</span>
       </van-col>
     </van-row>
+
     <van-row type="flex" justify="center">
       <van-col span="3" v-for="(day, index) in date" :key="index">
         <span class="figure-2">{{ day }}</span>
@@ -57,7 +58,15 @@
     </div>
     <div v-else>
       <div v-for="(footList, key, i) in footDict" :key="i">
-        <p class="dateStr">{{ key }}</p>
+        <span class="dateStr"
+          ><input
+            v-if="openDeleteRadio"
+            type="checkbox"
+            v-model="selectAllStatusDict[key]"
+            @click="selectAll(key)"
+          />
+          {{ key }}
+        </span>
         <van-row justify="center" gutter="2">
           <van-col
             v-for="(item, j) in footList"
@@ -70,6 +79,14 @@
               height="135"
               fit="cover"
               src="https://img01.yzcdn.cn/vant/cat.jpeg"
+            />
+            <!-- 复选 -->
+            <input
+              v-if="openDeleteRadio"
+              type="checkbox"
+              :value="item"
+              v-model="selectDict[key]"
+              @click="select(key)"
             />
             <van-cell center>
               <template #title>
@@ -94,6 +111,11 @@
 
 <script>
 import { displayFoot, deleteSingleFoot } from "@/api/foot";
+import {
+  footDictDemo,
+  selectDictDemo,
+  selectAllStatusDictDemo,
+} from "@/demo/footdemo.js";
 export default {
   name: "UserFoot",
   data() {
@@ -104,69 +126,11 @@ export default {
       hasLeft: true,
       weekDay: ["日", "一", "二", "三", "四", "五", "六"],
       date: [],
-      footDict: {
-        "2020-03-25": [
-          {
-            id: 1,
-            commodityName: "避孕套",
-            price: 200,
-            discounts: 0.95,
-            image:
-              "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",
-            status: true,
-          },
-          {
-            id: 1,
-            commodityName: "避孕套",
-            price: 200,
-            discounts: 0.95,
-            image:
-              "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",
-            status: true,
-          },
-          {
-            id: 1,
-            commodityName: "避孕套",
-            price: 200,
-            discounts: 0.95,
-            image:
-              "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",
-            status: true,
-          },
-          {
-            id: 1,
-            commodityName: "避孕套",
-            price: 200,
-            discounts: 0.95,
-            image:
-              "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",
-            status: true,
-          },
-        ],
-        "2020-03-24": [
-          {
-            id: 1,
-            commodityName: "避孕套",
-            price: 200,
-            discounts: 0.95,
-            image:
-              "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",
-            status: true,
-          },
-        ],
-        "2020-03-23": [
-          {
-            id: 1,
-            commodityName: "避孕套",
-            price: 200,
-            discounts: 0.95,
-            image:
-              "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",
-            status: true,
-          },
-        ],
-      },
+      footDict: {},
       curDay: 0,
+      openDeleteRadio: false, // 是否开启删除
+      selectDict: {}, // 存储删除足迹的字典,key:'2020-01-01', value:array[1,5,6] ,数组中存放商品id
+      selectAllStatusDict: {}, // 存储全选状态
     };
   },
   created() {
@@ -177,10 +141,16 @@ export default {
     this.setCurDate();
     // 获取足迹数据
     this.getFootData();
+
+    this.footDict = footDictDemo; // 测试数据集
+    this.selectDict = selectDictDemo; // 测试数据集
+    this.selectAllStatusDict = selectAllStatusDictDemo;
   },
   methods: {
     // 开启删除功能
-    openDelete() {},
+    openDelete() {
+      this.openDeleteRadio = !this.openDeleteRadio;
+    },
     // 返回上一页
     goBack() {
       this.$router.push({ name: this.previousPage });
@@ -204,7 +174,9 @@ export default {
             let daystr = this.parseTimestamp(element.timestamp); // 时间戳 --> 日期字符串
             if (!daystr in this.footDict) {
               // 如果字典中尚未存在当前日期下的记录,则创建一数组存储记录信息
-              this.footDict[daystr] = [];
+              this.footDict[daystr] = []; // 数据集
+              this.selectDict[daystr] = []; // 初始全未选
+              this.selectAllStatusDict[daystr] = false; // 初始为选中
             }
             // 向数组中添加信息
             this.footDict[daystr].push({
@@ -276,6 +248,31 @@ export default {
           this.$toast.fail("服务器开了会儿小差~");
         });
     },
+
+    // 全选
+    selectAll(day) {
+      console.log(day);
+      if (this.selectAllStatusDict[day]) {
+        this.selectAllStatusDict[day] = false;
+        this.selectDict[day] = []; // 清空
+      } else {
+        this.selectAllStatusDict[day] = true;
+        this.selectDict[day] = []; // 先清空
+        this.selectAllStatusDict[day] = true;
+        this.footDict[day].forEach((element) => {
+          // 再添加
+          this.selectDict[day].push(element);
+        });
+      }
+    },
+
+    // 选择某个足迹,回调,此方法在input关联的v-model数据变动之前调用
+    select(day) {
+      console.log(this.selectDict[day])
+      if (this.selectDict[day].length + 1 === this.footDict[day].length)
+        this.selectAllStatusDict[day] = true;
+      else this.selectAllStatusDict[day] = false;
+    },
   },
 };
 </script>
@@ -305,6 +302,8 @@ export default {
 
 /* 记录足迹的时间 */
 .dateStr {
+  text-align: left;
+  margin: 15px;
   font-size: 16px;
   display: block;
   color: grey;
