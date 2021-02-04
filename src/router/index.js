@@ -83,6 +83,10 @@ const Safe = () =>
 const BindPhone = () =>
     import ('@/components/user/BindPhone')
 
+// 足迹组件
+const UserFoot = () =>
+    import ('@/components/user/UserFoot')
+
 Vue.use(Router)
 
 export default new Router({
@@ -126,11 +130,12 @@ export default new Router({
             component: Personal,
             children: [
                 { path: 'setting', name: 'Setting', component: UserSettings, meta: { loginRequire: true, title: '用户设置' } },
-                { path: 'home', name: 'Home', component: UserHome, meta: { loginRequire: true, title: '个人主页' } },
+                { path: 'home', name: 'Home', component: UserHome, meta: { loginRequire: true, title: '我的主页' } },
                 { path: 'address', name: 'Address', component: UserAddress, meta: { loginRequire: true, title: '地址设置' } },
                 { path: 'address-detail', name: 'AddressDetail', component: UserAddressDetail, meta: { loginRequire: true, title: '增加地址' } },
                 { path: 'safe', name: 'Safe', component: Safe, meta: { title: '账户安全', loginRequire: true } },
-                { path: 'bind-phone', name: "BindPhone", component: BindPhone, meta: { loginRequire: true, title: '换榜手机' } }
+                { path: 'bind-phone', name: "BindPhone", component: BindPhone, meta: { loginRequire: true, title: '换榜手机' } },
+                { path: 'foot', name: 'Foot', component: UserFoot, meta: { loginRequire: true, title: '我的足迹' } }
             ],
             meta: {
                 loginRequire: true,

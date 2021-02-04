@@ -28,7 +28,7 @@ export default {
       functionList: [
         {
           name: "足迹",
-          to: "/",
+          to: "Foot",
           value: 2,
         },
         {
