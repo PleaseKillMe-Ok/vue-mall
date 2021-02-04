@@ -74,7 +74,7 @@
                 color="linear-gradient(to right, #ff6034, #ee0a24)"
                 @click="translateWay"
               >
-                切换手机
+                切换邮箱
               </van-button>
             </template>
           </van-field>

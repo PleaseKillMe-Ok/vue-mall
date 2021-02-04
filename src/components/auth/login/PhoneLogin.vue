@@ -159,7 +159,10 @@ export default {
           } else {
             sessionStorage.setItem("Bearer-Token", data.token);
             loadToast.clear(); // 关闭加载框
-            this.$router.push(this.$route.query.redirect); // 加载先前页
+            if (this.$route.query.redirect) {
+              this.$router.push(this.$route.query.redirect); // 加载先前页
+            }
+            this.$router.push('/'); // 加载先前页
           }
         })
         .catch((err) => {
