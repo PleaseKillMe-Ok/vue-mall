@@ -47,13 +47,13 @@
       </template>
     </van-cell>
     <br />
-    <van-cell is-link>
+    <van-cell is-link center @click="transfer">
       <template #title>
         <span class="title blank">切换用户</span>
       </template>
     </van-cell>
     <br />
-    <van-cell is-link center>
+    <van-cell is-link center @click="logout">
       <template #title>
         <span class="title blank">退出登录</span>
       </template>
@@ -81,6 +81,17 @@ export default {
   methods: {
     helper() {
       this.showHelper = true;
+    },
+    
+    // 切换用户
+    transfer() {},
+
+    // 登出
+    logout() {
+      sessionStorage.removeItem("Bearer-Token");
+      
+      // 删除cookie中的Bearer-Token
+      var cookieArray = document.cookie;  // 获取cookie存储字符串
     },
   },
 };
