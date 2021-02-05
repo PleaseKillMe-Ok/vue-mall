@@ -56,7 +56,7 @@
     <div v-if="Object.keys(footDict).length === 0" class="empty">
       没有浏览足迹,去首页逛逛吧~
     </div>
-    <div v-else>
+    <div v-else ref="checkboxs">
       <div v-for="(footList, key, i) in footDict" :key="i">
         <span class="dateStr"
           ><input
@@ -80,13 +80,14 @@
               fit="cover"
               src="https://img01.yzcdn.cn/vant/cat.jpeg"
             />
-            <!-- 复选 -->
+            <!-- 复选 data-id为自定义属性-->
             <input
               v-if="openDeleteRadio"
               type="checkbox"
+              :class="key"
               :value="item"
-              v-model="selectDict[key]"
-              @click="select(key)"
+              :data-cid="item.id"
+              @click="select(key, $event)"
             />
             <van-cell center>
               <template #title>
@@ -251,27 +252,49 @@ export default {
 
     // 全选
     selectAll(day) {
-      console.log(day);
-      if (this.selectAllStatusDict[day]) {
-        this.selectAllStatusDict[day] = false;
-        this.selectDict[day] = []; // 清空
+      let singleCheckBoxArray = this.$refs.checkboxs.getElementsByClassName(
+        day
+      ); // 获取class=day的所有checkbox DOM组成的数组
+      if (!this.selectAllStatusDict[day]) {
+        this.selectDict[day] = []; // 先清空再加
+        for (let i = 0; i < singleCheckBoxArray.length; i++) {
+          this.selectDict[day].push(singleCheckBoxArray[i].dataset.cid); // 获取自定义属性data-cid,添加到selectDict[day]数组中
+          singleCheckBoxArray[i].checked = true;
+        }
+        this.selectAllStatusDict[day] = true;
       } else {
-        this.selectAllStatusDict[day] = true;
-        this.selectDict[day] = []; // 先清空
-        this.selectAllStatusDict[day] = true;
-        this.footDict[day].forEach((element) => {
-          // 再添加
-          this.selectDict[day].push(element);
-        });
+        this.selectDict[day] = []; // 清空
+        this.selectAllStatusDict[day] = false;
+        for (let i = 0; i < singleCheckBoxArray.length; i++) {
+          singleCheckBoxArray[i].checked = false; // 取消单个单选框的选项
+        }
       }
     },
 
     // 选择某个足迹,回调,此方法在input关联的v-model数据变动之前调用
-    select(day) {
-      console.log(this.selectDict[day])
-      if (this.selectDict[day].length + 1 === this.footDict[day].length)
-        this.selectAllStatusDict[day] = true;
-      else this.selectAllStatusDict[day] = false;
+    // TODO: 这是一个问题!!!
+    select(day, event) {
+      let checkboxDom = event.target; // 获取点击的dom元素
+      if (checkboxDom.checked) {
+        // 加入元素
+        this.selectDict[day].push(checkboxDom.dataset.cid);
+        if (this.selectDict[day].length === this.footDict[day].length)
+          this.selectAllStatusDict[day] = true;
+      } else {
+        // 从数组中删除元素
+        let aimIndex = this.indexof(this.selectDict[day], checkboxDom.dataset.cid);
+        this.selectDict[day].splice(aimIndex, 1);
+        if (this.selectDict[day].length < this.footDict[day].length)
+          this.selectAllStatusDict[day] = false;
+      }
+    },
+
+    // 获取数组中某个元素的索引
+    indexof(array, value) {
+      for (let i = 0; i < array.length; i++) {
+        if (array[i] == value) return i;
+      }
+      return -1;
     },
   },
 };
