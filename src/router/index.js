@@ -100,9 +100,9 @@ export default new Router({
             path: '/',
             component: Index,
             children: [
-                { path: 'home', component: Home, meta: { title: '首页' } },
-                { path: 'message', component: Message, meta: { title: '消息', loginRequire: true } },
-                { path: 'cart', component: Cart, meta: { title: '购物车', loginRequire: true } },
+                { path: 'home', component: Home, name: 'Home', meta: { title: '首页' } },
+                { path: 'message', component: Message, name: 'Message', meta: { title: '消息', loginRequire: true } },
+                { path: 'cart', component: Cart, name: 'Cart', meta: { title: '购物车', loginRequire: true } },
                 { path: 'individual', name: 'Individual', component: UserSpace, meta: { title: '个人中心', loginRequire: true } },
             ],
         },

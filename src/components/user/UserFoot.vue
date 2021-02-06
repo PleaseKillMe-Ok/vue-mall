@@ -29,7 +29,12 @@
       @click-left="goBack"
     >
       <template #right>
-        <van-icon name="delete-o" size="22"></van-icon>
+        <div v-if="!openDeleteRadio">
+          <van-icon name="delete-o" size="22"></van-icon>
+        </div>
+        <div v-else>
+          <span>完成</span>
+        </div>
       </template>
     </van-nav-bar>
 
@@ -282,7 +287,10 @@ export default {
           this.selectAllStatusDict[day] = true;
       } else {
         // 从数组中删除元素
-        let aimIndex = this.indexof(this.selectDict[day], checkboxDom.dataset.cid);
+        let aimIndex = this.indexof(
+          this.selectDict[day],
+          checkboxDom.dataset.cid
+        );
         this.selectDict[day].splice(aimIndex, 1);
         if (this.selectDict[day].length < this.footDict[day].length)
           this.selectAllStatusDict[day] = false;
@@ -304,6 +312,8 @@ export default {
 #UserFoot {
   background-color: #f7f8fa;
 }
+
+/* 星期样式 */
 .figure-1 {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -319,6 +329,7 @@ export default {
   box-shadow: 0px 1px 2px whitesmoke;
 }
 
+/* 没有足迹时样式 */
 .empty {
   margin-top: 100px;
 }
