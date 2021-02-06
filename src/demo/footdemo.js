@@ -2,7 +2,7 @@
 var footDictDemo = {
     "2020-03-23": [{
             id: 1,
-            commodityName: "避孕套",
+            commodityName: "套套1",
             price: 200,
             discounts: 0.95,
             image: "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",
@@ -10,7 +10,7 @@ var footDictDemo = {
         },
         {
             id: 2,
-            commodityName: "避孕套",
+            commodityName: "套套2",
             price: 200,
             discounts: 0.95,
             image: "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",
@@ -18,7 +18,7 @@ var footDictDemo = {
         },
         {
             id: 3,
-            commodityName: "避孕套",
+            commodityName: "套套3",
             price: 200,
             discounts: 0.95,
             image: "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",
@@ -26,7 +26,7 @@ var footDictDemo = {
         },
         {
             id: 4,
-            commodityName: "避孕套",
+            commodityName: "套套4",
             price: 200,
             discounts: 0.95,
             image: "https://django-e-mall.oss-cn-shanghai.aliyuncs.com/01_mid.jpg",

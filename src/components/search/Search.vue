@@ -1,7 +1,7 @@
 <template>
   <div id="Search">
     <!-- 搜索导航栏 -->
-    <HeadNavigation @displayResult="displayResult"></HeadNavigation>
+    <SearchNavigation @displayResult="displayResult"></SearchNavigation>
     <div v-if="showResult">
       <SearchResult></SearchResult>
     </div>
@@ -15,13 +15,13 @@
 </template>
 
 <script>
-const HeadNavigation = () => import("@/components/common/HeadNavigation");
+const SearchNavigation = () => import("@/components/search/SearchNavigation");
 const HistorySearch = () => import("@/components/search/HistorySearch");
 const HeatSearch = () => import("@/components/search/HeatSearch");
 const SearchResult = () => import("@/components/search/SearchResult");
 export default {
   name: "Search",
-  components: { HeadNavigation, HistorySearch, HeatSearch, SearchResult },
+  components: { SearchNavigation, HistorySearch, HeatSearch, SearchResult },
   data() {
     return {
       previous: "", // 记录先前一页

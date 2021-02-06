@@ -9,6 +9,7 @@ import axios from './axios'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
+
 // 作为中间件
 Vue.use(Vant)
 Vue.config.productionTip = false

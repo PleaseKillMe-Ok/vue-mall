@@ -1,21 +1,16 @@
 <template>
   <div id="Home">
     <!-- 头部导航栏 -->
-    <van-nav-bar
-      :right-text="right_text"
-      v-model="previous"
-      @click-right="onClickRight"
-      fixed
-    >
+    <van-nav-bar :right-text="rightText" @click-right="onClickRight" fixed>
       <template #title>
-        <van-search
-          v-model="search_value"
-          placeholder="请输入搜索关键词"
-          input-align="center"
-          shape="round"
-          maxlength="30"
-          @focus="toSearch"
-        ></van-search>
+        <div class="search-bar">
+          <!-- 存放搜索框 -->
+          <van-search
+            placeholder="搜索栏"
+            shape="round"
+            @focus="toSearch"
+          ></van-search>
+        </div>
       </template>
     </van-nav-bar>
     <!-- 帮助文档 -->
@@ -34,8 +29,7 @@ export default {
   data() {
     return {
       show: false,
-      search_value: "",
-      right_text: "帮助",
+      rightText: "帮助",
       previous: "",
     };
   },
@@ -55,15 +49,22 @@ export default {
     // 进入搜索详情界面
     toSearch() {
       // 路由跳转
-      this.$router.push("/search");
+      this.$router.push({ name: "Search" });
     },
   },
 };
 </script>
 
 <style scoped>
-.van-nav-bar__content {
-  height: 60px !important;
-  background-color: #e66838;
+/* 搜索框 */
+.van-search--show-action {
+  height: 46px;
+}
+.search-bar {
+  height: 100%;
+  padding: 0px auto !important;
+}
+.van-search {
+  padding: 0px 8px 0px 0;
 }
 </style>
