@@ -151,8 +151,8 @@ export default new Router({
             name: 'Login',
             component: Login,
             children: [
-                { path: 'email', component: EmailLogin, meta: { title: '邮箱登录' } },
-                { path: 'phone', component: PhoneLogin, meta: { title: '手机号登录' } }
+                { path: 'email', component: EmailLogin, name: 'LoginEmail', meta: { title: '邮箱登录' } },
+                { path: 'phone', component: PhoneLogin, name: 'LoginPhone', meta: { title: '手机号登录' } }
             ]
 
         }, {

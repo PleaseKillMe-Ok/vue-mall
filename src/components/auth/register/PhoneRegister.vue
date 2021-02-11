@@ -4,7 +4,7 @@
     <van-form @submit="register">
       <van-field
         v-model="phone"
-        name="手机号"
+        name="phone"
         label="手机号"
         placeholder="请输入手机号"
         clearable
@@ -22,7 +22,7 @@
       />
       <van-field
         v-model="password"
-        name="密码"
+        name="password"
         label="密码"
         type="password"
         maxlength="20"
@@ -42,7 +42,7 @@
       />
       <van-field
         v-model="code"
-        name="验证码"
+        name="code"
         label="验证码"
         placeholder="验证码"
         clearable
@@ -82,6 +82,8 @@
 <script>
 const TopTool = () => import("@/components/auth/TopTool");
 import { phoneValidator, codeValidator, passwordValidator } from "@/validators";
+import { sendRegister } from "@/api/code";
+import { register } from "@/api/user";
 export default {
   name: "Register",
   data() {
@@ -116,7 +118,27 @@ export default {
   },
   methods: {
     // 注册
-    register() {},
+    register(values) {
+      values["way"] = "phone";
+      let load = this.$toast.loading({
+        message: "拼命加载中...",
+        forbidClick: true,
+      });
+      register(values)
+        .then((res) => {
+          load.clear(); // 关闭加载框
+          let data = res.data; // 数据
+          if (data.detail) this.$toast.fail(data.detail); // 校验错误
+          if (res.data.code === 21) {
+            this.$toast.success("注册成功");
+            this.$router.push({ name: "LoginPhone" });
+          }
+        })
+        .catch((err) => {
+          load.clear();
+          this.$toast.fail("服务器开了会儿小差~");
+        });
+    },
     // 校验
     phoneValidator(value) {
       return phoneValidator(value);
@@ -132,7 +154,13 @@ export default {
     sendCode() {
       if (this.phone != "" && phoneValidator(this.phone)) {
         // TODO: 倒计时60s
-        this.$toast.success("模拟发送成功");
+        sendRegister()
+          .then((res) => {
+            if (res.data.code === 41) this.$toast.success("验证码发送成功");
+          })
+          .catch((err) => {
+            this.$toast.fail("服务器开了会儿小差~");
+          });
       } else {
         this.$toast.fail("请检查手机号格式是否正确");
       }
