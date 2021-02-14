@@ -277,7 +277,6 @@ export default {
     },
 
     // 选择某个足迹,回调,此方法在input关联的v-model数据变动之前调用
-    // TODO: 这是一个问题!!!
     select(day, event) {
       let checkboxDom = event.target; // 获取点击的dom元素
       if (checkboxDom.checked) {
