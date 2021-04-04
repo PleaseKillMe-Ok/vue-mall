@@ -83,16 +83,16 @@ export default {
     // 根据用户搜索自动匹配模糊关键字名, 动态请求后台api获取模糊关键字名
     onInput(value) {
       // 如果搜索有数据的话就请求API
-      if (value !== "") {
-        search(this.page, this.searchValue)
-          .then((res) => {
-            let data = res.data;
-            this.$emit("displayResult", true, data);
-          })
-          .catch((err) => {
-            Toast.fail("服务器太累了,需要休息一会~");
-          });
-      }
+      // if (value !== "") {
+      //   search(this.page, this.searchValue)
+      //     .then((res) => {
+      //       let data = res.data;
+      //       this.$emit("displayResult", true, data);
+      //     })
+      //     .catch((err) => {
+      //       Toast.fail("服务器太累了,需要休息一会~");
+      //     });
+      // }
     },
     onClear() {
       this.$emit("displayResult", false);

@@ -10,15 +10,14 @@
 
       <div class="data">
         <ul>
-          <li v-for="item in heatSearchList" :key="item.rank">
-            <span class="rank">{{ item.rank }}</span>
-            <span>{{ item.keyword }}</span>
-            <span class="hot">热</span>
-            <span class="new">新</span>
-            
-            <van-icon class="arrow-up" name="arrow-up" />
-            <van-icon class="arrow-down" name="arrow-down" />
-            <span class="arrow-inherit">--</span>
+          <li v-for="(key,index) in heatSearchList" :key="index">
+            <span class="rank">{{ index+1 }}</span>
+            <span>{{ key }}</span>
+            <span v-if="fluctuate[index] === 3" class="hot">热</span>
+            <span v-else-if="fluctuate[index] === 2" class="new">新</span>
+            <van-icon v-if="fluctuate[index] === 1" class="arrow-up" name="arrow-up" />
+            <van-icon v-if="fluctuate[index] === -1" class="arrow-down" name="arrow-down" />
+            <span v-if="fluctuate[index] === 0" class="arrow-inherit">--</span>
             <van-divider />
           </li>
         </ul>
@@ -29,67 +28,32 @@
 </template>
 
 <script>
+import { getHeat } from "@/api/search.js";
 export default {
   name: "HeatSearch",
   data() {
     return {
-      heatSearchList: [
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 1,
-        },
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 2,
-        },
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 3,
-        },
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 4,
-        },
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 5,
-        },
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 6,
-        },
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 7,
-        },
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 8,
-        },
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 9,
-        },
-        {
-          keyword: "小米充电器",
-          id: "12023211231",
-          rank: 10,
-        },
-      ],
+      heatSearchList: [],
+      fluctuate: [],
     };
+  },
+  created() {
+    this.getHeat();
   },
   methods: {
     toHeatRank() {
       console.log("进入热搜榜");
+    },
+    getHeat() {
+      getHeat()
+        .then((res) => {
+          this.fluctuate = res.data.fluctuate;
+          this.heatSearchList = res.data.cur_heat;
+          console.log(res.data);
+        })
+        .catch((err) => {
+          this.$toast.fail("获取热搜榜数据失败");
+        });
     },
   },
 };
@@ -126,7 +90,7 @@ export default {
   background: red;
   width: 17px;
   height: 17px;
-  display:inline-block;
+  display: inline-block;
   text-align: center;
   color: whitesmoke;
   font-weight: bold;
@@ -163,19 +127,19 @@ export default {
   border-color: #ffed8b;
 }
 /* 排名上升箭头 */
-.arrow-up{
+.arrow-up {
   color: red;
   float: right;
 }
 
 /* 排名下降箭头 */
-.arrow-down{
+.arrow-down {
   color: blueviolet;
   float: right;
 }
 
 /* 排名不变 */
-.arrow-inherit{
+.arrow-inherit {
   color: gray;
   width: 15px;
   float: right;
