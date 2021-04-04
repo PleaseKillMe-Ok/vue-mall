@@ -11,7 +11,19 @@
       </template>
     </van-nav-bar>
     <van-cell>共{{ totalGoods }}件商品</van-cell>
-    <div class="card">双层循环</div>
+
+    <!-- 购物车商品布局 -->
+    <div class="card" v-for="(store, key, index) in storeList" :key="index">
+      <van-checkbox v-model="storeNameDict[key]">
+        {{ key }}
+      </van-checkbox>
+      <div v-for="(commodity, index) in store" :key="index">
+        <van-checkbox></van-checkbox>
+        {{ commodity["intro"] }}
+        <br />
+        {{ commodity["price"] }} {{ commodity["count"] }}
+      </div>
+    </div>
 
     <van-submit-bar :tip="tip" tip-icon="info-o" @submit="onSubmitOrder">
       <template v-if="isOpenManage" #button>
@@ -44,6 +56,7 @@
 </template>
 
 <script>
+import { storeList, storeNameDict } from "@/demo/cartdemo";
 export default {
   name: "Cart",
   data() {
@@ -57,7 +70,13 @@ export default {
       commodityList: [],
       isOpenManage: false,
       rightText: "管理",
+      storeList: [],
+      storeNameDict: {},
     };
+  },
+  created() {
+    this.storeList = storeList;
+    this.storeNameDict = storeNameDict;
   },
   watch: {
     // 全选商品

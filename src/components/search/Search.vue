@@ -2,6 +2,7 @@
   <div id="Search">
     <!-- 搜索导航栏 -->
     <SearchNavigation @displayResult="displayResult"></SearchNavigation>
+    <div style="margin-top:46px"></div>
     <div v-if="showResult">
       <SearchResult></SearchResult>
     </div>
@@ -38,4 +39,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
