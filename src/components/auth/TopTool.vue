@@ -47,7 +47,7 @@ export default {
     },
     // 返回首页
     back() {
-      this.$router.push({ name: "Home" });
+      this.$router.replace({ name: "Home" });
     },
   },
 };

@@ -5,15 +5,17 @@
       :hasRight="hasRight"
       :previousPage="previousPage"
     ></TopTool>
-    <div class="address">
-      <van-address-list
-        :list="addressList"
-        default-tag-text="默认"
-        v-model="chosenAddressId"
-        @add="onAdd"
-        @edit="onEdit"
-        @select="setDefault"
-      />
+    <div class="card">
+      <div class="address">
+        <van-address-list
+          :list="addressList"
+          default-tag-text="默认"
+          v-model="chosenAddressId"
+          @add="onAdd"
+          @edit="onEdit"
+          @select="setDefault"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -60,7 +62,7 @@ export default {
       });
       setDefaultAddress(item.id)
         .then((res) => {
-          if (res.status === 204) {
+          if (res.data.code === 1015) {
             load.clear();
             this.$toast.success("默认地址更换成功");
             this.addressList.forEach((element) => {
@@ -81,7 +83,7 @@ export default {
           data.forEach((element) => {
             this.addressList.push({
               id: element.pk,
-              name: element.recipients,
+              name: element.recipient,
               tel: element.phone,
               address: this.parseAddress(element.province, element.region),
               isDefault: element.default_address,

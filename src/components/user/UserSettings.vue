@@ -82,16 +82,20 @@ export default {
     helper() {
       this.showHelper = true;
     },
-    
+
     // 切换用户
-    transfer() {},
+    transfer() {
+      sessionStorage.removeItem("Bearer-Token");
+      this.$router.push({ name: "LoginPhone" });
+    },
 
     // 登出
     logout() {
       sessionStorage.removeItem("Bearer-Token");
-      
-      // 删除cookie中的Bearer-Token
-      var cookieArray = document.cookie;  // 获取cookie存储字符串
+      // // 删除cookie中的Bearer-Token
+      // var cookieArray = document.cookie; // 获取cookie存储字符串
+      // console.log(cookieArray);
+      this.$router.push({ name: "LoginPhone" });
     },
   },
 };

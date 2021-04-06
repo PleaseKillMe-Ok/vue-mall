@@ -154,7 +154,8 @@ export default {
     sendCode() {
       if (this.phone != "" && phoneValidator(this.phone)) {
         // TODO: 倒计时60s
-        sendRegister()
+        let data = { phone: this.phone, way: "phone" };
+        sendRegister(data)
           .then((res) => {
             if (res.data.code === 41) this.$toast.success("验证码发送成功");
           })

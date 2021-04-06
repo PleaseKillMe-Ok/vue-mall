@@ -87,6 +87,10 @@ const BindPhone = () =>
 const UserFoot = () =>
     import ('@/components/user/UserFoot')
 
+// 商品详情页
+const CommodityDetail = () =>
+    import ('@/components/commodity/CommodityDetail')
+
 Vue.use(Router)
 
 export default new Router({
@@ -170,6 +174,11 @@ export default new Router({
             path: '/forget-password',
             name: 'Forget',
             component: ForgetPassword,
+        }, {
+            // 商品详情页
+            path: 'commodity-detail',
+            name: 'CommodityDetail',
+            component: CommodityDetail
         }
     ]
 })

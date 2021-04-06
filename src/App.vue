@@ -48,4 +48,24 @@ export default {
   border-radius: 12px;
   box-shadow: 0 8px 12px #ebedf0;
 }
+.half-left-card{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 44%;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 12px #ebedf0;
+  float: left;
+}
+.half-right-card{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 43%;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 12px #ebedf0;
+  float: right;
+}
 </style>

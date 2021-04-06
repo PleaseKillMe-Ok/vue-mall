@@ -9,8 +9,8 @@
     ></TopTool>
     <van-form @submit="onSave">
       <van-field
-        v-model="recipients"
-        name="recipients"
+        v-model="recipient"
+        name="recipient"
         label="收货人"
         placeholder="请输入收货人"
         center
@@ -98,7 +98,12 @@
 
 <script>
 const TopTool = () => import("@/components/user/TopTool");
-import { deleteAddress, getAddressDetail, modifyAddress } from "@/api/address";
+import {
+  deleteAddress,
+  getAddressDetail,
+  modifyAddress,
+  addAddress,
+} from "@/api/address";
 import AreaList from "@/utils/area"; // 导入地址json
 export default {
   name: "UserAddressDetail",
@@ -116,7 +121,7 @@ export default {
       showRegion: false,
       title: "添加地址",
       previousPage: "Address",
-      recipients: "", // 收货人
+      recipient: "", // 收货人
       phone: "", // 手机号
       region: "", // 详细街道,地区
       province: "", // 省市区
@@ -150,21 +155,32 @@ export default {
     // 修改地址
     onSave(values) {
       // 发送请求API
+      let func = this.$route.query.func;
       let load = this.$toast.loading({
         message: "加载中...",
         forbidClick: true,
       });
-      modifyAddress(this.aid, values)
-        .then((res) => {
+      if (func === "modify") {
+        modifyAddress(this.aid, values)
+          .then((res) => {
+            let data = res.data;
+            if (data.code === 1014) {
+              load.clear();
+              this.$router.push({ name: "Address" });
+            }
+          })
+          .catch((err) => {
+            this.$toast.fail("服务器开了会小差~");
+          });
+      } else if (func === "add") {
+        addAddress(values).then((res) => {
           let data = res.data;
-          if (data.code === 36) {
+          if (data.code === 1013) {
             load.clear();
             this.$router.push({ name: "Address" });
           }
-        })
-        .catch((err) => {
-          this.$toast.fail("服务器开了会小差~");
         });
+      }
     },
     // 删除
     onDelete() {
@@ -189,7 +205,7 @@ export default {
         .then((res) => {
           let data = res.data;
           this.phone = data.phone;
-          this.recipients = data.recipients;
+          this.recipient = data.recipient;
           this.region = data.region;
           this.province = data.province;
           this.addressTags = data.address_tags;
@@ -210,7 +226,7 @@ export default {
       deleteAddress(parseInt(this.aid))
         .then((res) => {
           let data = res.data;
-          if (data.code === 55) {
+          if (data.code === 1016) {
             load.clear();
             this.$toast.success("删除地址成功");
             this.$router.push({ name: "Address" });
