@@ -3,6 +3,7 @@
     <!-- 头部导航栏 -->
     <van-nav-bar :right-text="rightText" @click-right="onClickRight" fixed>
       <template #title>
+        
         <div class="search-bar">
           <!-- 存放搜索框 -->
           <van-search
@@ -10,6 +11,7 @@
             shape="round"
             @focus="toSearch"
           ></van-search>
+          
         </div>
       </template>
     </van-nav-bar>

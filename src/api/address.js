@@ -34,3 +34,10 @@ export function getAddressDetail(pk) {
 export function modifyAddress(pk, data) {
     return axios.put('/consumer/chsc/apis/address/' + pk + '/', data)
 }
+
+/**
+ * 添加收货地址
+ */
+export function addAddress(data) {
+    return axios.post('/consumer/chsc/apis/address/', data)
+}
