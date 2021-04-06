@@ -1,4 +1,5 @@
 <template>
+  <!-- 商品小卡片 -->
   <div id="CommodityCard">
     <!-- 根据奇偶左右排序 -->
     <div
@@ -8,7 +9,12 @@
       style="display: block; height: 100%"
     >
       <li class="half-left-card">
-        <van-image width="100%" height="auto" :src="item.little_image" />
+        <van-image
+          width="100%"
+          height="auto"
+          :src="item.little_image"
+          @click="toDetail(item.id)"
+        />
         <div class="info">
           <div class="intro">
             {{ item.intro }}
@@ -36,6 +42,12 @@ export default {
   },
   created() {
     this.commoditys = commodityCardDemo;
+  },
+  methods: {
+    // 根据id进入商品详情页
+    toDetail(id) {
+      this.$router.push({ name: "CommodityDetail", query: { id: id } });
+    },
   },
 };
 </script>
