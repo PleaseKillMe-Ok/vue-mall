@@ -9,7 +9,16 @@
     >
       <li class="half-left-card">
         <van-image width="100%" height="auto" :src="item.little_image" />
-        {{ item.intro }}
+        <div class="info">
+          <div class="intro">
+            {{ item.intro }}
+          </div>
+          <p>
+            <span class="price">¥{{ item.favourable_price }}</span>
+            <span class="buy">{{ item.sell_counts }}已付款</span>
+            <span type="small" v-if="item.isFreeFreight" class="hot">包邮</span>
+          </p>
+        </div>
       </li>
     </div>
   </div>
@@ -49,8 +58,8 @@ export default {
   padding: 2px;
   margin-right: 5px;
   margin-left: 5px;
-  border-radius: 2px;
-  overflow: auto;
+  border-radius: 6px;
+  height: auto;
 }
 
 .tiles-wrap {
@@ -60,5 +69,42 @@ export default {
   list-style-type: none;
   display: block;
   height: 100%;
+}
+
+/* 商品信息 */
+.info {
+  padding-bottom: 10px;
+}
+.intro {
+  font-size: 17px;
+  text-align: left;
+  display: block;
+  padding-left: 10px;
+}
+.price {
+  color: red;
+  font-size: 16px;
+  float: left;
+  padding-left: 10px;
+  padding-top: 4px;
+}
+.buy {
+  color: grey;
+  opacity: 0.8;
+  font-size: 15px;
+}
+
+/* 包邮标记 */
+.hot {
+  background: #fbe1e1;
+  width: 40px;
+  height: 15px;
+  text-align: center;
+  color: red;
+  font-size: 12px !important;
+  border-radius: 25%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #f7b9b9;
 }
 </style>
