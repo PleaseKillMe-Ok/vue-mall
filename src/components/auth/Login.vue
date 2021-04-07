@@ -13,13 +13,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .form {
   padding-top: 30px;
 }
 /* 单元项样式 */
 .van-cell {
-  font-size: 20px;
+  font-size: 20px !important;
   margin-top: 20px;
 }
 .submitButton {

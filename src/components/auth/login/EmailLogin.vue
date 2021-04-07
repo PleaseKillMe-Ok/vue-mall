@@ -1,5 +1,6 @@
 <template>
   <div id="EmailLogin">
+    <ChoiceWay :show="showChoice" @hideChoiceWay="hideChoiceWay"></ChoiceWay>
     <TopTool :title="title" :actionList="actionList"></TopTool>
     <!-- 验证第一次不通过不往后验证 -->
     <div class="card">
@@ -124,6 +125,7 @@
 </template>
 
 <script>
+const ChoiceWay = () => import("@/components/auth/password/ChoiceWay");
 const TopTool = () => import("@/components/auth/TopTool");
 import { sendRegister } from "@/api/code";
 import {
@@ -134,7 +136,7 @@ import {
 
 export default {
   name: "EmailLogin",
-  components: { TopTool },
+  components: { TopTool, ChoiceWay },
   data() {
     return {
       title: "邮箱/用户名登录",
@@ -144,6 +146,7 @@ export default {
       way: "email",
       password: "",
       username: "",
+      showChoice: false, // 显示忘记密码弹出框
       show: false, // 是否显示其他登录方式
       actionList: [
         {
@@ -199,7 +202,7 @@ export default {
     },
     // 进入忘记密码
     toForgetPassword() {
-      this.$router.push("/forget-password");
+      this.showChoice = true;
     },
     // 显示其他登录方式
     displayOtherWay() {
@@ -221,9 +224,23 @@ export default {
       if (this.way == "email") this.way = "username";
       else this.way = "email";
     },
+    // 隐藏找回密码弹框
+    hideChoiceWay() {
+      this.showChoice = false;
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
+.van-cell {
+    font-size: 18px !important;
+}
+.van-button{
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.utils{
+  margin:25px
+}
 </style>

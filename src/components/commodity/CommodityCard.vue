@@ -8,11 +8,12 @@
       class="tiles-wrap"
       style="display: block; height: 100%"
     >
+     <!-- 懒加载图片 -->
       <li class="half-left-card">
-        <van-image
+        <img
           width="100%"
           height="auto"
-          :src="item.little_image"
+          v-lazy="item.little_image"
           @click="toDetail(item.id)"
         />
         <div class="info">
@@ -34,7 +35,7 @@
 import { commodityCardDemo } from "@/demo/commoditycarddemo";
 export default {
   name: "CommodityCard",
-  components: [commodityCardDemo],
+  components: { commodityCardDemo },
   data() {
     return {
       commoditys: [],
