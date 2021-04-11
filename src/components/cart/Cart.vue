@@ -14,14 +14,67 @@
 
     <!-- 购物车商品布局 -->
     <div class="card" v-for="(store, key, index) in storeList" :key="index">
-      <van-checkbox v-model="storeNameDict[key]">
-        {{ key }}
-      </van-checkbox>
+      <van-row>
+        <van-col span="2">
+          <van-checkbox></van-checkbox>
+        </van-col>
+        <van-col span="18">
+          <div class="storeTitle">
+            <van-tag type="danger">小云</van-tag>
+            <span>{{ key }}</span>
+          </div>
+        </van-col>
+        <van-col span="3">
+          <span @click="getVoucher(key)" class="voucher">领卷</span>
+        </van-col>
+      </van-row>
+
+      <!-- 单个购物车商品-->
+      <div></div>
       <div v-for="(commodity, index) in store" :key="index">
-        <van-checkbox></van-checkbox>
-        {{ commodity["intro"] }}
+        <van-row>
+          <van-col span="2">
+            <van-checkbox></van-checkbox>
+          </van-col>
+          <van-col span="8">
+            <img
+              width="90%"
+              height="auto"
+              v-lazy="commodity.little_image"
+              class="img"
+              @click="toDetail(item.id)"
+            />
+          </van-col>
+          <van-col span="13">
+            <span class="intro">{{ commodity["intro"] }}</span>
+            <div class="yeah">
+              <span class="price-one-good">¥{{ commodity["price"] }}</span>
+
+              <!-- <span
+              v-if="!commodity.openCount"
+              class="counts"
+              @click="transStatus(key, index)"
+              >x{{ commodity["count"] }}</span
+            >
+            <span v-else>
+              <van-stepper
+                class="counts-modify"
+                :value="commodity.count"
+                async-change
+                @change="onChangeCount"
+              /> -->
+              <span>
+                <van-stepper
+                  class="counts-modify"
+                  :value="commodity.count"
+                  async-change
+                  @change="onChangeCount"
+                />
+              </span>
+            </div>
+          </van-col>
+        </van-row>
         <br />
-        {{ commodity["price"] }} {{ commodity["count"] }}
       </div>
     </div>
 
@@ -126,6 +179,21 @@ export default {
 
     // 加入收藏夹
     moveFavorites() {},
+
+    // 领取优惠卷
+    getVoucher(name) {
+      console.log("领取优惠卷", name);
+    },
+
+    // 动态改变购物车某商品的数量
+    onChangeCount(id) {
+      console.log("改变商品", id);
+    },
+
+    // 由固定改变成布长器
+    transStatus(storeName, index) {
+      this.storeList[storeName][index].openCount = true;
+    },
   },
 };
 </script>
@@ -156,5 +224,68 @@ export default {
 
 .van-submit-bar {
   bottom: 50px !important;
+}
+
+.van-cell__title {
+  text-align: left;
+}
+
+/* 店铺 */
+.storeTitle {
+  vertical-align: middle;
+  text-align: left;
+  margin-bottom: 25px;
+  font-size: 18px;
+}
+/* 标签 */
+.van-tag {
+  vertical-align: middle;
+  bottom: 5px;
+}
+/* 商品小图片 */
+.img {
+  border-radius: 10%;
+}
+/* 商品信息 */
+.intro {
+  font-size: 16px;
+  font-weight: bolder;
+  text-align: left;
+  float: left;
+  padding-left: 10px;
+}
+.voucher {
+  font-size: 18px;
+}
+/* 单个商品价格的布局 */
+.price-one-good {
+  font-size: 24px;
+  float: left;
+  padding-left: 10px;
+  color: red;
+}
+
+.yeah {
+  margin-top: 100px;
+}
+
+/* 商品数量 */
+.counts {
+  background: #fbe1e1;
+  float: right;
+  color: red;
+  border-color: #fbe1e1;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 25%;
+  text-align: center;
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+  opacity: 0.7;
+}
+/* 布长器 */
+.counts-modify {
+  margin-left: 120px;
 }
 </style>
