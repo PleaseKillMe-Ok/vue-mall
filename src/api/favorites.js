@@ -32,5 +32,12 @@ export function deleteAllFavorites() {
  * 用户根据一定条件搜索商品
  */
 export function searchFavorites() {
-    // 
+    return axios.get()
+}
+
+/**
+ * 寻找相似商品
+ */
+export function findSimilar(type) {
+    return axios.get()
 }
