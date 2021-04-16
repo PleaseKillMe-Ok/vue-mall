@@ -3,6 +3,7 @@ import axios from '@/axios'
 /**
  * 删除用户单个浏览足迹
  */
+
 export function deleteSingleFoot(id) {
     return axios.delete('/consumer/chsc/apis/foot/' + id + '/');
 }
