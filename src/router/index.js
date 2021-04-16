@@ -91,6 +91,10 @@ const UserFoot = () =>
 const CommodityDetail = () =>
     import ('@/components/commodity/CommodityDetail')
 
+// 收藏夹
+const UserFavorites = () =>
+    import ('@/components/user/favorites/UserFavorites')
+
 Vue.use(Router)
 
 export default new Router({
@@ -139,7 +143,8 @@ export default new Router({
                 { path: 'address-detail', name: 'AddressDetail', component: UserAddressDetail, meta: { loginRequire: true, title: '增加地址' } },
                 { path: 'safe', name: 'Safe', component: Safe, meta: { title: '账户安全', loginRequire: true } },
                 { path: 'bind-phone', name: "BindPhone", component: BindPhone, meta: { loginRequire: true, title: '换榜手机' } },
-                { path: 'foot', name: 'Foot', component: UserFoot, meta: { loginRequire: true, title: '我的足迹' } }
+                { path: 'foot', name: 'Foot', component: UserFoot, meta: { loginRequire: true, title: '我的足迹' } },
+                { path: 'favorites', name: 'Favorites', component: UserFavorites, meta: { loginRequire: true, title: '我的收藏' } }
             ],
             meta: {
                 loginRequire: true,
