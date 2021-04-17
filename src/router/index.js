@@ -181,7 +181,7 @@ export default new Router({
             component: ForgetPassword,
         }, {
             // 商品详情页
-            path: 'commodity-detail',
+            path: '/commodity-detail',
             name: 'CommodityDetail',
             component: CommodityDetail
         }
