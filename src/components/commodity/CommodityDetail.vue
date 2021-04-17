@@ -40,17 +40,26 @@
 
     <!-- 商品导航 -->
     <van-goods-action>
-      <van-goods-action-icon icon="star-o" text="收藏" @click="onClickIcon" />
-      <van-goods-action-icon icon="cart-o" text="购物车" @click="onClickIcon" />
-      <van-goods-action-icon icon="shop-o" text="店铺" @click="onClickIcon" />
-      <van-goods-action-button type="warning" text="加入购物车" />
-      <van-goods-action-button type="danger" text="立即购买" />
+      <van-goods-action-icon icon="star-o" text="收藏" @click="onCollect" />
+      <van-goods-action-icon
+        icon="friends-o"
+        text="客服"
+        @click="onClickIcon"
+      />
+      <van-goods-action-icon icon="shop-o" text="店铺" @click="toStore" />
+      <van-goods-action-button
+        type="warning"
+        text="加入购物车"
+        @click="joinCart"
+      />
+      <van-goods-action-button type="danger" text="立即购买" @click="buy" />
     </van-goods-action>
   </div>
 </template>
 
 <script>
 import { swipeImage } from "@/demo/commodityDetail";
+import { addFavorites } from "@/api/favorites/";
 export default {
   name: "CommodityDetail",
   data() {
@@ -85,6 +94,35 @@ export default {
     toCart() {
       console.log("分享");
       this.$router.push({ name: "Cart" });
+    },
+
+    // 立即购买
+    buy() {
+      console.log("立即购买");
+    },
+
+    // 加入购物车
+    joinCart() {
+      console.log("加入购物车");
+    },
+
+    // 加入收藏夹
+    onCollect() {
+      let data = { commodity_pk: this.id };
+      addFavorites(data)
+        .then((res) => {
+          let data = res.data;
+          if (data.code === 1020) this.$toast.success("添加失败");
+        })
+        .catch((err) => {
+          this.$toast.fail("添加失败，服务器开了会小差～");
+        });
+      console.log("加入收藏夹");
+    },
+
+    // 进入店铺
+    toStore() {
+      console.log("进入店铺");
     },
   },
 };

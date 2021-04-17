@@ -3,10 +3,10 @@ import axios from '@/axios'
 /**
  * 搜索商品
  * @param {页数} page 
- * @param {关键字} value 
+ * @param {关键字} q 
  */
-export function search(page, value) {
-    return axios.get('/search/chsc/apis/search/?page=' + page + '&text=' + value);
+export function search(page, q) {
+    return axios.get('/search/chsc/apis/keyword/?page=' + page + '&q=' + q);
 }
 
 /**
