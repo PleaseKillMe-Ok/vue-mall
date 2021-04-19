@@ -11,8 +11,8 @@
         />
       </template>
       <template #right>
-        <van-icon name="cart-o" class="icon" @click="share"></van-icon>
-        <van-icon name="share-o" class="icon" @click="toCart"></van-icon>
+        <van-icon name="cart-o" class="icon" @click="toCart"></van-icon>
+        <van-icon name="share-o" class="icon" @click="share"></van-icon>
       </template>
     </van-nav-bar>
 
@@ -54,6 +54,7 @@
           title="选择"
           label="选择商品属性"
           is-link
+          @click="openChoice(commodityInformation.id)"
         />
         <van-cell
           class="operation-cell"
@@ -155,6 +156,12 @@
       />
       <van-goods-action-button type="danger" text="立即购买" @click="buy" />
     </van-goods-action>
+    <!-- sku属性值选择动作面板 -->
+    <van-action-sheet v-model="showSkuProps">
+      <template #default>
+        <SkuPropsSelector :propsValues="propsValues"> </SkuPropsSelector>
+      </template>
+    </van-action-sheet>
   </div>
 </template>
 
@@ -162,8 +169,12 @@
 import { swipeImage, remarkDict, storeDict } from "@/demo/commodityDetailDemo";
 import { addFavorites } from "@/api/favorites/";
 import { getCommodityDetail } from "@/api/commodity";
+const SkuPropsSelector = () =>
+  import("@/components/commodity/SkuPropsSelector");
+
 export default {
   name: "CommodityDetail",
+  components: { SkuPropsSelector },
   data() {
     return {
       commodityInformation: {}, // 存储商品详细信息
@@ -176,6 +187,8 @@ export default {
         "https://img01.yzcdn.cn/vant/apple-1.jpg",
         "https://img01.yzcdn.cn/vant/apple-2.jpg",
       ], // 商品详情大图
+      showSkuProps: false, // 是否开启sku属性面板
+      propsValues: [], // 商品sku键值对
     };
   },
   created() {
@@ -195,8 +208,14 @@ export default {
           this.commdodityImages = this.commodityInformation.big_image.split(
             ","
           ); // 按照逗号分割大图字符串，生成图片列表
+          this.propsValues = this.commodityInformation.sku_props;
         })
         .catch((err) => {});
+    },
+
+    // 打开商品sku选择菜单
+    openChoice(id) {
+      this.showSkuProps = true;
     },
 
     // 分享
