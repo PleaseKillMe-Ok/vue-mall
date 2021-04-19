@@ -159,7 +159,7 @@
     <!-- sku属性值选择动作面板 -->
     <van-action-sheet v-model="showSkuProps">
       <template #default>
-        <SkuPropsSelector :propsValues="propsValues"> </SkuPropsSelector>
+        <SkuPropsSelector :propsValues="propsValues" :commodityInformation="commodityInformation" @closeSkuProps="showSkuProps = false"> </SkuPropsSelector>
       </template>
     </van-action-sheet>
   </div>
