@@ -16,15 +16,16 @@
         <div class="prop-values">
           <van-button
             :id="value.id"
-            v-for="(value, index) in values.sku_values"
-            :key="index"
+            v-for="(value, index2) in values.sku_values"
+            :key="index2"
             :class="[
               'value-btn',
               {
-                'value-btn-choice': index === choiceMap[values.name],
+                'value-btn-choice': index2 === choiceMap[values.name],
               },
             ]"
-            @click="choiceValue(index, values.name, value.id)"
+            :disabled="!value.status"
+            @click="choiceValue(index, index2, values.name, value.id)"
           >
             {{ value.value }}
           </van-button>
@@ -93,11 +94,14 @@ export default {
     },
 
     // 选择合适的map项
-    choiceValue(index, name, id) {
+    choiceValue(outIndex, InnerIndex, name, id) {
       // index为choiceMap的下标,name为属性名
-      this.$set(this.choiceMap, name, index);
-      // 解析用户点击某一个类目后的其他类目的数据
+      this.$set(this.choiceMap, name, InnerIndex);
+      // 解析出用户点击某一个类目后的其他有效类目的数据
       this.parseSku(id, name);
+      // this.propsValues[outIndex].sku_values[InnerIndex].status = false;
+      // 修改可用的类目状态和不可用的类目显示
+      this.modifyStatus(outIndex);
     },
 
     // 解析获取每一组可能的sku，组合成一个字典
@@ -108,7 +112,6 @@ export default {
       this.skuList.forEach((element) => {
         let properties = element.properties_r;
         // 校验每一个可能的sku中对应key的value值是否等于用户点击的value值
-
         if (properties[key] === id) {
           // 如果等于，遍历该map，组合新的skuValueMap
           for (let key in properties) {
@@ -116,27 +119,49 @@ export default {
             if (isNaN(this.skuValuesMap[key]))
               this.$set(this.skuValuesMap, key, new Array()); // 绑定属性为响应式
             // 将每个id值推入skuValuesMap中
-            this.skuValuesMap[key].push({
-              id: properties[key],
-              value: properties
-            });
+            this.skuValuesMap[key].push(properties[key]);
             // this.skuValuesMap[key].push(properties[key]);
           }
         }
       });
       console.log(this.skuValuesMap);
     },
+    // 修改可用的类目状态和不可用的类目显示, 排除用户点击的那个类目
+    modifyStatus(outIndex) {
+      for (let i = 0; i < this.propsValues.length; i++) {
+        if (i !== outIndex) {
+          let skuValues = this.propsValues[i].sku_values; // 类目值数组
+          let name = this.propsValues[i].name; // 类目名
 
-    // 动态修改sku个属性值的状态
-    modifySkuProp(name, id) {
-      this.propsValues.forEach((element) => {
-        if (element.name !== name) {
-          let values = element.sku_values;
-          for (let value in values) {
+          // 先将状态全部设置为false
+          for (let j = 0; j < skuValues.length; j++) {
+            this.propsValues[i].sku_values[j].status = false;
+          }
+          // 如果有效类目数组存在与skuValuesMap字典中，则将其类目下的有效属性值的状态设置为true
+          for (let m = 0; m < skuValues.length; m++) {
+            if (this.skuValuesMap[name] != null) {
+              for (let n = 0; n < this.skuValuesMap[name].length; n++) {
+                if (skuValues[m].id == this.skuValuesMap[name][n]) {
+                  // 如果id存在
+                  this.propsValues[i].sku_values[m].status = true;
+                }
+              }
+            }
           }
         }
-      });
+      }
     },
+
+    // // 动态修改sku个属性值的状态
+    // modifySkuProp(name, id) {
+    //   this.propsValues.forEach((element) => {
+    //     if (element.name !== name) {
+    //       let values = element.sku_values;
+    //       for (let value in values) {
+    //       }
+    //     }
+    //   });
+    // },
 
     // 关掉动作面板
     close() {
@@ -195,6 +220,4 @@ export default {
   color: #fd7038;
   border-style: solid;
 }
-
-/* 没有库存了 */
 </style>
