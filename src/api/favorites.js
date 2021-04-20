@@ -10,7 +10,7 @@ export function getFavorites() {
 /**
  * 用户添加收藏夹商品
  */
-export function addFavorites() {
+export function addFavorites(data) {
     return axios.post('/consumer/chsc/apis/favorites/', data);
 }
 
@@ -18,7 +18,7 @@ export function addFavorites() {
  * 用户单删除收藏夹商品
  */
 export function deleteFavorites(id) {
-    return axios.delete('/consumer/chsc/apis/favorites/' + id);
+    return axios.delete('/consumer/chsc/apis/favorites/' + id + '/');
 }
 
 /**
