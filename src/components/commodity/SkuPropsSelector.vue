@@ -61,12 +61,13 @@ export default {
     return {
       image: "https://img01.yzcdn.cn/vant/apple-1.jpg",
       buyCount: 1, // 购买数量
-      active: -1,
       storeCount: 100, // 库存数量
       choiceMap: {}, // 选择sku属性项
       defaultPrice: 0, // 默认价格
       skuList: [], // sku列表
       skuValuesMap: {}, // key为属性名，value为属性值数组
+      chosePropsList: [], // 维护用户已经点击的类目数组下标
+      preDict: {}, // 用户每次选择类目后的字典数据
     };
   },
   created() {
@@ -94,75 +95,135 @@ export default {
     },
 
     // 选择合适的map项
-    choiceValue(outIndex, InnerIndex, name, id) {
-      // index为choiceMap的下标,name为属性名
-      this.$set(this.choiceMap, name, InnerIndex);
-      // 解析出用户点击某一个类目后的其他有效类目的数据
-      this.parseSku(id, name);
-      // this.propsValues[outIndex].sku_values[InnerIndex].status = false;
+    choiceValue(outIndex, InnerIndex, name, valueId) {
       // 修改可用的类目状态和不可用的类目显示
-      this.modifyStatus(outIndex);
+      // 解析出用户点击某一个类目后的其他有效类目的数据
+      this.parseSku(valueId, name);
+      if (!this.propsValues[outIndex].sku_values[InnerIndex].is_choice) {
+        // 当前类目值未被选中
+        if (!this.chosePropsList.includes(outIndex)) {
+          this.chosePropsList.push(outIndex); // 避免重复添加
+          this.preDict[name] = valueId; // 向前缀字典中添加键值对，{name:valueId}
+        }
+        // index为choiceMap的下标,name为属性名
+        this.$set(this.choiceMap, name, InnerIndex); // 修改选中样式
+        this.modifyStatus(); // 状态进入
+        // 先全部设置为false，然后只对选中的设置为true
+        for (let i = 0; i < this.propsValues[outIndex].sku_values.length; i++) {
+          this.propsValues[outIndex].sku_values[i].is_choice = false;
+        }
+        this.propsValues[outIndex].sku_values[InnerIndex].is_choice = true;
+      } else {
+        // 当类目值被选中
+        let i = this.chosePropsList.indexOf(outIndex); // 获取下标
+        this.chosePropsList.splice(i, 1); // 删除类目值所在的类目名
+        this.$set(this.choiceMap, name, -1); // 取消选中，样式变化
+        this.backModifyStatus(); // 状态回朔
+        // 只对选中的设置为false，其他已经是false
+        this.propsValues[outIndex].sku_values[InnerIndex].is_choice = false;
+      }
     },
 
-    // 解析获取每一组可能的sku，组合成一个字典
-    parseSku(id, key) {
-      // id表示每个sku属性值的id， key表示每个sku属性名
+    // 解析获取每一组可能的sku，组合成一个字典，判断当前sku记录是否满足前缀条件
+    parseSku(valueId, key) {
+      // valueId表示每个sku属性值的id， key表示每个sku属性名
       // 遍历skuList
+
+      // 如果有，先删除
+      if (this.preDict.hasOwnProperty(key)) delete this.preDict[key];
+
       this.skuValuesMap = {};
-      this.skuList.forEach((element) => {
-        let properties = element.properties_r;
+      for (let i = 0; i < this.skuList.length; i++) {
+        let flag = true; // 满足要求
+        let properties = this.skuList[i].properties_r;
         // 校验每一个可能的sku中对应key的value值是否等于用户点击的value值
-        if (properties[key] === id) {
-          // 如果等于，遍历该map，组合新的skuValueMap
-          for (let key in properties) {
-            // 如果不存在this.skuValuesMap[key]数组，生成一个新数组
-            if (isNaN(this.skuValuesMap[key]))
-              this.$set(this.skuValuesMap, key, new Array()); // 绑定属性为响应式
-            // 将每个id值推入skuValuesMap中
-            this.skuValuesMap[key].push(properties[key]);
-            // this.skuValuesMap[key].push(properties[key]);
+        if (properties[key] === valueId) {
+          // 如果等于，遍历时需要考虑其所有前缀
+          for (let preKey in this.preDict) {
+            if (
+              this.preDict[preKey] == null ||
+              this.preDict[preKey] != properties[preKey]
+            ) {
+              flag = false;
+              break;
+            }
+          }
+          if (!flag) continue; // 继续遍历下一条有效的sku记录
+          // 构造字典数组
+          for (let pkey in properties) {
+            // 为空，为类目名构造数组
+            if (this.skuValuesMap[pkey] == null) {
+              this.$set(this.skuValuesMap, pkey, new Array());
+            }
+            // 如果类目名数组中存在相同类目值，跳过
+            else if (this.skuValuesMap[pkey].includes(properties[pkey])) {
+              continue;
+            }
+            this.skuValuesMap[pkey].push(properties[pkey]);
           }
         }
-      });
+      }
       console.log(this.skuValuesMap);
     },
-    // 修改可用的类目状态和不可用的类目显示, 排除用户点击的那个类目
-    modifyStatus(outIndex) {
-      for (let i = 0; i < this.propsValues.length; i++) {
-        if (i !== outIndex) {
-          let skuValues = this.propsValues[i].sku_values; // 类目值数组
-          let name = this.propsValues[i].name; // 类目名
 
-          // 先将状态全部设置为false
-          for (let j = 0; j < skuValues.length; j++) {
-            this.propsValues[i].sku_values[j].status = false;
-          }
-          // 如果有效类目数组存在与skuValuesMap字典中，则将其类目下的有效属性值的状态设置为true
-          for (let m = 0; m < skuValues.length; m++) {
-            if (this.skuValuesMap[name] != null) {
-              for (let n = 0; n < this.skuValuesMap[name].length; n++) {
-                if (skuValues[m].id == this.skuValuesMap[name][n]) {
-                  // 如果id存在
-                  this.propsValues[i].sku_values[m].status = true;
-                }
+    // 修改可用的类目状态和不可用的类目显示
+    modifyStatus() {
+      for (let i = 0; i < this.propsValues.length; i++) {
+        // 过滤出类目数组中还未选中类目下标
+        // if (!this.chosePropsList.includes(i)) {
+        let skuValues = this.propsValues[i].sku_values; // 类目值数组
+        let name = this.propsValues[i].name; // 类目名
+        // 先将状态全部设置为false
+        for (let j = 0; j < skuValues.length; j++) {
+          this.propsValues[i].sku_values[j].status = false;
+        }
+        // 如果有效类目数组存在于skuValuesMap字典中，则将其类目下的有效属性值的状态设置为true
+        for (let m = 0; m < skuValues.length; m++) {
+          if (this.skuValuesMap[name] != null) {
+            for (let n = 0; n < this.skuValuesMap[name].length; n++) {
+              if (skuValues[m].id == this.skuValuesMap[name][n]) {
+                // 如果id存在并且库存>0
+                this.propsValues[i].sku_values[m].status = true;
               }
             }
           }
         }
+        // }
       }
     },
 
-    // // 动态修改sku个属性值的状态
-    // modifySkuProp(name, id) {
-    //   this.propsValues.forEach((element) => {
-    //     if (element.name !== name) {
-    //       let values = element.sku_values;
-    //       for (let value in values) {
-    //       }
-    //     }
-    //   });
-    // },
-
+    // 用户取消莫个类目值，状态回朔
+    backModifyStatus() {
+      this.skuValuesMap = {};
+      for (let i = 0; i < this.skuList.length; i++) {
+        let flag = true; // 满足要求
+        let properties = this.skuList[i].properties_r;
+        // 校验每一个可能的sku中对应key的value值是否等于用户点击的value值
+          for (let preKey in this.preDict) {
+            if (
+              this.preDict[preKey] == null ||
+              this.preDict[preKey] != properties[preKey]
+            ) {
+              flag = false;
+              break;
+            }
+          }
+          if (!flag) continue; // 继续遍历下一条有效的sku记录
+          // 构造字典数组
+          for (let pkey in properties) {
+            // 为空，为类目名构造数组
+            if (this.skuValuesMap[pkey] == null) {
+              this.$set(this.skuValuesMap, pkey, new Array());
+            }
+            // 如果类目名数组中存在相同类目值，跳过
+            else if (this.skuValuesMap[pkey].includes(properties[pkey])) {
+              continue;
+            }
+            this.skuValuesMap[pkey].push(properties[pkey]);
+          }
+      }
+      this.modifyStatus();  // 再次更新状态
+    },
     // 关掉动作面板
     close() {
       this.$emit("closeSkuProps");
