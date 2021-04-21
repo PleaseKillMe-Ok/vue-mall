@@ -2,11 +2,30 @@
   <div id="SkuPropsSelector">
     <div class="card">
       <van-row>
-        <van-col span="4">
+        <van-col span="5">
           <img v-lazy="image" class="img" width="100%" height="auto" />
         </van-col>
-        <van-col span="17"> ¥{{ defaultPrice }} </van-col>
-        <van-col span="2">
+        <van-col span="14" class="sku-price">
+          <!-- 根据是否选中sku，计算价格和库存-->
+          <div id="price">
+            <span v-if="chosePropsList.length < propsValues.length">
+              ¥{{ defaultPrice }}</span
+            >
+            <span
+              v-else-if="
+                chosePropsList.length === propsValues.length &&
+                skuFavourablePrice < skuPrice
+              "
+            >
+              ¥{{ skuFavourablePrice }}
+              <span class="sku-favourable-price">¥{{ skuPrice }}</span>
+            </span>
+            <span v-else-if="chosePropsList.length === propsValues.length"
+              >¥{{ skuPrice }}
+            </span>
+          </div>
+        </van-col>
+        <van-col span="3">
           <van-icon name="close" @click="close"></van-icon>
         </van-col>
       </van-row>
@@ -35,11 +54,28 @@
       </div>
       <van-row>
         <van-col span="4" class="buy-title"> 购买数量 </van-col>
-        <van-col span="14" class="store">库存{{ storeCount }}件</van-col>
-        <van-col span="6"><van-stepper v-model="buyCount" /></van-col>
+        <van-col span="14" class="store">
+          库存
+          <span>{{ skuStock }}</span>
+        </van-col>
+        <van-col span="6"
+          ><van-stepper
+            ref="stepper"
+            v-model="buyCount"
+            :disable-plus="buyCount >= skuStock"
+            theme="round"
+            button-size="20"
+        /></van-col>
       </van-row>
+      <div class="van-sku-actions">
+        <van-button type="danger" size="large" @click="joinCart"
+          >加入购物车</van-button
+        >
+        <van-button type="warning" size="large" @click="buy"
+          >立即购买</van-button
+        >
+      </div>
     </div>
-    {{ skuList }}
   </div>
 </template>
 
@@ -61,26 +97,44 @@ export default {
     return {
       image: "https://img01.yzcdn.cn/vant/apple-1.jpg",
       buyCount: 1, // 购买数量
-      storeCount: 100, // 库存数量
       choiceMap: {}, // 选择sku属性项
       defaultPrice: 0, // 默认价格
+      defaultStore: 0, // 默认商品总库存
       skuList: [], // sku列表
       skuValuesMap: {}, // key为属性名，value为属性值数组
       chosePropsList: [], // 维护用户已经点击的类目数组下标
       preDict: {}, // 用户每次选择类目后的字典数据
+      skuPrice: 0, // 选中的sku价格
+      skuStock: 0, // 选中的sku库存容量
+      skuSidRelation: {}, // 存储sku的Sid和sku其他信息映射关系,
+      skuFavourablePrice: 0, // sku的优惠价
     };
   },
   created() {
-    this.defaultPrice = this.commodityInformation.favourable_price;
+    this.defaultPrice = this.commodityInformation.favourable_price; // 默认价格
+    this.defaultStore = this.commodityInformation.stock; // 默认总库存
+    this.skuStock = this.defaultStore;
+    this.skuPrice = this.defaultPrice;
     this.getEffectiveSku();
   },
   watch: {
-    propsValues() {
+    // 当propsValues由父-->子执行
+    propsValues(newName, oldName) {
       // 为每个key构造选择项map, key为属性name， value 为值index
-      this.propsValues.forEach((element) => {
+      newName.forEach((element) => {
         this.choiceMap[element.name] = -1;
       });
     },
+    // 当skuList数据获取成功执行
+    skuList(newName, oldName) {
+      this.parseSkuExtra(newName); // 解析sku额外信息
+    },
+    // 当用户选择/取消某个类目时
+    chosePropsList(newName, oldName) {
+      console.log(typeof newName);
+    },
+    // 修改步进器
+    buyCount(newName, oldName) {},
   },
   methods: {
     // 获取该商品下所有的有效SKU
@@ -113,6 +167,7 @@ export default {
           this.propsValues[outIndex].sku_values[i].is_choice = false;
         }
         this.propsValues[outIndex].sku_values[InnerIndex].is_choice = true;
+        this.computeSku();
       } else {
         // 当类目值被选中
         let i = this.chosePropsList.indexOf(outIndex); // 获取下标
@@ -121,6 +176,7 @@ export default {
         this.backModifyStatus(); // 状态回朔
         // 只对选中的设置为false，其他已经是false
         this.propsValues[outIndex].sku_values[InnerIndex].is_choice = false;
+        this.computeSku();
       }
     },
 
@@ -129,7 +185,7 @@ export default {
       // valueId表示每个sku属性值的id， key表示每个sku属性名
       // 遍历skuList
 
-      // 如果有，先删除
+      // 如果前缀字典中有key，先删除，方便同类目下切换属性值
       if (this.preDict.hasOwnProperty(key)) delete this.preDict[key];
 
       this.skuValuesMap = {};
@@ -163,7 +219,18 @@ export default {
           }
         }
       }
-      console.log(this.skuValuesMap);
+    },
+
+    // 解析sku的额外信息
+    parseSkuExtra(skuList) {
+      skuList.forEach((element) => {
+        let sid = element.sid.split("-").sort().join("-");
+        this.skuSidRelation[sid] = {
+          favourablePrice: element.favourable_price,
+          price: element.price,
+          stock: element.stock,
+        };
+      });
     },
 
     // 修改可用的类目状态和不可用的类目显示
@@ -188,42 +255,102 @@ export default {
             }
           }
         }
-        // }
       }
     },
 
-    // 用户取消莫个类目值，状态回朔
+    // 用户取消某个类目值，状态回朔
     backModifyStatus() {
       this.skuValuesMap = {};
       for (let i = 0; i < this.skuList.length; i++) {
         let flag = true; // 满足要求
         let properties = this.skuList[i].properties_r;
         // 校验每一个可能的sku中对应key的value值是否等于用户点击的value值
-          for (let preKey in this.preDict) {
-            if (
-              this.preDict[preKey] == null ||
-              this.preDict[preKey] != properties[preKey]
-            ) {
-              flag = false;
-              break;
-            }
+        for (let preKey in this.preDict) {
+          if (
+            this.preDict[preKey] == null ||
+            this.preDict[preKey] != properties[preKey]
+          ) {
+            flag = false;
+            break;
           }
-          if (!flag) continue; // 继续遍历下一条有效的sku记录
-          // 构造字典数组
-          for (let pkey in properties) {
-            // 为空，为类目名构造数组
-            if (this.skuValuesMap[pkey] == null) {
-              this.$set(this.skuValuesMap, pkey, new Array());
-            }
-            // 如果类目名数组中存在相同类目值，跳过
-            else if (this.skuValuesMap[pkey].includes(properties[pkey])) {
-              continue;
-            }
-            this.skuValuesMap[pkey].push(properties[pkey]);
+        }
+        if (!flag) continue; // 继续遍历下一条有效的sku记录
+        // 构造字典数组
+        for (let pkey in properties) {
+          // 为空，为类目名构造数组
+          if (this.skuValuesMap[pkey] == null) {
+            this.$set(this.skuValuesMap, pkey, new Array());
           }
+          // 如果类目名数组中存在相同类目值，跳过
+          else if (this.skuValuesMap[pkey].includes(properties[pkey])) {
+            continue;
+          }
+          this.skuValuesMap[pkey].push(properties[pkey]);
+        }
       }
-      this.modifyStatus();  // 再次更新状态
+      this.modifyStatus(); // 再次更新状态
     },
+
+    // 根据指定的有效sku，计算出对应的价格和库存
+    computeSku() {
+      // 获取用户选中的类目值, 拼接成sid
+      let sidList = new Array();
+      for (let key in this.choiceMap) {
+        if (this.preDict[key] != null)
+          sidList.push(this.preDict[key].toString());
+      }
+      let sid = sidList.sort().join("-");
+      if (this.skuSidRelation.hasOwnProperty(sid)) {
+        this.skuPrice = parseFloat(this.skuSidRelation[sid].price);
+        this.skuFavourablePrice = parseFloat(
+          this.skuSidRelation[sid].favourablePrice
+        );
+        this.skuStock = parseInt(this.skuSidRelation[sid].stock);
+      } else {
+        // 一直处于默认的price和stock
+        this.skuPrice = this.defaultPrice;
+        this.skuStock = this.defaultStore;
+      }
+    },
+
+    // 加入购物车
+    joinCart() {
+      if (this.chosePropsList.length < this.propsValues.length)
+        this.$toast("请选择商品规格");
+      else if (this.skuStock < 0) {
+        this.$toast("该规格的商品卖完了");
+      } else if (this.skuStock < this.buyCount) {
+        this.$toast("规格数量无效");
+      } else {
+        let data = this.collectSku();
+        this.$toast("加入成功");
+      }
+    },
+
+    // 立即购买
+    buy() {
+      if (this.chosePropsList.length < this.propsValues.length)
+        this.$toast("请选择商品规格");
+      else if (this.skuStock < 0) {
+        this.$toast("该规格的商品卖完了");
+      } else if (this.skuStock < this.buyCount) {
+        this.$toast("规格数量无效");
+      } else {
+        let data = this.collectSku();
+        console.log(data);
+        this.$toast("立即购买");
+      }
+    },
+
+    // 收集用户选中的sku信息
+    collectSku() {
+      let data = JSON.stringify({
+        sku: this.preDict,
+        buy_count: this.buyCount,
+      });
+      return data;
+    },
+
     // 关掉动作面板
     close() {
       this.$emit("closeSkuProps");
@@ -267,11 +394,11 @@ export default {
 /* 值按钮 */
 .value-btn {
   display: inline-block;
-  margin-bottom: 10px;
-  margin-left: 15px;
-  border-radius: 15%;
+  margin-bottom: 5px;
+  margin-left: 12px;
+  border-radius: 25px;
   background-color: #96979917;
-  height: 30px;
+  height: 20px;
   border-style: none;
 }
 
@@ -280,5 +407,23 @@ export default {
   border-color: #fd7038;
   color: #fd7038;
   border-style: solid;
+}
+
+/* sku的原价格 */
+.sku-price {
+  text-align: left;
+  margin-left: 20px;
+  font-weight: bolder;
+  font-size: 22px;
+  color: red;
+}
+/* sku优惠价 */
+.sku-favourable-price {
+  margin-left: 15px;
+  font-size: 15px;
+  vertical-align: center;
+  text-decoration: line-through;
+  color: grey;
+  opacity: 0.9;
 }
 </style>
