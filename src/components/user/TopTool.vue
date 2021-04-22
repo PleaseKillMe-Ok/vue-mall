@@ -35,7 +35,7 @@ export default {
     },
     previousPage: {
       type: String,
-      default: "Individual",
+      default: "/individual",
     },
     againConfirm: {
       type: Boolean,
@@ -48,7 +48,7 @@ export default {
       this.$router.push({ name: "Setting" });
     },
     goBack() {
-      this.$router.push({ name: this.previousPage });
+      this.$router.push({ path: this.previousPage });
     },
   },
 };
