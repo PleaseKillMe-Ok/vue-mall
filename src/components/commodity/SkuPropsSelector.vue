@@ -328,7 +328,7 @@ export default {
         addToCart()
           .then((res) => {
             let data = res.data;
-            if (data.code === ){
+            if (data.code === 1068){
               this.$toast.success("加入成功！ ")
             }
           })
