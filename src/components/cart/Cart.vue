@@ -10,31 +10,39 @@
         <span class="title">{{ title }}</span>
       </template>
     </van-nav-bar>
-    <van-cell>共{{ totalGoods }}件商品</van-cell>
-
+    <van-cell>共{{ commodityCount }}件商品</van-cell>
+    weqwe
+    {{ selectedCommodityResult }}
     <!-- 购物车商品布局 -->
-    <div class="card" v-for="(store, key, index) in storeList" :key="index">
+    <div
+      class="card commoditys-style"
+      v-for="(store, name, index) in storeDict"
+      :key="index"
+    >
       <van-row>
         <van-col span="2">
-          <van-checkbox></van-checkbox>
+          <van-checkbox-group v-model="selectedStoreResult">
+            <van-checkbox :name="name"></van-checkbox>
+          </van-checkbox-group>
         </van-col>
         <van-col span="18">
           <div class="storeTitle">
             <van-tag type="danger">小云</van-tag>
-            <span>{{ key }}</span>
+            <span>{{ name }}</span>
           </div>
         </van-col>
         <van-col span="3">
-          <span @click="getVoucher(key)" class="voucher">领卷</span>
+          <span @click="getVoucher(name)" class="voucher">领卷</span>
         </van-col>
       </van-row>
 
       <!-- 单个购物车商品-->
-      <div></div>
-      <div v-for="(commodity, index) in store" :key="index">
+      <div v-for="(commodity, index) in store" :key="index" :id="commodity.id">
         <van-row>
           <van-col span="2">
-            <van-checkbox></van-checkbox>
+            <van-checkbox-group v-model="selectedCommodityResult">
+              <van-checkbox :name="commodity.tid"></van-checkbox>
+            </van-checkbox-group>
           </van-col>
           <van-col span="8">
             <img
@@ -46,9 +54,9 @@
             />
           </van-col>
           <van-col span="13">
-            <span class="intro">{{ commodity["intro"] }}</span>
+            <span class="intro">{{ commodity.intro }}</span>
             <div class="yeah">
-              <span class="price-one-good">¥{{ commodity["price"] }}</span>
+              <span class="price-one-good">¥{{ commodity.totalPrice }}</span>
 
               <!-- <span
               v-if="!commodity.openCount"
@@ -67,8 +75,25 @@
                 <van-stepper
                   class="counts-modify"
                   :value="commodity.count"
-                  async-change
-                  @change="onChangeCount"
+                  @plus="
+                    onChangeCount(
+                      commodity.tid,
+                      commodity.sid,
+                      commodity.count + 1,
+                      name,
+                      index
+                    )
+                  "
+                  @minus="
+                    onChangeCount(
+                      commodity.tid,
+                      commodity.sid,
+                      commodity.count - 1,
+                      name,
+                      index
+                    )
+                  "
+                  theme="round"
                 />
               </span>
             </div>
@@ -78,7 +103,12 @@
       </div>
     </div>
 
-    <van-submit-bar :tip="tip" tip-icon="info-o" @submit="onSubmitOrder">
+    <van-submit-bar
+      :tip="tip"
+      tip-icon="info-o"
+      @submit="onSubmitOrder"
+      class="bottom"
+    >
       <template v-if="isOpenManage" #button>
         <van-button
           plain
@@ -109,7 +139,8 @@
 </template>
 
 <script>
-import { storeList, storeNameDict } from "@/demo/cartdemo";
+import { storeNameDict, newStoreList } from "@/demo/cartdemo";
+import { getCartInfo, modifySkuCount } from "@/api/cart";
 export default {
   name: "Cart",
   data() {
@@ -123,13 +154,16 @@ export default {
       commodityList: [],
       isOpenManage: false,
       rightText: "管理",
-      storeList: [],
-      storeNameDict: {},
+      storeDict: {}, // 存储{店铺名:[商品详细信息]}
+      storeNameDict: {}, // 存储{店铺名:[购物车中商品的tids]}
+      storeTidDict: {}, // 存储{tid:店铺名}
+      commodityCount: 0, // 购物车中商品个数
+      selectedStoreResult: [], // 选中的店铺结果数组
+      selectedCommodityResult: [], // 选中的商品结果Map
     };
   },
   created() {
-    this.storeList = storeList;
-    this.storeNameDict = storeNameDict;
+    this.getCartInfo();
   },
   watch: {
     // 全选商品
@@ -145,8 +179,127 @@ export default {
         this.disabled = true;
       }
     },
+
+    // 监听选中的店铺名数组
+    /**
+     * 当用户选中/取消了某个店铺复选框，则将其所下属的所有商品加入/撤离选中商品结果字典
+     * newValue/oldValue为一个Object，数组对象
+     */
+    selectedStoreResult(newValue, oldValue) {
+      // 通过状态前后数组长度判断是选中还是取消
+      console.log(newValue.length, oldValue.length);
+      if (newValue.length > oldValue.length) {
+        // 选中
+        for (let index in this.storeDict[newValue[newValue.length - 1]]) {
+          this.selectedCommodityResult.push(
+            this.storeDict[newValue[0]][index].tid
+          ); // 向selectedCommodityResult中添加tid
+        }
+      } else if (newValue.length === oldValue.length) {
+        // 此处由于该店铺下所有商品都被选中，回调该监听器
+      } else {
+        // 取消
+        if (newValue.length === 0) {
+          // 直接清空数组，防止出现越界异常
+          this.selectedCommodityResult = [];
+        } else {
+          // 删除指定的商品
+          for (let index in this.storeDict[oldValue[oldValue.length - 1]]) {
+            // 依次删除出现在该店铺下的商品
+            let i = this.selectedCommodityResult.indexOf(
+              this.storeDict[newValue[0]][index].tid
+            );
+            this.selectedCommodityResult.splice(i, 1);
+          }
+        }
+      }
+    },
+
+    // 监听选中的商品数组
+    /**
+     * 当
+     */
+    selectedCommodityResult(newValue, oldValue) {
+      if (newValue.length > oldValue.length) {
+        let storeName = this.storeTidDict[newValue[newValue.length - 1]];
+        let tempCount = 0;
+        let aimCount = this.storeNameDict[storeName].length;
+        for (let index in this.storeNameDict[storeName]) {
+          if (
+            this.selectedCommodityResult.includes(
+              this.storeNameDict[storeName][index]
+            )
+          )
+            tempCount += 1;
+        }
+        console.log(tempCount, aimCount);
+        if (tempCount == aimCount) {
+          this.selectedStoreResult.push(storeName);
+        }
+      } else if (newValue.length === oldValue.length) {
+        //
+      } else {
+        let storeName = this.selectedStoreResult[oldValue[oldValue.length - 1]];
+        let i = this.selectedStoreResult.indexOf(storeName);
+        this.selectedStoreResult.splice(i, 1);
+      }
+    },
+
+    // 监听选中的商品结果集合
   },
   methods: {
+    // 获取购物车中的数据
+    getCartInfo() {
+      getCartInfo()
+        .then((res) => {
+          this.commodityList = res.data;
+          this.commodityCount = this.commodityList.length;
+          this.parseData();
+        })
+        .catch((err) => {
+          this.$toast.fail("获取购物车信息失败，服务器开了会小差～");
+        });
+    },
+
+    // 解析数据为字典， {storeName1:[commodity1, commodity2], storeName2:[]...}
+    parseData() {
+      for (let index in this.commodityList) {
+        let item = this.commodityList[index];
+        let store = item.commodity_info.store;
+        let commodity = item.commodity_info;
+        if (this.storeDict[store.name] == null) {
+          // 如果storeDict中不存在该店铺键名
+          this.$set(this.storeDict, store.name, new Array());
+          this.$set(this.storeNameDict, store.name, new Array());
+        }
+        let favourable_price =
+          item.sksku_infou == null
+            ? commodity.favourable_price
+            : item.sku_info.favourable_price;
+        let count = item.count;
+        // 将单个商品详细信息加入this.storeDict
+        this.storeDict[store.name].push({
+          tid: item.pk,
+          cid: commodity.id,
+          sid: item.sku,
+          commodityName: commodity.commodity_name,
+          price: item.sku_info == null ? commodity.price : item.sku_info.price,
+          favourable_price: favourable_price,
+          intro: commodity.intro,
+          status: commodity.status,
+          skuName: item.sku_info == null ? "" : item.sku_info.name,
+          littleImage: commodity.little_image,
+          openCount: false,
+          count: count,
+          totalPrice: favourable_price * count,
+        });
+
+        this.storeNameDict[store.name].push(item.pk); // {storName:[tid1,tid2,tid...]}
+
+        this.storeTidDict[item.pk] = store.name; // {tid1:storeName1, tid2:storeName2, tid3:storeName2}
+      }
+    },
+
     // 管理购物车中的商品
     manager() {
       if (this.isOpenManage) {
@@ -186,13 +339,30 @@ export default {
     },
 
     // 动态改变购物车某商品的数量
-    onChangeCount(id) {
-      console.log("改变商品", id);
+    onChangeCount(tid, sid, count, storeName, index) {
+      let data = {
+        tid: tid, // 购物车指定记录的id
+        sid: sid, // 购物车指定商品的sku的id
+        count: count, // 购物车指定商品的变化后的数量
+      };
+      // 发送修改购买的商品sku的数量
+      modifySkuCount(data)
+        .then((res) => {
+          let data = res.data;
+          if (data.code == 1069) {
+            // 更新对应单个商品总价格
+            this.storeDict[storeName][index].totalPrice = data.new_price;
+            this.storeDict[storeName][index].count = count;
+          }
+        })
+        .catch((err) => {
+          this.$toast.fail("商品数量修改失败，服务器开了会小差～");
+        });
     },
 
     // 由固定改变成布长器
     transStatus(storeName, index) {
-      this.storeList[storeName][index].openCount = true;
+      this.storeDict[storeName][index].openCount = true;
     },
   },
 };
@@ -287,5 +457,10 @@ export default {
 /* 布长器 */
 .counts-modify {
   margin-left: 120px;
+}
+
+/* 所有商品整体布局 */
+.commoditys-style {
+  margin-bottom: 100px;
 }
 </style>

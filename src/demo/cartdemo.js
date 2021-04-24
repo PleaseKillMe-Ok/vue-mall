@@ -36,9 +36,36 @@ var storeList = {
     }]
 }
 
+var newStoreList = [{
+    "pk": 3,
+    "count": 5,
+    "commodity": {
+        "id": 32,
+        "commodity_name": "磨牙棒222",
+        "price": "9.90",
+        "favourable_price": "8.50",
+        "intro": "白色磨牙榜夹芯钙奶棒100克买二送一",
+        "status": true,
+        "little_image": "",
+        "store": {
+            "id": 1,
+            "name": "云中小店铺",
+            "intro": "这是云中的店铺,出售零食"
+        }
+    },
+    "sku": {
+        "id": 9,
+        "sid": "19-53-38-43",
+        "price": "12.00",
+        "favourable_price": "9.50",
+        "name": "美味黑色4GB18cm大型变态辣辣条",
+        "status": true
+    }
+}]
+
 var storeNameDict = {
     '艾诺迪亚数码专营': false,
     '天地图书专营店': false
 }
 
-export { storeList, storeNameDict }
+export { storeList, storeNameDict, newStoreList }

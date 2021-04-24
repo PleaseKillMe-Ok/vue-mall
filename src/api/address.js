@@ -41,3 +41,10 @@ export function modifyAddress(pk, data) {
 export function addAddress(data) {
     return axios.post('/consumer/chsc/apis/address/', data)
 }
+
+/**
+ * 获取用户默认地址
+ */
+export function getDefaultAddress() {
+    return axios.get('/consumer/chsc/apis/address/default/')
+}

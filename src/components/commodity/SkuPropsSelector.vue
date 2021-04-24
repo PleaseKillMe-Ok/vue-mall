@@ -81,6 +81,7 @@
 
 <script>
 import { getEffectiveSku } from "@/api/commodity";
+import { addToCart } from "@/api/cart";
 export default {
   name: "SkuPropsSelector",
   props: {
@@ -323,7 +324,17 @@ export default {
         this.$toast("规格数量无效");
       } else {
         let data = this.collectSku();
-        this.$toast("加入成功");
+        // 发送加入购物车请求
+        addToCart()
+          .then((res) => {
+            let data = res.data;
+            if (data.code === 1068){
+              this.$toast.success("加入成功！ ")
+            }
+          })
+          .catch((err) => {
+            this.$toast.fail("加入失败，服务器开了会小差～");
+          });
       }
     },
 
