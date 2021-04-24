@@ -15,6 +15,13 @@ export function addFavorites(data) {
 }
 
 /**
+ * 批量添加收藏夹商品
+ */
+export function addFavoritesBulk(data) {
+    return axios.post('/consumer/chsc/apis/favorites/several/', data);
+}
+
+/**
  * 用户单删除收藏夹商品
  */
 export function deleteFavorites(id) {

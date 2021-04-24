@@ -140,7 +140,13 @@
 
 <script>
 import { storeNameDict, newStoreList } from "@/demo/cartdemo";
-import { getCartInfo, modifySkuCount } from "@/api/cart";
+import { addFavoritesBulk } from "@/api/favorites";
+import {
+  getCartInfo,
+  modifySkuCount,
+  deleteCartSeveral,
+  deleteCartAll,
+} from "@/api/cart";
 export default {
   name: "Cart",
   data() {
@@ -157,6 +163,7 @@ export default {
       storeDict: {}, // 存储{店铺名:[商品详细信息]}
       storeNameDict: {}, // 存储{店铺名:[购物车中商品的tids]}
       storeTidDict: {}, // 存储{tid:店铺名}
+      tidCidDict: {}, // 存储{tid:cid}， 购物车记录id：商品id
       commodityCount: 0, // 购物车中商品个数
       selectedStoreResult: [], // 选中的店铺结果数组
       selectedCommodityResult: [], // 选中的商品结果Map
@@ -166,17 +173,19 @@ export default {
     this.getCartInfo();
   },
   watch: {
-    // 全选商品
+    // 全选商品，将所有的商品添加到selectedCommodityResult，将所有的店铺名添加到selectedStoreResult
     choiceAll(newValue, oldValue) {
       this.disabled = !this.disabled;
-    },
-
-    // 监听商品列表变化
-    commodityList(newValue, oldValue) {
-      if (newValue.length > 0) {
-        this.disabled = false;
+      if (newValue) {
+        for (let key in this.storeNameDict) {
+          this.selectedStoreResult.push(key);
+          for (let index in this.storeNameDict[key]) {
+            this.selectedCommodityResult.push(this.storeNameDict[key][index]);
+          }
+        }
       } else {
-        this.disabled = true;
+        this.selectedStoreResult = [];
+        this.selectedCommodityResult = [];
       }
     },
 
@@ -217,12 +226,21 @@ export default {
 
     // 监听选中的商品数组
     /**
-     * 当
+     * 1. 当 勾选某个商品时，判断当前selectedCommodityResult数组中是否包含该店铺下的所有商品
+     * 如果是，表示所有商品都已选中，此时店铺复选框应该选中，将店铺名加入selectedStoreResult中
+     *
+     * 2. 当取消勾选后，此时将店铺名从selectedStoreResult移除即可
      */
     selectedCommodityResult(newValue, oldValue) {
+      // 启用/禁止提交订单按钮
+      if (newValue.length > 0) {
+        this.disabled = false;
+      } else {
+        this.disabled = true;
+      }
       if (newValue.length > oldValue.length) {
         let storeName = this.storeTidDict[newValue[newValue.length - 1]];
-        let tempCount = 0;
+        let tempCount = 0; // 临时计数器
         let aimCount = this.storeNameDict[storeName].length;
         for (let index in this.storeNameDict[storeName]) {
           if (
@@ -232,8 +250,7 @@ export default {
           )
             tempCount += 1;
         }
-        console.log(tempCount, aimCount);
-        if (tempCount == aimCount) {
+        if (tempCount === aimCount) {
           this.selectedStoreResult.push(storeName);
         }
       } else if (newValue.length === oldValue.length) {
@@ -297,6 +314,8 @@ export default {
         this.storeNameDict[store.name].push(item.pk); // {storName:[tid1,tid2,tid...]}
 
         this.storeTidDict[item.pk] = store.name; // {tid1:storeName1, tid2:storeName2, tid3:storeName2}
+
+        this.tidCidDict[item.pk] = commodity.id; // {tid1:cid1,tid2:cid2...}
       }
     },
 
@@ -320,18 +339,62 @@ export default {
 
     // 删除商品
     deleteCommodity() {
-      this.$dialog
-        .confirm({
-          message: "确认删除该宝贝吗?",
-        })
-        .then(() => {
-          console.log("删除成功");
-        })
-        .catch(() => {});
+      if (this.selectedCommodityResult.length <= 0) {
+        this.$toast.fail("请选择要删除的商品");
+      } else {
+        this.$dialog
+          .confirm({
+            message: "确认删除该宝贝吗?",
+          })
+          .then(() => {
+            if (this.choiceAll) {
+              // 删除全部的购物车宝贝
+              deleteCartAll()
+                .then((res) => {
+                  let data = res.data;
+                  if (data.code === 1067) this.$toast.success(data.msg);
+                })
+                .catch((err) => {
+                  this.$toast.fail("删除失败～服务器开了会小差～");
+                });
+            } else {
+              // 删除指定的购物车宝贝
+              let datas = {
+                pk_list: this.selectedCommodityResult,
+              };
+              deleteCartSeveral(datas)
+                .then((res) => {
+                  let data = res.data;
+                  if (data.code === 1067) this.$toast.success(data.msg);
+                })
+                .catch((err) => {
+                  this.$toast.fail("删除失败～服务器开了会小差～");
+                });
+            }
+          })
+          .catch(() => {});
+      }
     },
 
     // 加入收藏夹
-    moveFavorites() {},
+    moveFavorites() {
+      let pkList = new Array();
+      // 向pkList添加对应于tid的商品id
+      for (let index in this.selectedCommodityResult) {
+        pkList.push(this.tidCidDict[this.selectedCommodityResult[index]]);
+      }
+      let data = {
+        commodity_pk_list: pkList,
+      };
+      addFavoritesBulk(data)
+        .then((res) => {
+          let data = res.data;
+          if (data.code === 1020) this.$toast.success(data.msg);
+        })
+        .catch((err) => {
+          this.$toast.fail("收藏商品失败，服务器开了会小差～");
+        });
+    },
 
     // 领取优惠卷
     getVoucher(name) {
