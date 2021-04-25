@@ -17,6 +17,19 @@
         <FavoritesStore :isOpenManage="isOpenManage"></FavoritesStore>
       </van-tab>
     </van-tabs>
+    <!-- 底部固定栏 -->
+    <div class="fix">
+     <span style="text-align:left">你好</span>
+     <span>我很好</span>
+    </div>
+    <!-- <van-submit-bar
+      disabled
+      :price="3050"
+      button-text="提交订单"
+      tip="你的收货地址不支持同城送, 我们已为你推荐快递"
+      tip-icon="info-o"
+      @submit="onSubmit"
+    /> -->
   </div>
 </template>
 
@@ -29,6 +42,7 @@ export default {
   components: { FavoritesCommodity },
   data() {
     return {
+      disabled: true, // 是否开启底部按钮
       active: 0, // 默认选中第一个标签页
       isOpenManage: false, // 是否开启收藏商品管理
       rightTitle: "管理",
@@ -56,4 +70,20 @@ export default {
 </script>
 
 <style scoped>
+/* 底部固定栏 */
+.fix {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  background-color: #fff;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.choice-all {
+}
 </style>

@@ -3,21 +3,31 @@
     <!-- 最顶部工具栏 -->
     <TopTool :previousPage="previousPage"></TopTool>
     <!-- 简要个人信息栏 -->
-    <van-row @click="toPersonal">
-      <van-col span="8">
-        <van-image
-          class="head-image"
-          width="5rem"
-          height="5rem"
-          fit="cover"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-          round
-      /></van-col>
-      <van-col span="10">
-        <p class="username">司云中</p>
-        <p class="account">帐号:syz999520</p>
-      </van-col>
-    </van-row>
+    <van-cell is-link center>
+      <van-row @click="toPersonal">
+        <van-col span="8">
+          <van-image
+            class="head-image"
+            width="5rem"
+            height="5rem"
+            fit="cover"
+            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            round
+        /></van-col>
+        <van-col span="14">
+          <span class="username block">{{ information.username }}</span>
+          <span class="personality block">点这里可以添加个性签名</span>
+          <div class="fans-attention block">
+            <span>{{ information.fans }}</span
+            ><span class="extra-text">关注</span> &nbsp;&nbsp;&nbsp;<span
+              class="extra-text"
+              >|</span
+            >&nbsp;&nbsp;&nbsp; <span>{{ information.attention }}</span
+            ><span class="extra-text">粉丝</span>
+          </div>
+        </van-col>
+      </van-row>
+    </van-cell>
 
     <!-- 功能宫格栏 -->
     <FunctionGrid></FunctionGrid>
@@ -27,7 +37,7 @@
 <script>
 const TopTool = () => import("@/components/user/TopTool");
 const FunctionGrid = () => import("@/components/user/FunctionGrid");
-import { Toast } from "vant";
+import { getInformation } from "@/api/user";
 export default {
   name: "UserHeader",
   components: {
@@ -36,12 +46,37 @@ export default {
   },
   data() {
     return {
-      previousPage:"/"
+      previousPage: "/",
+      information: {}, // 用户个人信息
     };
   },
+  created() {
+    this.getInformation();
+  },
   methods: {
+    // 获取用户个人基本信息
+    getInformation() {
+      getInformation()
+        .then((res) => {
+          this.information = res.data;
+        })
+        .catch((res) => {
+          this.$toast.fail("获取用户个人信息失败,服务器开了会小差～");
+        });
+    },
     toPersonal() {
-      this.$router.push('/personal')
+      this.$router.push("/personal");
+    },
+
+    // 获取用户足迹/收藏夹/红包卡卷/收货地址的记录个数
+    getExtraCount() {
+      getExtraCount()
+        .then((res) => {
+          // 
+        })
+        .catch((res) => {
+          this.$toast.fail("获取用户额外信息失败，服务器开了会小差～")
+        });
     },
   },
 };
@@ -55,17 +90,34 @@ export default {
   margin: 10px 0px 0px 20px;
 }
 .username {
-  float: left;
   margin-top: 1rem;
-  margin-left: 1.5rem;
-  margin-right: 0.5rem;
-  font-size: 1.5rem;
+  margin-left: 20px;
+  margin-right: 15px;
+  font-size: 18px;
   font-weight: bolder;
 }
+.block {
+  display: block;
+}
+
 /* 帐号 */
-.account {
-  float: left;
-  font-size: 0.9rem;
+.personality {
+  font-size: 0.8rem;
   margin-left: 1rem;
+  color: grey;
+  opacity: 0.8;
+}
+
+/* 关注度 */
+.fans-attention {
+  font-weight: bolder;
+  margin-left: 1rem;
+}
+
+.extra-text {
+  color: grey;
+  opacity: 0.8;
+  font-weight: 100;
+  margin-left: 5px;
 }
 </style>
