@@ -70,8 +70,8 @@ export default {
       if (this.searchValue !== "") {
         search(this.searchValue)
           .then((res) => {
-            // let data = res.data; // 模拟获取到的数据
-            // this.$emit("displayResult", true, data); // 传递给父组件,切换父组件的子组件,将数据传递给父组件,显示搜索结果
+            let data = res.data; // 模拟获取到的数据
+            this.$emit("displayResult", true, data); // 传递给父组件,切换父组件的子组件,将数据传递给父组件,显示搜索结果
           })
           .catch((err) => {
             this.$toast.fail("服务器太累了,需要休息一会~");
@@ -83,16 +83,16 @@ export default {
     // 根据用户搜索自动匹配模糊关键字名, 动态请求后台api获取模糊关键字名
     onInput(value) {
       // 如果搜索有数据的话就请求API
-      // if (value !== "") {
-      //   search(this.page, this.searchValue)
-      //     .then((res) => {
-      //       let data = res.data;
-      //       this.$emit("displayResult", true, data);
-      //     })
-      //     .catch((err) => {
-      //       Toast.fail("服务器太累了,需要休息一会~");
-      //     });
-      // }
+      if (this.searchValue != "") {
+        search(this.searchValue)
+          .then((res) => {
+            let data = res.data;
+            this.$emit("displayResult", true, data);
+          })
+          .catch((err) => {
+            this.$toast.fail("服务器太累了,需要休息一会~");
+          });
+      }
     },
     onClear() {
       this.$emit("displayResult", false);
