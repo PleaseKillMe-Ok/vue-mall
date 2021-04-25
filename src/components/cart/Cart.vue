@@ -11,8 +11,6 @@
       </template>
     </van-nav-bar>
     <van-cell>共{{ commodityCount }}件商品</van-cell>
-    weqwe
-    {{ selectedCommodityResult }}
     <!-- 购物车商品布局 -->
     <div
       class="card commoditys-style"

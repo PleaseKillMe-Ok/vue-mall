@@ -183,7 +183,11 @@ export default new Router({
             // 商品详情页
             path: '/commodity-detail',
             name: 'CommodityDetail',
-            component: CommodityDetail
+            component: CommodityDetail,
+            meta: {
+                loginRequire: true,
+                title: "详情页"
+            }
         }
     ]
 })

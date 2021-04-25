@@ -348,7 +348,7 @@ export default {
         deleteFavorites(this.collection.pk).then((res) => {
           let data = res.data;
           if (data.code === 1019) {
-            this.$toast.success(data.msg);
+            this.$toast.success("取消收藏");
             this.collection.pk = null;  // id置为空
           } else this.$toast.fail(data.detail);
         });
