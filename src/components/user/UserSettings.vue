@@ -3,7 +3,7 @@
   <div id="UserSettings">
     <TopTool :title="title" :hasRight="false"></TopTool>
     <van-cell is-link center>
-      <van-row @click="toPersonal">
+      <van-row>
         <van-col span="8">
           <van-image
             class="head-image"
@@ -30,7 +30,6 @@
         <span class="title">账户与安全</span>
       </template>
     </van-cell>
-    <br />
     <van-cell is-link>
       <template #title>
         <span class="title">支付设置</span>
@@ -50,6 +49,11 @@
     <van-cell is-link @click="helper">
       <template #title>
         <span class="title">关于吃货商城</span>
+      </template>
+    </van-cell>
+    <van-cell is-link :to="{ name: 'OpenStore' }">
+      <template #title>
+        <span class="title">商家开店</span>
       </template>
     </van-cell>
     <br />

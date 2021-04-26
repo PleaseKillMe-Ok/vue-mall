@@ -26,7 +26,7 @@
         <span class="title">修改登录密码</span>
       </template>
     </van-cell>
-    <van-cell is-link>
+    <van-cell is-link @click="discard">
       <template #title>
         <span class="title">注销账户</span>
       </template>
@@ -51,6 +51,7 @@
 
 <script>
 const TopTool = () => import("@/components/user/TopTool");
+import { discard } from "@/api/user";
 export default {
   name: "UserSafe",
   components: { TopTool },
@@ -71,8 +72,33 @@ export default {
   },
   methods: {
     bindPhone() {
-      sessionStorage.setItem("tempPhone", this.phone);  // 临时保存phone
+      sessionStorage.setItem("tempPhone", this.phone); // 临时保存phone
       this.$router.push({ name: "BindPhone" });
+    },
+
+    // 注销账户
+    discard() {
+      this.$dialog
+        .confirm({
+          title: "注销账户！",
+          message: "您确定忍心要注销您的账户吗？",
+        })
+        .then(() => {
+          discard()
+            .then((res) => {
+              let data = res.data;
+              if (data.code === 1071) {
+                this.$toast.success("注销账户成功");
+                this.$router.push({ name: "PhoneLogin" });
+              }
+            })
+            .catch((res) => {
+              this.$toast.fail("注销账户失败");
+            });
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
   },
 };

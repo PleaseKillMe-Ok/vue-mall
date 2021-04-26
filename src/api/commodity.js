@@ -23,3 +23,10 @@ export function computeSku(data) {
 export function getEffectiveSku() {
     return axios.get('/seller/chsc/apis/sku/');
 }
+
+/**
+ * 获取商品一级类目
+ */
+export function getTopCategory() {
+    return axios.get('goods/chsc/apis/first-category/')
+}

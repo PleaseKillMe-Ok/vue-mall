@@ -5,16 +5,30 @@
       :hasRight="hasRight"
       :previousPage="previousPage"
     ></TopTool>
-    <div class="card">
-      <div class="address">
-        <van-address-list
-          :list="addressList"
-          default-tag-text="默认"
-          v-model="chosenAddressId"
-          @add="onAdd"
-          @edit="onEdit"
-          @select="setDefault"
-        />
+    <div>
+      <div class="card" v-if="addressList.length > 0">
+        <div class="address">
+          <van-address-list
+            :list="addressList"
+            default-tag-text="默认"
+            v-model="chosenAddressId"
+            @add="onAdd"
+            @edit="onEdit"
+            @select="setDefault"
+          />
+        </div>
+      </div>
+      <div v-else>
+        <p class="null">尚没有收货地址，赶紧去添加吧～</p>
+        <van-button
+          type="primary"
+          block
+          round
+          color="linear-gradient(to right, #ff6034, #ee0a24)"
+          class="btn"
+          @click="onAdd"
+          >添加地址</van-button
+        >
       </div>
     </div>
   </div>
@@ -111,5 +125,15 @@ export default {
   padding: 5px;
   background-color: #fff;
   border-radius: 8px;
+}
+
+.null {
+  margin-top: 50%;
+  opacity: 0.8;
+  color: grey;
+}
+.btn {
+  bottom: 0px;
+  position: absolute;
 }
 </style>
