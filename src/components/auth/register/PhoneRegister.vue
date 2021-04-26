@@ -124,12 +124,13 @@ export default {
         message: "拼命加载中...",
         forbidClick: true,
       });
+      console.log(values)
       register(values)
         .then((res) => {
           load.clear(); // 关闭加载框
           let data = res.data; // 数据
           if (data.detail) this.$toast.fail(data.detail); // 校验错误
-          if (res.data.code === 21) {
+          if (res.data.code === 1003) {
             this.$toast.success("注册成功");
             this.$router.push({ name: "LoginPhone" });
           }
@@ -155,9 +156,10 @@ export default {
       if (this.phone != "" && phoneValidator(this.phone)) {
         // TODO: 倒计时60s
         let data = { phone: this.phone, way: "phone" };
+        console.log(data)
         sendRegister(data)
           .then((res) => {
-            if (res.data.code === 41) this.$toast.success("验证码发送成功");
+            if (res.data.code === 1070) this.$toast.success("验证码发送成功");
           })
           .catch((err) => {
             this.$toast.fail("服务器开了会儿小差~");

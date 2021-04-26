@@ -15,7 +15,7 @@
         <div v-if="isEmail">
           <van-field
             v-model="email"
-            name="邮箱"
+            name="email"
             label="邮箱"
             placeholder="请输入邮箱"
             clearable
@@ -49,7 +49,7 @@
         <div v-else>
           <van-field
             v-model="username"
-            name="用户名"
+            name="username"
             label="用户名"
             placeholder="请输入用户名"
             clearable
@@ -82,7 +82,7 @@
         </div>
         <van-field
           v-model="password"
-          name="密码"
+          name="password"
           label="密码"
           type="password"
           maxlength="20"
@@ -106,8 +106,8 @@
           >
         </div>
         <van-row class="utils">
-          <van-col span="12" @click="toForgetPassword">忘记密码 </van-col>
-          <van-col span="12" @click="displayOtherWay">其他登录 </van-col>
+          <van-col span="12" @click="toForgetPassword"> 忘记密码 </van-col>
+          <van-col span="12" @click="displayOtherWay"> 其他登录 </van-col>
         </van-row>
         <van-row class="otherWay" v-if="show">
           <van-col
@@ -116,8 +116,8 @@
             :key="index"
             @click="toOtherWay(index)"
           >
-            {{ item.way }}
-          </van-col>
+            {{ item.way }}</van-col
+          >
         </van-row>
       </van-form>
     </div>
@@ -127,7 +127,7 @@
 <script>
 const ChoiceWay = () => import("@/components/auth/password/ChoiceWay");
 const TopTool = () => import("@/components/auth/TopTool");
-import { sendRegister } from "@/api/code";
+import { login } from "@/api/user.js";
 import {
   emailValidator,
   passwordValidator,
@@ -144,6 +144,7 @@ export default {
       validateFirst: true, // 第一次验证失效就结束验证
       email: "",
       way: "email",
+      isRemember: true, // 记住用户名/邮箱
       password: "",
       username: "",
       showChoice: false, // 显示忘记密码弹出框
@@ -196,9 +197,35 @@ export default {
       return usernameValidator(value);
     },
     login(values) {
-      console.log(values);
-      // 发送请求
-      this.$toast.success("登录成功");
+      // 请求数据体
+      let loadToast = this.$toast.loading({
+        message: "请求中...",
+        forbidClick: true,
+      });
+      let postData = {
+        login_key: values.email,
+        is_remember: this.isRemember,
+        way: "email",
+        password: values.password,
+      };
+      login(postData)
+        .then((res) => {
+          let data = res.data;
+          if (data.detail) {
+            this.$toast.fail(data.detail);
+          } else {
+            sessionStorage.setItem("Bearer-Token", data.token);
+            loadToast.clear(); // 关闭加载框
+            if (this.$route.query.redirect) {
+              this.$router.push(this.$route.query.redirect); // 加载先前页
+            }
+            this.$router.push("/"); // 加载先前页
+          }
+        })
+        .catch((err) => {
+          loadToast.clear(); // 关闭加载框
+          this.$toast.fail("服务器开开了会小差~");
+        });
     },
     // 进入忘记密码
     toForgetPassword() {
@@ -234,13 +261,13 @@ export default {
 
 <style scoped>
 .van-cell {
-    font-size: 18px !important;
+  font-size: 18px !important;
 }
-.van-button{
+.van-button {
   margin-top: 25px;
   margin-bottom: 25px;
 }
-.utils{
-  margin:25px
+.utils {
+  margin: 25px;
 }
 </style>
