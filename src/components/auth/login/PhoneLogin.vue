@@ -162,7 +162,7 @@ export default {
             if (this.$route.query.redirect) {
               this.$router.push(this.$route.query.redirect); // 加载先前页
             }
-            this.$router.push('/'); // 加载先前页
+            this.$router.push("/"); // 加载先前页
           }
         })
         .catch((err) => {

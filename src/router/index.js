@@ -95,6 +95,10 @@ const CommodityDetail = () =>
 const UserFavorites = () =>
     import ('@/components/user/favorites/UserFavorites')
 
+// 分类
+const Category = () =>
+    import ('@/components/commodity/Category')
+
 Vue.use(Router)
 
 export default new Router({
@@ -112,6 +116,7 @@ export default new Router({
                 { path: 'message', component: Message, name: 'Message', meta: { title: '消息', loginRequire: true } },
                 { path: 'cart', component: Cart, name: 'Cart', meta: { title: '购物车', loginRequire: true } },
                 { path: 'individual', name: 'Individual', component: UserSpace, meta: { title: '个人中心', loginRequire: true } },
+                { path: 'category', name: 'Category', component: Category, meta: { title: '商品分类', loginRequire: true } },
             ],
         },
         {
@@ -183,7 +188,11 @@ export default new Router({
             // 商品详情页
             path: '/commodity-detail',
             name: 'CommodityDetail',
-            component: CommodityDetail
+            component: CommodityDetail,
+            meta: {
+                loginRequire: true,
+                title: "商品详情"
+            }
         }
     ]
 })

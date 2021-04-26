@@ -30,8 +30,8 @@ export function deleteCartAll() {
 }
 
 /**
- * 删除指定购物车中的记录
+ * 删除指定购物车中的记录,传递body数据
  */
 export function deleteCartSeveral(data) {
-    return axios.delete('/consumer/chsc/apis/trolley/several', data)
+    return axios.delete('/consumer/chsc/apis/trolley/several/', { data: data })
 }

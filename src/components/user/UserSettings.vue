@@ -2,16 +2,22 @@
   <!-- 用户设置 -->
   <div id="UserSettings">
     <TopTool :title="title" :hasRight="false"></TopTool>
-    <van-cell is-link>
-      <template #title>
-        <span class="title"
-          ><van-image
-            round
+    <van-cell is-link center>
+      <van-row @click="toPersonal">
+        <van-col span="8">
+          <van-image
+            class="head-image"
             width="5rem"
             height="5rem"
-            src="https://img01.yzcdn.cn/vant/cat.jpeg"
-        /></span>
-      </template>
+            fit="cover"
+            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            round
+        /></van-col>
+        <van-col span="14">
+          <span class="username block">{{ information.username }}</span>
+          <span class="sex block">性别：{{ information.sex }}</span>
+        </van-col>
+      </van-row>
     </van-cell>
     <van-cell is-link :to="{ name: 'Address' }">
       <template #title>
@@ -69,6 +75,7 @@
 <script>
 const TopTool = () => import("@/components/user/TopTool");
 const Helper = () => import("@/components/common/Helper");
+import { getInformation } from "@/api/user";
 export default {
   name: "UserSettings",
   components: { TopTool, Helper },
@@ -76,9 +83,23 @@ export default {
     return {
       title: "账户设置",
       showHelper: false,
+      information: {},
     };
   },
+  created() {
+    this.getInformation();
+  },
   methods: {
+    // 获取用户个人信息
+    getInformation() {
+      getInformation()
+        .then((res) => {
+          this.information = res.data;
+        })
+        .catch((res) => {
+          this.$toast.fail("获取用户个人信息失败,服务器开了会小差～");
+        });
+    },
     helper() {
       this.showHelper = true;
     },
@@ -114,5 +135,21 @@ export default {
 .blank {
   font-size: 0.9rem;
   float: inherit;
+}
+
+.username {
+  padding-top: 25px;
+  margin-left: 20px;
+  margin-right: 15px;
+  font-size: 18px;
+  font-weight: bolder;
+}
+
+.sex {
+  margin-left: 20px;
+}
+
+.block {
+  display: block;
 }
 </style>

@@ -42,10 +42,10 @@ export default {
           to: "/",
         },
         {
-          name: "消息",
-          icon: "chat-o",
+          name: "分类",
+          icon: "apps-o",
           iconName: "",
-          to: "/message",
+          to: "/category",
           badge: 10,
         },
         {

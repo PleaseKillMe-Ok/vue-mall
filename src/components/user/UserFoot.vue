@@ -159,7 +159,8 @@ export default {
     },
     // 返回上一页
     goBack() {
-      this.$router.push({ name: this.previousPage });
+      if (this.$route.query.previous == null) this.$router.push("");
+      else this.$router.push({ path: this.$route.query.previous });
     },
     // 设置当前日期所在周的第几天
     setCurDate() {
@@ -176,27 +177,28 @@ export default {
       displayFoot()
         .then((res) => {
           let result = res.data;
-          result.data.forEach((element) => {
-            let daystr = this.parseTimestamp(element.timestamp); // 时间戳 --> 日期字符串
-            if (!daystr in this.footDict) {
-              // 如果字典中尚未存在当前日期下的记录,则创建一数组存储记录信息
-              this.footDict[daystr] = []; // 数据集
-              this.selectDict[daystr] = []; // 初始全未选
-              this.selectAllStatusDict[daystr] = false; // 初始为选中
-            }
-            // 向数组中添加信息
-            this.footDict[daystr].push({
-              id: element.id,
-              commodityName: element.commodity_name,
-              price: element.price,
-              discounts: element.discounts,
-              image: element.image,
-              status: element.status,
-            });
-          });
+          // result.data.forEach((element) => {
+          //   let daystr = this.parseTimestamp(element.timestamp); // 时间戳 --> 日期字符串
+          //   if (!daystr in this.footDict) {
+          //     // 如果字典中尚未存在当前日期下的记录,则创建一数组存储记录信息
+          //     this.footDict[daystr] = []; // 数据集
+          //     this.selectDict[daystr] = []; // 初始全未选
+          //     this.selectAllStatusDict[daystr] = false; // 初始为选中
+          //   }
+          //   // 向数组中添加信息
+          //   this.footDict[daystr].push({
+          //     id: element.id,
+          //     commodityName: element.commodity_name,
+          //     price: element.price,
+          //     discounts: element.discounts,
+          //     image: element.image,
+          //     status: element.status,
+          //   });
+          // });
           load.clear();
         })
         .catch((err) => {
+          load.clear();
           this.$toast.fail("服务器开了会儿小差");
         });
     },

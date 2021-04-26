@@ -2,9 +2,9 @@
   <div id="Search">
     <!-- 搜索导航栏 -->
     <SearchNavigation @displayResult="displayResult"></SearchNavigation>
-    <div style="margin-top:46px"></div>
+    <div style="margin-top: 46px"></div>
     <div v-if="showResult">
-      <SearchResult></SearchResult>
+      <SearchResult :searchResult="searchResult"></SearchResult>
     </div>
     <div v-else>
       <!-- 历史搜索记录 -->
@@ -27,17 +27,18 @@ export default {
     return {
       previous: "", // 记录先前一页
       content: "search",
-      showResult:false
+      showResult: false,
+      searchResult: [], // 搜索的数据集
     };
   },
-  methods:{
-    displayResult(status){
-      this.showResult = status
-    }
-  }
+  methods: {
+    displayResult(status, data) {
+      this.showResult = status;
+      this.searchResult = data;
+    },
+  },
 };
 </script>
 
 <style scoped>
-
 </style>

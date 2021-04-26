@@ -148,7 +148,10 @@ export default {
       register(values)
         .then((res) => {
           if (res.data.status === "success") this.$toast.success("注册成功");
-          else if (res.data.detail) this.$toast.fail(res.data.detail);
+          else if (res.data.detail) {
+            this.$toast.fail(res.data.detail);
+            this.$router.push({ name: "LoginEmail" });
+          }
         })
         .catch((err) => {
           this.$toast.fail("服务器开了会小差~");
@@ -177,7 +180,7 @@ export default {
         sendRegister(data)
           .then((res) => {
             let data = res.data;
-            this.$toast.fail(data.msg);
+            this.$toast.success(data.msg);
           })
           .catch((err) => {
             this.$toast.fail("服务器开开了会小差~");

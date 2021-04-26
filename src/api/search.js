@@ -2,11 +2,10 @@ import axios from '@/axios'
 
 /**
  * 搜索商品
- * @param {页数} page 
  * @param {关键字} q 
  */
-export function search(page, q) {
-    return axios.get('/search/chsc/apis/keyword/?page=' + page + '&q=' + q);
+export function search(q) {
+    return axios.get('/goods/chsc/apis/keyword/?q=' + q);
 }
 
 /**

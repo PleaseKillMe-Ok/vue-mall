@@ -20,7 +20,7 @@
                 text="删除"
                 type="danger"
                 class="delete-button"
-                @click="onDelete(item.pk)"
+                @click="onDelete(item.pk, index)"
               />
               <van-button
                 square
@@ -48,22 +48,26 @@
             </van-card>
           </van-swipe-cell>
         </div>
+        <!-- 底部固定栏-->
       </van-tab>
     </van-tabs>
   </div>
 </template>
 
 <script>
-import { getFavorites } from "@/api/favorites";
+import { getFavorites, deleteFavorites } from "@/api/favorites";
 export default {
   name: "FavoritesCommodity",
   data() {
     return {
       active: 0,
       tabs: ["全部", "优惠", "已买过"],
-      favoritesList: [],
+      favoritesList: [], // 全部列表
+      favoritesDiscountList: [], // 优惠列表
+      boughtList: [], // 已经购买过列表
     };
   },
+  components: {},
   props: {
     isOpenManage: {
       type: Boolean,
@@ -74,26 +78,57 @@ export default {
     this.getFavoritesList();
   },
   methods: {
-    // 随着标签改变，内容也发生改变
-    onChangeTab(name, title) {},
+    // 随着标签改变，内容也发生改变，懒加载
+    onChangeTab(name, title) {
+      if (title === "优惠" && this.favoritesDiscountList.length == 0) {
+        console.log("发送优惠请求");
+      } else if (title === "已买过" && this.boughtList.length == 0) {
+        console.log("已经买过!");
+      }
+    },
     // 请求获取收藏夹列表
     getFavoritesList() {
       getFavorites()
         .then((res) => {
           this.favoritesList = res.data;
         })
-        .catch((err) => {});
+        .catch((err) => {
+          this.$toast.fail("获取数据失败");
+        });
     },
     // 寻找相似商品
     onFind(type) {
+      // search(type)
+      //   .then((res) => {})
+      //   .catch((err) => {});
       console.log("寻找相似商品");
     },
     // 删除该条收藏记录
-    onDelete(id) {
-      console.log("删除该条收藏记录");
+    onDelete(id, index) {
+      deleteFavorites(id)
+        .then((res) => {
+          let data = res.data;
+          if (data.code === 1019) {
+            this.$toast.success("删除成功!");
+            this.favoritesList.splice(index, 1);
+          }
+        })
+        .catch((err) => {
+          this.$toast.fail("删除失败，服务器开了会儿小差～");
+        });
     },
     // 将该商品加入购物车
     onJoin(id) {
+      joinCart(id)
+        .then((res) => {
+          let data = res.data;
+          if (data.code === 1019) {
+            this.$toast.success("添加成功!");
+          }
+        })
+        .catch((err) => {
+          this.$toast.fail("添加失败，服务器开了会小差～");
+        });
       console.log("商品加入购物车");
     },
   },
@@ -131,5 +166,21 @@ export default {
   width: 100%;
   background-color: #d40c0c;
   border: none;
+}
+
+.card {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  box-sizing: content-box;
+  width: 100%;
+  height: 50px;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  background-color: #fff;
 }
 </style>

@@ -1,16 +1,48 @@
 <template>
-<div id="SearchResult">搜索结果列表</div>  
+  <div id="SearchResult">
+    <div v-if="searchResult.length === 0" style="margin-top: 50%">
+      搜索不到任何商品
+    </div>
+    <div v-else>
+      <van-cell v-for="(item, index) in keywordList" :key="index">{{
+        item
+      }}</van-cell>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-    name:'SearchResult',
-    data(){
-        return {}
-    }
-}
+  name: "SearchResult",
+  props: {
+    searchResult: {
+      type: Array,
+      default: [],
+    },
+  },
+  data() {
+    return {
+      keywordList: [], // 解析后的关键字列表
+      loading: false,
+      finished: false,
+    };
+  },
+  created() {
+    this.searchResult.forEach((element) => {
+      this.keywordList.push(element.commodity_name);
+    });
+  },
+  watch: {
+    searchResult() {
+      this.keywordList = [];
+      this.searchResult.forEach((element) => {
+        this.keywordList.push(element.commodity_name);
+      });
+    },
+  },
+  methods: {},
+};
 </script>
 
 <style>
-
 </style>

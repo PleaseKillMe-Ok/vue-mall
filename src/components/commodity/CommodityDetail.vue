@@ -222,6 +222,7 @@ import { swipeImage, remarkDict, storeDict } from "@/demo/commodityDetailDemo";
 import { addFavorites, deleteFavorites } from "@/api/favorites/";
 import { getCommodityDetail } from "@/api/commodity";
 import { getDefaultAddress } from "@/api/address";
+import { recordUserFoot } from "@/api/user";
 const SkuPropsSelector = () =>
   import("@/components/commodity/SkuPropsSelector");
 
@@ -256,10 +257,23 @@ export default {
     this.storeDict = storeDict;
     this.getCommodityDetail();
     this.getDefaultAddress();
+    this.recordUserFoot(); // 记录用户足迹
   },
   methods: {
-    // 根据商品id获取数据
+    recordUserFoot() {
+      // 记录用户浏览的商品
+      let data = { pk: this.$route.query.id };
+      recordUserFoot(data)
+        .then((res) => {
+          //
+        })
+        .catch((err) => {
+          //
+        });
+    },
+
     getCommodityDetail() {
+      // 根据商品id获取数据
       let id = this.$route.query.id;
       getCommodityDetail(id)
         .then((res) => {
@@ -348,8 +362,8 @@ export default {
         deleteFavorites(this.collection.pk).then((res) => {
           let data = res.data;
           if (data.code === 1019) {
-            this.$toast.success(data.msg);
-            this.collection.pk = null;  // id置为空
+            this.$toast.success("取消收藏");
+            this.collection.pk = null; // id置为空
           } else this.$toast.fail(data.detail);
         });
       }
