@@ -186,7 +186,7 @@ export default new Router({
             component: CommodityDetail,
             meta: {
                 loginRequire: true,
-                title: "详情页"
+                title: "商品详情"
             }
         }
     ]

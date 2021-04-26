@@ -16,6 +16,7 @@
             <!-- 自定义宫格内容 -->
             <template #default>
               <div class="data">
+                <van-icon :name="item.icon" class="icon" />
                 <p>{{ item.name }}</p>
               </div>
             </template>
@@ -38,26 +39,31 @@ export default {
           name: "待付款",
           url: "/",
           value: 2,
+          icon: "pending-payment",
         },
         {
           name: "待发货",
           url: "",
           value: 5,
+          icon: "paid",
         },
         {
           name: " 待收货",
           url: "",
           value: 4,
+          icon: "logistics",
         },
         {
           name: "评价",
           url: "",
           value: 0,
+          icon: "comment-o",
         },
         {
           name: "退款/售后",
           url: "",
           value: 0,
+          icon: "after-sale",
         },
       ],
     };
@@ -80,5 +86,9 @@ export default {
 
 .data {
   font-size: 0.65rem;
+}
+
+.icon {
+  font-size: 25px;
 }
 </style>

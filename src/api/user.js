@@ -78,3 +78,17 @@ export function forgetPasswordSecond() {
 export function addFavorites() {
     return axios.post('/consumer/chsc/apis/favorites/', {})
 }
+
+/**
+ * 获取用户额外信息
+ */
+export function getExtraCount() {
+    return axios.get('/consumer/chsc/apis/extra/count/')
+}
+
+/**
+ * 记录用户浏览的商品
+ */
+export function recordUserFoot(data) {
+    return axios.post('/consumer/chsc/apis/foot/', data)
+}

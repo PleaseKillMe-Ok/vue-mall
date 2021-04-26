@@ -67,17 +67,6 @@ export default {
     toPersonal() {
       this.$router.push("/personal");
     },
-
-    // 获取用户足迹/收藏夹/红包卡卷/收货地址的记录个数
-    getExtraCount() {
-      getExtraCount()
-        .then((res) => {
-          // 
-        })
-        .catch((res) => {
-          this.$toast.fail("获取用户额外信息失败，服务器开了会小差～")
-        });
-    },
   },
 };
 </script>
