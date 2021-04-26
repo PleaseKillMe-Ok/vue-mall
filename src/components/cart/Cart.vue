@@ -12,7 +12,9 @@
     </van-nav-bar>
     <van-cell>共{{ commodityCount }}件商品</van-cell>
     <!-- 购物车商品布局 -->
+    <div v-if="commodityCount === 0" class="empty">您的购物车目前是空的～</div>
     <div
+      v-else
       class="card commoditys-style"
       v-for="(store, name, index) in storeDict"
       :key="index"
@@ -329,11 +331,19 @@ export default {
 
     // 返回首页
     goBack() {
-      this.$router.push("/");
+      if (this.$route.query.previous == null) this.$router.push("");
+      else this.$router.push({ path: this.$route.query.previous });
     },
 
     // 提交订单
-    onSubmitOrder() {},
+    onSubmitOrder() {
+      console.log(6666);
+      if (this.selectedCommodityResult.length <= 0) {
+        this.$toast.fail("请选择要删除的商品");
+      } else {
+        console.log("正在跳转...");
+      }
+    },
 
     // 删除商品
     deleteCommodity() {
@@ -376,22 +386,26 @@ export default {
 
     // 加入收藏夹
     moveFavorites() {
-      let pkList = new Array();
-      // 向pkList添加对应于tid的商品id
-      for (let index in this.selectedCommodityResult) {
-        pkList.push(this.tidCidDict[this.selectedCommodityResult[index]]);
+      if (this.selectedCommodityResult.length <= 0) {
+        this.$toast.fail("请选择要删除的商品");
+      } else {
+        let pkList = new Array();
+        // 向pkList添加对应于tid的商品id
+        for (let index in this.selectedCommodityResult) {
+          pkList.push(this.tidCidDict[this.selectedCommodityResult[index]]);
+        }
+        let data = {
+          commodity_pk_list: pkList,
+        };
+        addFavoritesBulk(data)
+          .then((res) => {
+            let data = res.data;
+            if (data.code === 1020) this.$toast.success(data.msg);
+          })
+          .catch((err) => {
+            this.$toast.fail("收藏商品失败，服务器开了会小差～");
+          });
       }
-      let data = {
-        commodity_pk_list: pkList,
-      };
-      addFavoritesBulk(data)
-        .then((res) => {
-          let data = res.data;
-          if (data.code === 1020) this.$toast.success(data.msg);
-        })
-        .catch((err) => {
-          this.$toast.fail("收藏商品失败，服务器开了会小差～");
-        });
     },
 
     // 领取优惠卷
@@ -523,5 +537,12 @@ export default {
 /* 所有商品整体布局 */
 .commoditys-style {
   margin-bottom: 100px;
+}
+
+/* 空的样式 */
+.empty {
+  margin-top: 50%;
+  opacity: 0.8;
+  color: grey;
 }
 </style>
