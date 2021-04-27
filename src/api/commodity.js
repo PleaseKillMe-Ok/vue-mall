@@ -21,7 +21,7 @@ export function computeSku(data) {
  */
 
 export function getEffectiveSku() {
-    return axios.get('/seller/chsc/apis/sku/');
+    return axios.get('/seller/chsc/apis/sku/', { headers: { Permission: 100002 } });
 }
 
 /**

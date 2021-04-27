@@ -4,8 +4,11 @@ import axios from '@/axios'
  * 搜索商品
  * @param {关键字} q 
  */
-export function search(q) {
-    return axios.get('/goods/chsc/apis/keyword/?q=' + q);
+export function search(q, record = null) {
+    if (record == null)
+        return axios.get('/goods/chsc/apis/keyword/?q=' + q);
+    else
+        return axios.get('/goods/chsc/apis/keyword/?q=' + q + '&record=' + record);
 }
 
 /**
