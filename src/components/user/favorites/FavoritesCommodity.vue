@@ -27,7 +27,7 @@
                 text="加入购物车"
                 type="warning"
                 class="join-button"
-                @click="onJoin(item.pk)"
+                @click="onJoin(item.cid)"
               />
             </template>
             <!-- 商品面板 -->
@@ -56,6 +56,7 @@
 
 <script>
 import { getFavorites, deleteFavorites } from "@/api/favorites";
+import { addToCart } from "@/api/cart";
 export default {
   name: "FavoritesCommodity",
   data() {
@@ -105,31 +106,43 @@ export default {
     },
     // 删除该条收藏记录
     onDelete(id, index) {
+      let load = this.$toast.loading({
+        message: "处理中",
+        forbidClick: true,
+      });
       deleteFavorites(id)
         .then((res) => {
           let data = res.data;
           if (data.code === 1019) {
+            load.clear();
             this.$toast.success("删除成功!");
             this.favoritesList.splice(index, 1);
           }
         })
         .catch((err) => {
+          load.clear();
           this.$toast.fail("删除失败，服务器开了会儿小差～");
         });
     },
     // 将该商品加入购物车
     onJoin(id) {
-      joinCart(id)
-        .then((res) => {
-          let data = res.data;
-          if (data.code === 1019) {
-            this.$toast.success("添加成功!");
-          }
-        })
-        .catch((err) => {
-          this.$toast.fail("添加失败，服务器开了会小差～");
-        });
-      console.log("商品加入购物车");
+      let load = this.$toast.loading({
+        message: "处理中",
+        forbidClick: true,
+      });
+      this.$router.push({ name: "CommodityDetail", query: { id: id } });
+      // addToCart(id)
+      //   .then((res) => {
+      //     let data = res.data;
+      //     if (data.code === 1019) {
+      //       load.clear();
+      //       this.$toast.success("添加成功!");
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     load.clear();
+      //     this.$toast.fail("添加失败，服务器开了会小差～");
+      //   });
     },
   },
 };

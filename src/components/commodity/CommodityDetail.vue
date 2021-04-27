@@ -2,7 +2,7 @@
   <!-- 商品详情页 -->
   <div id="CommodityDetail">
     <!-- 导航 -->
-    <van-nav-bar left-arrow>
+    <van-nav-bar left-arrow @click-left="goBack">
       <template #title>
         <van-search
           v-model="searchValue"
@@ -373,6 +373,10 @@ export default {
     // 进入店铺
     toStore() {
       console.log("进入店铺");
+    },
+    // 回到首页
+    goBack() {
+      this.$router.push({ path: 'Home' });
     },
   },
 };

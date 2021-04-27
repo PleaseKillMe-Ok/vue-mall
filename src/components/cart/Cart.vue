@@ -355,14 +355,20 @@ export default {
             message: "确认删除该宝贝吗?",
           })
           .then(() => {
+            let load = this.$toast.loading({
+              message: "处理中",
+              forbidClick: true,
+            });
             if (this.choiceAll) {
               // 删除全部的购物车宝贝
               deleteCartAll()
                 .then((res) => {
                   let data = res.data;
+                  load.clear();
                   if (data.code === 1067) this.$toast.success(data.msg);
                 })
                 .catch((err) => {
+                  load.clear();
                   this.$toast.fail("删除失败～服务器开了会小差～");
                 });
             } else {
@@ -373,9 +379,11 @@ export default {
               deleteCartSeveral(datas)
                 .then((res) => {
                   let data = res.data;
+                  load.clear();
                   if (data.code === 1067) this.$toast.success(data.msg);
                 })
                 .catch((err) => {
+                  load.clear();
                   this.$toast.fail("删除失败～服务器开了会小差～");
                 });
             }
@@ -389,6 +397,10 @@ export default {
       if (this.selectedCommodityResult.length <= 0) {
         this.$toast.fail("请选择要删除的商品");
       } else {
+        let load = this.$toast.loading({
+          message: "处理中",
+          forbidClick: true,
+        });
         let pkList = new Array();
         // 向pkList添加对应于tid的商品id
         for (let index in this.selectedCommodityResult) {
@@ -400,10 +412,12 @@ export default {
         addFavoritesBulk(data)
           .then((res) => {
             let data = res.data;
+            load.clear();
             if (data.code === 1020) this.$toast.success(data.msg);
           })
           .catch((err) => {
             this.$toast.fail("收藏商品失败，服务器开了会小差～");
+            load.clear();
           });
       }
     },
@@ -421,6 +435,10 @@ export default {
         count: count, // 购物车指定商品的变化后的数量
       };
       // 发送修改购买的商品sku的数量
+      let load = this.$toast.loading({
+        message: "处理中",
+        forbidClick: true,
+      });
       modifySkuCount(data)
         .then((res) => {
           let data = res.data;
@@ -429,9 +447,11 @@ export default {
             this.storeDict[storeName][index].totalPrice = data.new_price;
             this.storeDict[storeName][index].count = count;
           }
+          load.clear();
         })
         .catch((err) => {
           this.$toast.fail("商品数量修改失败，服务器开了会小差～");
+          load.clear();
         });
     },
 

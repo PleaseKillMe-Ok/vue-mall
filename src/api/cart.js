@@ -4,7 +4,7 @@ import axios from '@/axios'
  * 将目标商品添加进购物车
  */
 export function addToCart(data) {
-    return axios.get('/consumer/chsc/apis/trolley/', data)
+    return axios.post('/consumer/chsc/apis/trolley/', data)
 }
 
 /**
