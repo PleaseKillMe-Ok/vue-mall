@@ -222,7 +222,7 @@ export default {
       }
     },
 
-    // 解析sku的额外信息
+    // 解析sku的额外信息,sku库存，优惠价，原价
     parseSkuExtra(skuList) {
       skuList.forEach((element) => {
         let sid = element.sid.split("-").sort().join("-");
@@ -230,6 +230,7 @@ export default {
           favourablePrice: element.favourable_price,
           price: element.price,
           stock: element.stock,
+          pk: element.pk,
         };
       });
     },
@@ -310,6 +311,7 @@ export default {
       } else {
         // 一直处于默认的price和stock
         this.skuPrice = this.defaultPrice;
+        console.log(this.defaultPrice);
         this.skuStock = this.defaultStore;
       }
     },
@@ -325,11 +327,11 @@ export default {
       } else {
         let data = this.collectSku();
         // 发送加入购物车请求
-        addToCart()
+        addToCart(data)
           .then((res) => {
             let data = res.data;
-            if (data.code === 1068){
-              this.$toast.success("加入成功！ ")
+            if (data.code === 1068) {
+              this.$toast.success("加入成功！ ");
             }
           })
           .catch((err) => {
@@ -355,10 +357,17 @@ export default {
 
     // 收集用户选中的sku信息
     collectSku() {
-      let data = JSON.stringify({
-        sku: this.preDict,
-        buy_count: this.buyCount,
-      });
+      let sidList = new Array();
+      for (let key in this.preDict) {
+        if (this.preDict[key] != null)
+          sidList.push(this.preDict[key].toString());
+      }
+      let sid = sidList.sort().join("-");
+      let data = {
+        sku: this.skuSidRelation[sid].pk, // sku的id
+        count: this.buyCount, // 选择的数量
+        commodity: this.$route.query.id, // commodity的id
+      };
       return data;
     },
 

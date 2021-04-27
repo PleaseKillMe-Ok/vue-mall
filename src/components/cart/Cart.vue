@@ -51,6 +51,16 @@
               v-lazy="commodity.little_image"
               class="img"
               @click="toDetail(item.id)"
+              v-if="commodity.little_image"
+            />
+
+            <img
+              v-else
+              width="90%"
+              height="auto"
+              src="https://django-e-mall.oss-cn-shanghai.aliyuncs.com/u%3D3324287611%2C3832720410%26fm%3D26%26gp%3D0.jpg"
+              class="img"
+              @click="toDetail(item.id)"
             />
           </van-col>
           <van-col span="13">
@@ -167,6 +177,7 @@ export default {
       commodityCount: 0, // 购物车中商品个数
       selectedStoreResult: [], // 选中的店铺结果数组
       selectedCommodityResult: [], // 选中的商品结果Map
+      tidTotalPrice: {}, // 存放每个tid和该tid对应商品价格的总金额
     };
   },
   created() {
@@ -176,6 +187,7 @@ export default {
     // 全选商品，将所有的商品添加到selectedCommodityResult，将所有的店铺名添加到selectedStoreResult
     choiceAll(newValue, oldValue) {
       this.disabled = !this.disabled;
+      this.selectedCommodityResult = []; // 先置为空
       if (newValue) {
         for (let key in this.storeNameDict) {
           this.selectedStoreResult.push(key);
@@ -187,6 +199,14 @@ export default {
         this.selectedStoreResult = [];
         this.selectedCommodityResult = [];
       }
+      let tempTotalPrice = 0;
+      // 更新总价格
+      for (let index in this.selectedCommodityResult) {
+        tempTotalPrice += this.tidTotalPrice[
+          this.selectedCommodityResult[index]
+        ];
+      }
+      this.totalPrice = tempTotalPrice;
     },
 
     // 监听选中的店铺名数组
@@ -196,7 +216,6 @@ export default {
      */
     selectedStoreResult(newValue, oldValue) {
       // 通过状态前后数组长度判断是选中还是取消
-      console.log(newValue.length, oldValue.length);
       if (newValue.length > oldValue.length) {
         // 选中
         for (let index in this.storeDict[newValue[newValue.length - 1]]) {
@@ -207,7 +226,7 @@ export default {
       } else if (newValue.length === oldValue.length) {
         // 此处由于该店铺下所有商品都被选中，回调该监听器
       } else {
-        // 取消
+        // 取消勾选
         if (newValue.length === 0) {
           // 直接清空数组，防止出现越界异常
           this.selectedCommodityResult = [];
@@ -238,6 +257,7 @@ export default {
       } else {
         this.disabled = true;
       }
+      let tempTotalPrice = 0;
       if (newValue.length > oldValue.length) {
         let storeName = this.storeTidDict[newValue[newValue.length - 1]];
         let tempCount = 0; // 临时计数器
@@ -260,6 +280,11 @@ export default {
         let i = this.selectedStoreResult.indexOf(storeName);
         this.selectedStoreResult.splice(i, 1);
       }
+      // 更新总价格
+      for (let index in newValue) {
+        tempTotalPrice += this.tidTotalPrice[newValue[index]];
+      }
+      this.totalPrice = tempTotalPrice;
     },
 
     // 监听选中的商品结果集合
@@ -316,6 +341,8 @@ export default {
         this.storeTidDict[item.pk] = store.name; // {tid1:storeName1, tid2:storeName2, tid3:storeName2}
 
         this.tidCidDict[item.pk] = commodity.id; // {tid1:cid1,tid2:cid2...}
+
+        this.tidTotalPrice[item.pk] = favourable_price * count; // {tid1:price1, tid2:pid2}
       }
     },
 
@@ -337,7 +364,6 @@ export default {
 
     // 提交订单
     onSubmitOrder() {
-      console.log(6666);
       if (this.selectedCommodityResult.length <= 0) {
         this.$toast.fail("请选择要删除的商品");
       } else {
@@ -355,14 +381,20 @@ export default {
             message: "确认删除该宝贝吗?",
           })
           .then(() => {
+            let load = this.$toast.loading({
+              message: "处理中",
+              forbidClick: true,
+            });
             if (this.choiceAll) {
               // 删除全部的购物车宝贝
               deleteCartAll()
                 .then((res) => {
                   let data = res.data;
+                  load.clear();
                   if (data.code === 1067) this.$toast.success(data.msg);
                 })
                 .catch((err) => {
+                  load.clear();
                   this.$toast.fail("删除失败～服务器开了会小差～");
                 });
             } else {
@@ -373,9 +405,11 @@ export default {
               deleteCartSeveral(datas)
                 .then((res) => {
                   let data = res.data;
+                  load.clear();
                   if (data.code === 1067) this.$toast.success(data.msg);
                 })
                 .catch((err) => {
+                  load.clear();
                   this.$toast.fail("删除失败～服务器开了会小差～");
                 });
             }
@@ -389,6 +423,10 @@ export default {
       if (this.selectedCommodityResult.length <= 0) {
         this.$toast.fail("请选择要删除的商品");
       } else {
+        let load = this.$toast.loading({
+          message: "处理中",
+          forbidClick: true,
+        });
         let pkList = new Array();
         // 向pkList添加对应于tid的商品id
         for (let index in this.selectedCommodityResult) {
@@ -400,10 +438,12 @@ export default {
         addFavoritesBulk(data)
           .then((res) => {
             let data = res.data;
+            load.clear();
             if (data.code === 1020) this.$toast.success(data.msg);
           })
           .catch((err) => {
             this.$toast.fail("收藏商品失败，服务器开了会小差～");
+            load.clear();
           });
       }
     },
@@ -421,6 +461,10 @@ export default {
         count: count, // 购物车指定商品的变化后的数量
       };
       // 发送修改购买的商品sku的数量
+      let load = this.$toast.loading({
+        message: "处理中",
+        forbidClick: true,
+      });
       modifySkuCount(data)
         .then((res) => {
           let data = res.data;
@@ -429,9 +473,11 @@ export default {
             this.storeDict[storeName][index].totalPrice = data.new_price;
             this.storeDict[storeName][index].count = count;
           }
+          load.clear();
         })
         .catch((err) => {
           this.$toast.fail("商品数量修改失败，服务器开了会小差～");
+          load.clear();
         });
     },
 

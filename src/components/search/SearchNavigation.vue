@@ -68,7 +68,7 @@ export default {
     // 搜索按钮点击事件,请求后台API
     onSearch() {
       if (this.searchValue !== "") {
-        search(this.searchValue)
+        search(this.searchValue, 1)
           .then((res) => {
             let data = res.data; // 模拟获取到的数据
             this.$emit("displayResult", true, data); // 传递给父组件,切换父组件的子组件,将数据传递给父组件,显示搜索结果

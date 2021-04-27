@@ -99,6 +99,10 @@ const UserFavorites = () =>
 const Category = () =>
     import ('@/components/commodity/Category')
 
+// 商家开店组件
+const OpenStore = () =>
+    import ('@/components/user/OpenStore')
+
 Vue.use(Router)
 
 export default new Router({
@@ -149,7 +153,8 @@ export default new Router({
                 { path: 'safe', name: 'Safe', component: Safe, meta: { title: '账户安全', loginRequire: true } },
                 { path: 'bind-phone', name: "BindPhone", component: BindPhone, meta: { loginRequire: true, title: '换榜手机' } },
                 { path: 'foot', name: 'Foot', component: UserFoot, meta: { loginRequire: true, title: '我的足迹' } },
-                { path: 'favorites', name: 'Favorites', component: UserFavorites, meta: { loginRequire: true, title: '我的收藏' } }
+                { path: 'favorites', name: 'Favorites', component: UserFavorites, meta: { loginRequire: true, title: '我的收藏' } },
+                { path: 'open-store', name: 'OpenStore', component: OpenStore, meta: { loginRequire: true, title: '商家开店' } },
             ],
             meta: {
                 loginRequire: true,

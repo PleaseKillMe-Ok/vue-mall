@@ -92,3 +92,17 @@ export function getExtraCount() {
 export function recordUserFoot(data) {
     return axios.post('/consumer/chsc/apis/foot/', data)
 }
+
+/**
+ * 注销账户
+ */
+export function discard() {
+    return axios.delete('/consumer/chsc/apis/safe/discard/');
+}
+
+/**
+ * 开店
+ */
+export function openStore(data) {
+    return axios.post('/seller/chsc/apis/store/', data);
+}
