@@ -28,5 +28,12 @@ export function getEffectiveSku() {
  * 获取商品一级类目
  */
 export function getTopCategory() {
-    return axios.get('goods/chsc/apis/first-category/')
+    return axios.get('/goods/chsc/apis/first-category/')
+}
+
+/**
+ * 获取商品二级及以下类目
+ */
+export function getSecondLeftCategroy(id) {
+    return axios.get('/goods/chsc/apis/' + id + '/second-category/');
 }
