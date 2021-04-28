@@ -376,7 +376,7 @@ export default {
     },
     // 回到首页
     goBack() {
-      this.$router.push({ path: 'Home' });
+      this.$router.push({ path: "Home" });
     },
   },
 };

@@ -103,6 +103,10 @@ const Category = () =>
 const OpenStore = () =>
     import ('@/components/user/OpenStore')
 
+// 商品搜索清单卡片
+const SearchCard = () =>
+    import ('@/components/search/SearchCard')
+
 Vue.use(Router)
 
 export default new Router({
@@ -120,7 +124,7 @@ export default new Router({
                 { path: 'message', component: Message, name: 'Message', meta: { title: '消息', loginRequire: true } },
                 { path: 'cart', component: Cart, name: 'Cart', meta: { title: '购物车', loginRequire: true } },
                 { path: 'individual', name: 'Individual', component: UserSpace, meta: { title: '个人中心', loginRequire: true } },
-                { path: 'category', name: 'Category', component: Category, meta: { title: '商品分类', loginRequire: true } },
+                { path: 'category', name: 'Category', component: Category, meta: { title: '商品分类' } },
             ],
         },
         {
@@ -197,6 +201,14 @@ export default new Router({
             meta: {
                 loginRequire: true,
                 title: "商品详情"
+            }
+        }, {
+            // 商品搜索详情页面
+            path: '/search-card',
+            name: 'SearchCard',
+            component: SearchCard,
+            meta: {
+                title: '商品搜索清单'
             }
         }
     ]

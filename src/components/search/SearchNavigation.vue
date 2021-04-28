@@ -2,7 +2,6 @@
   <div class="HeadNavigation">
     <van-nav-bar
       :right-text="rightText"
-      v-model="previous"
       left-arrow
       @click-left="onClickLeft"
       @click-right="onClickRight"
@@ -46,12 +45,17 @@ import { search } from "@/api/search";
 export default {
   name: "HeadNavigation",
   components: { Helper },
+  props: {
+    previous: {
+      type: String,
+      default: "/",
+    },
+  },
   data() {
     return {
       show: false,
       searchValue: "",
       rightText: "帮助",
-      previous: "",
       url: "",
       page: 1, // 默认page为1
     };
@@ -59,7 +63,7 @@ export default {
   methods: {
     // 返回前一页
     onClickLeft() {
-      this.$router.push("/");
+      this.$router.push({ path: this.previous });
     },
     // 显示帮助栏
     onClickRight() {

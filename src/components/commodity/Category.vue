@@ -36,17 +36,22 @@
                   <van-col
                     v-for="(numCol, indexCol) in 3"
                     :key="indexCol"
-                    span="7"
+                    span="8"
+                    @click="
+                      goToComodity(value.child[indexRow * 3 + indexCol].name)
+                    "
                   >
                     <!-- 防止数组越界 -->
                     <span v-if="indexRow * 3 + indexCol < value.child.length">
                       <img
                         src="https://django-e-mall.oss-cn-shanghai.aliyuncs.com/u%3D3324287611%2C3832720410%26fm%3D26%26gp%3D0.jpg"
-                        width="50px"
+                        width="55px"
                         height="auto"
-                        style="display: block;padding-top:10px"
+                        style="display: block; padding-top: 10px"
                       />
-                      {{ value.child[indexRow * 3 + indexCol].name }}
+                      <span>{{
+                        value.child[indexRow * 3 + indexCol].name
+                      }}</span>
                     </span>
                   </van-col>
                 </van-row>
@@ -108,6 +113,14 @@ export default {
             this.$toast.fail("获取二级及以下类目失败,服务器开了会小差～");
           });
       }
+    },
+
+    // 根据用户选择的类别名搜索相关商品
+    goToComodity(name) {
+      this.$router.push({
+        name: "SearchCard",
+        query: { keyword: name, previous: this.$route.path },
+      });
     },
   },
 };

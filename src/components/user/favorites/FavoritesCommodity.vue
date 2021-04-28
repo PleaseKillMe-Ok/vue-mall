@@ -40,7 +40,13 @@
               thumb="https://img01.yzcdn.cn/vant/cat.jpeg"
             >
               <template #tags>
-                <van-tag plain type="danger" style="float: left">失效</van-tag>
+                <van-tag
+                  plain
+                  type="danger"
+                  style="float: left"
+                  v-if="!item.status"
+                  >失效</van-tag
+                >
               </template>
               <template #footer>
                 <van-button size="mini">找相似</van-button>
