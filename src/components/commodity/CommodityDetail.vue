@@ -200,8 +200,14 @@
         type="warning"
         text="加入购物车"
         @click="joinCart"
+        :disabled="commodityInformation.stock == 0"
       />
-      <van-goods-action-button type="danger" text="立即购买" @click="buy" />
+      <van-goods-action-button
+        type="danger"
+        text="立即购买"
+        @click="buy"
+        :disabled="commodityInformation.stock == 0"
+      />
     </van-goods-action>
     <!-- sku属性值选择动作面板 -->
     <van-action-sheet v-model="showSkuProps">
