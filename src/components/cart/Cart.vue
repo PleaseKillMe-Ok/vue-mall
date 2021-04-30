@@ -159,6 +159,7 @@ import {
 } from "@/api/cart";
 export default {
   name: "Cart",
+  inject: ["reload"], // 注入reload属性到当前子组件
   data() {
     return {
       title: "购物车",
@@ -407,10 +408,12 @@ export default {
                   let data = res.data;
                   load.clear();
                   if (data.code === 1067) this.$toast.success(data.msg);
+                  this.reload(); // 刷新页面
                 })
                 .catch((err) => {
                   load.clear();
                   this.$toast.fail("删除失败～服务器开了会小差～");
+                  this.$router.push({ path: this.$route.path });
                 });
             } else {
               // 删除指定的购物车宝贝
@@ -422,6 +425,7 @@ export default {
                   let data = res.data;
                   load.clear();
                   if (data.code === 1067) this.$toast.success(data.msg);
+                  this.reload();
                 })
                 .catch((err) => {
                   load.clear();
