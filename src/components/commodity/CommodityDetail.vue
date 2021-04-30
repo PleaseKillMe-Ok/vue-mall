@@ -180,7 +180,7 @@
     <div class="card look-again"><van-divider>猜你喜欢</van-divider></div>
 
     <!-- 商品导航 -->
-    <van-goods-action>
+    <van-goods-action class="action">
       <van-goods-action-icon
         icon="star"
         text="收藏"
@@ -489,5 +489,10 @@ export default {
   font-weight: bolder;
   font-size: 18px;
   color: red;
+}
+
+/* 商品导航 */
+.action{
+  margin-bottom: 50px;
 }
 </style>

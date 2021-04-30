@@ -113,12 +113,7 @@
       </div>
     </div>
 
-    <van-submit-bar
-      :tip="tip"
-      tip-icon="info-o"
-      @submit="onSubmitOrder"
-      class="bottom"
-    >
+    <van-submit-bar :tip="tip" tip-icon="info-o" class="bottom">
       <template v-if="isOpenManage" #button>
         <van-button
           plain
@@ -135,8 +130,12 @@
       <template v-else #button>
         <span
           >合计: <span class="price">¥ {{ totalPrice }}</span></span
-        ><van-button :disabled="disabled" round type="danger"
-          >提交订单</van-button
+        ><van-button
+          :disabled="disabled"
+          round
+          type="danger"
+          @click="onSubmitOrder"
+          >结算</van-button
         >
       </template>
       <template #default>
@@ -374,16 +373,18 @@ export default {
 
     // 返回首页
     goBack() {
-      if (this.$route.query.previous == null) this.$router.push("");
+      if (this.$route.query.previous == null) this.$router.push("/");
       else this.$router.push({ path: this.$route.query.previous });
     },
 
     // 提交订单
     onSubmitOrder() {
       if (this.selectedCommodityResult.length <= 0) {
-        this.$toast.fail("请选择要删除的商品");
+        this.$toast.fail("请选择要结算的商品");
       } else {
-        console.log("正在跳转...");
+        let token = sessionStorage.getItem("Bearer-Token"); // 取出token，用作当前用户身份id
+        sessionStorage.setItem(token, this.selectedCommodityResult); // 通过sessionStorage暂存选择需要购买的商品
+        this.$router.push({ name: "OrderGeneration" });
       }
     },
 
@@ -644,7 +645,7 @@ export default {
 }
 /* 布长器 */
 .counts-modify {
-  margin-left: 120px;
+  margin-left: 100px;
 }
 
 /* 所有商品整体布局 */
