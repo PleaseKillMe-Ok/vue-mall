@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import Router from 'vue-router'
 
 /* 懒加载 */
@@ -107,9 +108,20 @@ const OpenStore = () =>
 const SearchCard = () =>
     import ('@/components/search/SearchCard')
 
-Vue.use(Router)
+// 生成订单界面
+const OrderGeneration = () =>
+    import ('@/components/order/OrderGeneration')
 
-export default new Router({
+Vue.use(VueRouter)
+
+// 允许重定向到自身页面
+const originalPush = VueRouter.prototype.replace
+
+VueRouter.prototype.replace = function replace(location) {
+    return originalPush.call(this, location).catch(err => err)
+}
+
+export default new VueRouter({
     /*  插槽, 跳转到某个路由时,该路由下的页面存在router-view标签的话,就将组件插在这个插槽中渲染显示*/
     routes: [{
             // 路由重定向
@@ -125,17 +137,27 @@ export default new Router({
                 { path: 'cart', component: Cart, name: 'Cart', meta: { title: '购物车', loginRequire: true } },
                 { path: 'individual', name: 'Individual', component: UserSpace, meta: { title: '个人中心', loginRequire: true } },
                 { path: 'category', name: 'Category', component: Category, meta: { title: '商品分类' } },
+                {
+                    path: 'search',
+                    name: 'Search',
+                    component: Search,
+                    meta: {
+                        loginRequire: true,
+                        title: '搜索'
+                    }
+                }, {
+                    // 商品详情页
+                    path: 'commodity-detail',
+                    name: 'CommodityDetail',
+                    component: CommodityDetail,
+                    meta: {
+                        loginRequire: true,
+                        title: "商品详情"
+                    }
+                }
             ],
         },
-        {
-            path: '/search',
-            name: 'Search',
-            component: Search,
-            meta: {
-                loginRequire: true,
-                title: '搜索'
-            }
-        },
+
         {
             path: '/personal',
             redirect: '/personal/home',
@@ -194,21 +216,21 @@ export default new Router({
             name: 'Forget',
             component: ForgetPassword,
         }, {
-            // 商品详情页
-            path: '/commodity-detail',
-            name: 'CommodityDetail',
-            component: CommodityDetail,
-            meta: {
-                loginRequire: true,
-                title: "商品详情"
-            }
-        }, {
             // 商品搜索详情页面
             path: '/search-card',
             name: 'SearchCard',
             component: SearchCard,
             meta: {
                 title: '商品搜索清单'
+            }
+        }, {
+            // 生成订单页面
+            path: '/order-generation',
+            name: 'OrderGeneration',
+            component: OrderGeneration,
+            meta: {
+                title: '订单生成',
+                loginRequire: true
             }
         }
     ]
