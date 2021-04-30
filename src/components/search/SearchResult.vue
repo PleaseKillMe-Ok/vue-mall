@@ -3,10 +3,19 @@
     <div v-if="searchResult.length === 0" style="margin-top: 50%">
       搜索不到任何商品
     </div>
+
     <div v-else>
-      <van-cell v-for="(item, index) in keywordList" :key="index">{{
-        item
-      }}</van-cell>
+      <van-cell
+        v-for="(item, index) in keywordList"
+        :key="index"
+        is-link
+        :to="{
+          name: 'SearchCard',
+          query: { previous: $route.path, keyword: item },
+        }"
+        :value="item"
+      >
+      </van-cell>
     </div>
   </div>
 </template>
@@ -44,5 +53,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.a {
+  color: black;
+}
 </style>

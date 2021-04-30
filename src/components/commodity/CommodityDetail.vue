@@ -180,7 +180,7 @@
     <div class="card look-again"><van-divider>猜你喜欢</van-divider></div>
 
     <!-- 商品导航 -->
-    <van-goods-action>
+    <van-goods-action class="action">
       <van-goods-action-icon
         icon="star"
         text="收藏"
@@ -200,8 +200,14 @@
         type="warning"
         text="加入购物车"
         @click="joinCart"
+        :disabled="commodityInformation.stock == 0"
       />
-      <van-goods-action-button type="danger" text="立即购买" @click="buy" />
+      <van-goods-action-button
+        type="danger"
+        text="立即购买"
+        @click="buy"
+        :disabled="commodityInformation.stock == 0"
+      />
     </van-goods-action>
     <!-- sku属性值选择动作面板 -->
     <van-action-sheet v-model="showSkuProps">
@@ -376,7 +382,7 @@ export default {
     },
     // 回到首页
     goBack() {
-      this.$router.push({ path: 'Home' });
+      this.$router.push({ path: "Home" });
     },
   },
 };
@@ -483,5 +489,10 @@ export default {
   font-weight: bolder;
   font-size: 18px;
   color: red;
+}
+
+/* 商品导航 */
+.action{
+  margin-bottom: 50px;
 }
 </style>

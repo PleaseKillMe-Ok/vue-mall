@@ -113,12 +113,7 @@
       </div>
     </div>
 
-    <van-submit-bar
-      :tip="tip"
-      tip-icon="info-o"
-      @submit="onSubmitOrder"
-      class="bottom"
-    >
+    <van-submit-bar :tip="tip" tip-icon="info-o" class="bottom">
       <template v-if="isOpenManage" #button>
         <van-button
           plain
@@ -135,8 +130,12 @@
       <template v-else #button>
         <span
           >合计: <span class="price">¥ {{ totalPrice }}</span></span
-        ><van-button :disabled="disabled" round type="danger"
-          >提交订单</van-button
+        ><van-button
+          :disabled="disabled"
+          round
+          type="danger"
+          @click="onSubmitOrder"
+          >结算</van-button
         >
       </template>
       <template #default>
@@ -159,6 +158,7 @@ import {
 } from "@/api/cart";
 export default {
   name: "Cart",
+  inject: ["reload"], // 注入reload属性到当前子组件
   data() {
     return {
       title: "购物车",
@@ -186,6 +186,7 @@ export default {
   watch: {
     // 全选商品，将所有的商品添加到selectedCommodityResult，将所有的店铺名添加到selectedStoreResult
     choiceAll(newValue, oldValue) {
+      console.log(221312);
       this.disabled = !this.disabled;
       this.selectedCommodityResult = []; // 先置为空
       if (newValue) {
@@ -196,17 +197,12 @@ export default {
           }
         }
       } else {
+        // 这里不能盲目的置为空
         this.selectedStoreResult = [];
         this.selectedCommodityResult = [];
       }
-      let tempTotalPrice = 0;
       // 更新总价格
-      for (let index in this.selectedCommodityResult) {
-        tempTotalPrice += this.tidTotalPrice[
-          this.selectedCommodityResult[index]
-        ];
-      }
-      this.totalPrice = tempTotalPrice;
+      this.computeTotalAgain();
     },
 
     // 监听选中的店铺名数组
@@ -223,8 +219,18 @@ export default {
             this.storeDict[newValue[0]][index].tid
           ); // 向selectedCommodityResult中添加tid
         }
+        // 对数组去重
+        let tempArray = this.selectedCommodityResult;
+        this.selectedCommodityResult = this.removeDuplicated(tempArray);
+
+        // 更新总价格
+        this.computeTotalAgain();
+        // 判断所有商品是否都选中
+        if (newValue.length === Object.keys(this.storeDict).length) {
+          this.choiceAll = true;
+        }
       } else if (newValue.length === oldValue.length) {
-        // 此处由于该店铺下所有商品都被选中，回调该监听器
+        // 此处由于该店铺下所有商品都被选中，回调该监听器,不做任何事
       } else {
         // 取消勾选
         if (newValue.length === 0) {
@@ -240,6 +246,8 @@ export default {
             this.selectedCommodityResult.splice(i, 1);
           }
         }
+        // 取消勾选全选
+        this.choiceAll = false;
       }
     },
 
@@ -260,25 +268,34 @@ export default {
       let tempTotalPrice = 0;
       if (newValue.length > oldValue.length) {
         let storeName = this.storeTidDict[newValue[newValue.length - 1]];
-        let tempCount = 0; // 临时计数器
-        let aimCount = this.storeNameDict[storeName].length;
-        for (let index in this.storeNameDict[storeName]) {
-          if (
-            this.selectedCommodityResult.includes(
-              this.storeNameDict[storeName][index]
-            )
-          )
-            tempCount += 1;
-        }
-        if (tempCount === aimCount) {
+        let needCheck = this.judgeAutoCheckStore(storeName); // 判断是否勾选店铺checkbox
+        if (needCheck) {
           this.selectedStoreResult.push(storeName);
         }
+        // 判断所有商品是否都被选中
+        if (newValue.length === this.commodityCount) this.choiceAll = true;
       } else if (newValue.length === oldValue.length) {
         //
       } else {
-        let storeName = this.selectedStoreResult[oldValue[oldValue.length - 1]];
+        // 如何正确搜索商品对应的店铺，然后删除
+        // let storeName = this.selectedStoreResult[oldValue[oldValue.length - 1]];
+        // let i = this.selectedStoreResult.indexOf(storeName);
+        // this.selectedStoreResult.splice(i, 1);
+        // 寻找该商品对应的店铺，要取消勾选该商品时，如果对应的店铺勾选了，应取消勾选
+        let storeName = this.storeTidDict[oldValue[oldValue.length - 1]];
         let i = this.selectedStoreResult.indexOf(storeName);
-        this.selectedStoreResult.splice(i, 1);
+        let needCheck = this.judgeAutoCheckStore(storeName); // 判断是否勾选店铺checkbox
+        if (i !== -1 && !needCheck) {
+          // 索引存在,取消勾选店铺
+          this.selectedStoreResult.splice(i, 1);
+        }
+        // 取消勾选全选
+        if (this.choiceAll) {
+          // 避免多次回调selectedCommodityResult监听器，造成死循环
+          let temp = newValue; // 先暂存起来
+          this.choiceAll = false; // 由于此操作会回调this.choiceAll的监听器,为异步操作，因此需要将暂存的数据重新赋值到selectedCommodityResult中
+          this.selectedCommodityResult = temp;
+        }
       }
       // 更新总价格
       for (let index in newValue) {
@@ -286,8 +303,6 @@ export default {
       }
       this.totalPrice = tempTotalPrice;
     },
-
-    // 监听选中的商品结果集合
   },
   methods: {
     // 获取购物车中的数据
@@ -358,16 +373,18 @@ export default {
 
     // 返回首页
     goBack() {
-      if (this.$route.query.previous == null) this.$router.push("");
+      if (this.$route.query.previous == null) this.$router.push("/");
       else this.$router.push({ path: this.$route.query.previous });
     },
 
     // 提交订单
     onSubmitOrder() {
       if (this.selectedCommodityResult.length <= 0) {
-        this.$toast.fail("请选择要删除的商品");
+        this.$toast.fail("请选择要结算的商品");
       } else {
-        console.log("正在跳转...");
+        let token = sessionStorage.getItem("Bearer-Token"); // 取出token，用作当前用户身份id
+        sessionStorage.setItem(token, this.selectedCommodityResult); // 通过sessionStorage暂存选择需要购买的商品
+        this.$router.push({ name: "OrderGeneration" });
       }
     },
 
@@ -392,10 +409,12 @@ export default {
                   let data = res.data;
                   load.clear();
                   if (data.code === 1067) this.$toast.success(data.msg);
+                  this.reload(); // 刷新页面
                 })
                 .catch((err) => {
                   load.clear();
                   this.$toast.fail("删除失败～服务器开了会小差～");
+                  this.$router.push({ path: this.$route.path });
                 });
             } else {
               // 删除指定的购物车宝贝
@@ -407,6 +426,7 @@ export default {
                   let data = res.data;
                   load.clear();
                   if (data.code === 1067) this.$toast.success(data.msg);
+                  this.reload();
                 })
                 .catch((err) => {
                   load.clear();
@@ -469,9 +489,14 @@ export default {
         .then((res) => {
           let data = res.data;
           if (data.code == 1069) {
-            // 更新对应单个商品总价格
+            // 更新对应单个商品总价格和数量
             this.storeDict[storeName][index].totalPrice = data.new_price;
             this.storeDict[storeName][index].count = count;
+
+            // 修改tid与价格映射表中的总价格
+            this.tidTotalPrice[tid] = data.new_price;
+            // 更新总价格
+            this.computeTotalAgain();
           }
           load.clear();
         })
@@ -479,6 +504,49 @@ export default {
           this.$toast.fail("商品数量修改失败，服务器开了会小差～");
           load.clear();
         });
+    },
+
+    // 重新计算商品总价格
+    // 当勾选/取消商品/店铺  或者 对某个商品数量进行修改时需重新计算
+    computeTotalAgain() {
+      let tempTotalPrice = 0;
+      for (let index in this.selectedCommodityResult) {
+        tempTotalPrice += this.tidTotalPrice[
+          this.selectedCommodityResult[index]
+        ];
+      }
+      this.totalPrice = tempTotalPrice;
+    },
+
+    // 对数组去重
+    removeDuplicated(arr) {
+      arr.sort();
+      let i = 0;
+      for (let j = 1; j < arr.length; j++) {
+        if (arr[j] != arr[i]) {
+          arr[i + 1] = arr[j];
+          i += 1;
+        }
+      }
+      return arr.slice(0, i + 1);
+    },
+
+    // 判断是否需要自动勾选某个店铺
+    judgeAutoCheckStore(storeName) {
+      let tempCount = 0; // 临时计数器
+      let aimCount = this.storeNameDict[storeName].length;
+      for (let index in this.storeNameDict[storeName]) {
+        if (
+          this.selectedCommodityResult.includes(
+            this.storeNameDict[storeName][index]
+          )
+        )
+          tempCount += 1;
+      }
+      if (tempCount === aimCount) {
+        return true;
+      }
+      return false;
     },
 
     // 由固定改变成布长器
@@ -577,7 +645,7 @@ export default {
 }
 /* 布长器 */
 .counts-modify {
-  margin-left: 120px;
+  margin-left: 100px;
 }
 
 /* 所有商品整体布局 */

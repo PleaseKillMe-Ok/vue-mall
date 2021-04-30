@@ -49,7 +49,10 @@ export default {
     // 进入搜索详情界面
     toSearch() {
       // 路由跳转
-      this.$router.push({ name: "Search" });
+      this.$router.push({
+        name: "Search",
+        query: { previous: this.$route.path },
+      });
     },
   },
 };

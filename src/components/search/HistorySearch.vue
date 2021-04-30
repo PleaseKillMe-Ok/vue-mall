@@ -11,7 +11,15 @@
       </span>
     </div>
     <div class="data">
-      <van-button v-for="(key, index) in historyList" :key="index" round>
+      <van-button
+        v-for="(key, index) in historyList"
+        :key="index"
+        round
+        :to="{
+          name: 'SearchCard',
+          query: { previous: $route.path, keyword: key },
+        }"
+      >
         {{ key }}
       </van-button>
     </div>

@@ -47,8 +47,10 @@ export default {
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 8px 12px #ebedf0;
+  margin-left: 10px;
+  margin-right: 10px;
 }
-.half-left-card{
+.half-left-card {
   margin-top: 5px;
   margin-bottom: 5px;
   width: 44%;
@@ -58,7 +60,7 @@ export default {
   box-shadow: 0 8px 12px #ebedf0;
   float: left;
 }
-.half-right-card{
+.half-right-card {
   margin-top: 5px;
   margin-bottom: 5px;
   width: 43%;

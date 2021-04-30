@@ -1,7 +1,10 @@
 <template>
   <div id="Search">
     <!-- 搜索导航栏 -->
-    <SearchNavigation @displayResult="displayResult"></SearchNavigation>
+    <SearchNavigation
+      @displayResult="displayResult"
+      :previous="previous"
+    ></SearchNavigation>
     <div style="margin-top: 46px"></div>
     <div v-if="showResult">
       <SearchResult :searchResult="searchResult"></SearchResult>
@@ -30,6 +33,9 @@ export default {
       showResult: false,
       searchResult: [], // 搜索的数据集
     };
+  },
+  created() {
+    this.previous = this.$route.query.previous;
   },
   methods: {
     displayResult(status, data) {

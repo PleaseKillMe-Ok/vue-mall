@@ -2,7 +2,6 @@
   <div class="HeadNavigation">
     <van-nav-bar
       :right-text="rightText"
-      v-model="previous"
       left-arrow
       @click-left="onClickLeft"
       @click-right="onClickRight"
@@ -46,12 +45,17 @@ import { search } from "@/api/search";
 export default {
   name: "HeadNavigation",
   components: { Helper },
+  props: {
+    previous: {
+      type: String,
+      default: "/",
+    },
+  },
   data() {
     return {
       show: false,
       searchValue: "",
       rightText: "帮助",
-      previous: "",
       url: "",
       page: 1, // 默认page为1
     };
@@ -59,7 +63,7 @@ export default {
   methods: {
     // 返回前一页
     onClickLeft() {
-      this.$router.push("/");
+      this.$router.push({ path: this.previous });
     },
     // 显示帮助栏
     onClickRight() {
@@ -70,8 +74,10 @@ export default {
       if (this.searchValue !== "") {
         search(this.searchValue, 1)
           .then((res) => {
-            let data = res.data; // 模拟获取到的数据
-            this.$emit("displayResult", true, data); // 传递给父组件,切换父组件的子组件,将数据传递给父组件,显示搜索结果
+            this.$router.push({
+              name: "SearchCard",
+              query: { previous: this.$route.path, keyword: this.searchValue },
+            });
           })
           .catch((err) => {
             this.$toast.fail("服务器太累了,需要休息一会~");
