@@ -2,7 +2,7 @@
   <div id="OrderLine">
     <div class="card">
       <span class="label">我的订单</span>
-      <span class="detail">查看全部订单&gt;</span>
+      <span class="detail" @click="toOrder">查看全部订单&gt;</span>
       <van-divider class="hr" />
 
       <van-grid :column-num="columnNumber" :border="displayBorder">
@@ -68,12 +68,23 @@ export default {
       ],
     };
   },
+  methods: {
+    // 去往订单标签页面
+    toOrder() {
+      this.$router.push({
+        name: "Order",
+        query: { previous: this.$route.path },
+      });
+    },
+  },
 };
 </script>
 
 <style scoped>
 .label {
   float: left;
+  margin-left: 5px;
+  font-size: 18px;
 }
 .detail {
   float: right;
