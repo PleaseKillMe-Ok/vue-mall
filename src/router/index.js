@@ -112,6 +112,10 @@ const SearchCard = () =>
 const OrderGeneration = () =>
     import ('@/components/order/OrderGeneration')
 
+// 订单标签
+const OrderTab = () =>
+    import ('@/components/order/OrderTab')
+
 Vue.use(VueRouter)
 
 // 允许重定向到自身页面
@@ -230,6 +234,15 @@ export default new VueRouter({
             component: OrderGeneration,
             meta: {
                 title: '订单生成',
+                loginRequire: true
+            }
+        }, {
+            // 订单标签页面
+            path: '/order',
+            name: 'Order',
+            component: OrderTab,
+            meta: {
+                title: '订单标签',
                 loginRequire: true
             }
         }
