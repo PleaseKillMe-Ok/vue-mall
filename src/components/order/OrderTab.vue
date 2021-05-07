@@ -128,6 +128,7 @@ export default {
 
     // 解析数据-->以订单号为大类分类，然后在大类中按照店铺进行分类
     parseData() {
+      this.orderStoreCommodityMap = {}  // 先清空
       for (let index in this.orderList) {
         let orderItem = this.orderList[index];
         let orderDetails = orderItem.order_details;

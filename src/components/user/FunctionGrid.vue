@@ -16,6 +16,30 @@
         </template>
       </van-grid-item>
     </van-grid>
+    <div class="card">
+      <span class="label">我的订单</span>
+      <span class="detail" @click="toOrder">查看全部订单&gt;</span>
+      <van-divider class="hr" />
+
+      <van-grid :column-num="columnNumber" :border="displayBorder">
+        <van-grid-item
+          v-for="(item, index) in orderfunctionList"
+          :key="index"
+          :to="item.url"
+        >
+          <!-- 徽章 -->
+          <van-badge :content="item.value">
+            <!-- 自定义宫格内容 -->
+            <template #default>
+              <div class="data">
+                <van-icon :name="item.icon" class="icon" />
+                <p>{{ item.name }}</p>
+              </div>
+            </template>
+          </van-badge>
+        </van-grid-item>
+      </van-grid>
+    </div>
   </div>
 </template>
 
@@ -49,12 +73,60 @@ export default {
         },
       ],
       extraInfomation: {}, // 额外的信息
+      displayBorder: false, // 是否显示边框
+      columnNumber: 5, // 列数
+      orderfunctionList: [
+        {
+          name: "待付款",
+          status: "1",
+          url: "/",
+          value: 0,
+          icon: "pending-payment",
+        },
+        {
+          name: "待发货",
+          status: "2",
+          url: "",
+          value: 0,
+          icon: "paid",
+        },
+        {
+          name: " 待收货",
+          status: "3",
+          url: "",
+          value: 0,
+          icon: "logistics",
+        },
+        {
+          name: "评价",
+          status: "4",
+          url: "",
+          value: 0,
+          icon: "comment-o",
+        },
+        {
+          name: "退款/售后",
+          status: "6",
+          url: "",
+          value: 0,
+          icon: "after-sale",
+        },
+      ],
+      orderDict: {}, // 订单状态和数量的映射
     };
   },
   created() {
     this.getExtraCount();
   },
   methods: {
+    // 去往订单标签页面
+    toOrder() {
+      this.$router.push({
+        name: "Order",
+        query: { previous: this.$route.path },
+      });
+    },
+    // 去往宫格栏界面
     toItemPage(routeName) {
       this.$router.push({
         name: routeName,
@@ -71,10 +143,23 @@ export default {
           this.functionList[1].value = this.extraInfomation.collection_count;
           this.functionList[2].value = this.extraInfomation.address_count;
           this.functionList[3].value = this.extraInfomation.foot_count;
+          this.orderDict = this.extraInfomation.order_dict;
+          this.parseOrderDict();
         })
         .catch((res) => {
           this.$toast.fail("获取用户额外信息失败，服务器开了会小差～");
         });
+    },
+
+    // 解析{订单状态:数量}数据
+    parseOrderDict() {
+      for (let index in this.orderfunctionList) {
+        let item = this.orderfunctionList[index];
+        // 存在该status下的订单
+        if (this.orderDict[item.status] != null) {
+          this.orderfunctionList[index].value = this.orderDict[item.status];
+        }
+      }
     },
   },
 };
@@ -83,5 +168,26 @@ export default {
 <style scoped>
 .data {
   font-size: 0.7rem;
+}
+.label {
+  float: left;
+  margin-left: 5px;
+  font-size: 18px;
+}
+.detail {
+  float: right;
+  font-size: 0.7rem;
+  color: gray;
+}
+.hr {
+  margin-top: 2rem;
+}
+
+.data {
+  font-size: 0.65rem;
+}
+
+.icon {
+  font-size: 25px;
 }
 </style>
