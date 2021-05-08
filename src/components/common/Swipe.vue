@@ -1,16 +1,20 @@
 <template>
   <div id="Swipe">
-    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-      <van-swipe-item>请求后台API轮播</van-swipe-item>
+    <van-swipe
+      class="swipe"
+      :autoplay="3000"
+      indicator-color="white"
+      width="100%"
+      height="auto"
+    >
       <van-swipe-item
         v-for="(swipe, index) in swipeList"
         :key="index"
         @click="accessDetail(swipe.url)"
       >
-        <img :src="swipe.pic" :class="picture" />
+        <img :src="swipe.pic" :class="picture" width="100%" height="auto" />
       </van-swipe-item>
     </van-swipe>
-    
   </div>
 </template>
 
@@ -28,7 +32,16 @@ export default {
   methods: {
     // 请求API
     getSwipe() {
-     
+      this.swipeList = [
+        {
+          pic:
+            "https://vue-e-mall.oss-cn-beijing.aliyuncs.com/src%3Dhttp___m.360buyimg.com_mobilecms_s750x750_jfs_t17791_347_1064370232_210474_cb300c7b_5ab85845na531ffba.jpg%21q80.jpg%26refer%3Dhttp___m.360buyimg.jpeg",
+        },
+        {
+          pic:
+            "https://vue-e-mall.oss-cn-beijing.aliyuncs.com/7aec54e736d12f2e78d02dfb44c2d56284356850.png",
+        },
+      ];
     },
     // 计算取数据的区间
     computeRetrieve() {
@@ -51,6 +64,10 @@ export default {
 </script>
 
 <style scoped>
+.swipe {
+  margin-top: 50px;
+}
+
 .my-swipe .van-swipe-item {
   margin-top: 50px;
   color: #fff;
@@ -60,6 +77,6 @@ export default {
   background-color: #39a9ed;
 }
 .picture {
-  height: 220px;
+  height: 200px;
 }
 </style>

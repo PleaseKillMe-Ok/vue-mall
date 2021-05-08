@@ -14,7 +14,10 @@
         </div>
       </template>
     </van-nav-bar>
-    <div class="body">
+    <div v-if="commodityList.length === 0" class="null-good">
+      抱歉，搜索不到您所需要的商品
+    </div>
+    <div class="body" v-else>
       <van-row
         v-for="(item, index) in commodityList"
         :key="index"
@@ -135,5 +138,10 @@ export default {
 
 .fuck {
   margin-top: 15px;
+}
+
+.null-good {
+  margin-top: 50%;
+  color: grey;
 }
 </style>
