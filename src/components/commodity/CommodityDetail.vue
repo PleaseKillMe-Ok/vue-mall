@@ -171,9 +171,10 @@
     <!-- 商品详情 -->
     <div class="">
       <van-divider>商品详情</van-divider>
-      <div v-for="(image, index) in commodityImages" :key="index">
+      <!-- <div v-for="(image, index) in commodityImages" :key="index">
         <img v-lazy="image" width="100%" height="auto" />
-      </div>
+      </div> -->
+      <div v-html="commodityInformation.details"></div>
     </div>
 
     <!-- 看了又看 -->
@@ -492,7 +493,7 @@ export default {
 }
 
 /* 商品导航 */
-.action{
+.action {
   margin-bottom: 50px;
 }
 </style>

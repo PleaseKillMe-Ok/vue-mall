@@ -44,7 +44,9 @@
               },
             ]"
             :disabled="!value.status"
-            @click="choiceValue(index, index2, values.name, value.id)"
+            @click="
+              choiceValue(index, index2, values.name, value.id, value.value)
+            "
           >
             {{ value.value }}
           </van-button>
@@ -104,7 +106,8 @@ export default {
       skuList: [], // sku列表
       skuValuesMap: {}, // key为属性名，value为属性值数组
       chosePropsList: [], // 维护用户已经点击的类目数组下标
-      preDict: {}, // 用户每次选择类目后的字典数据
+      preDict: {}, // 用户每次选择类目后的字典数据,存储 {类目名:类目值}
+      preDictId: {}, // 同上， 存储{类目名:类目值id}
       skuPrice: 0, // 选中的sku价格
       skuStock: 0, // 选中的sku库存容量
       skuSidRelation: {}, // 存储sku的Sid和sku其他信息映射关系,
@@ -116,7 +119,7 @@ export default {
     this.defaultStore = this.commodityInformation.stock; // 默认总库存
     this.skuStock = this.defaultStore;
     this.skuPrice = this.defaultPrice;
-    this.getEffectiveSku();
+    this.skuList = this.commodityInformation.sku;
   },
   watch: {
     // 当propsValues由父-->子执行
@@ -142,7 +145,7 @@ export default {
     getEffectiveSku() {
       getEffectiveSku()
         .then((res) => {
-          this.skuList = res.data;
+          this.skuList = res.data.data;
         })
         .catch((err) => {
           this.$toast.fail("获取数据失败,服务器开了会小差～");
@@ -150,15 +153,23 @@ export default {
     },
 
     // 选择合适的map项
-    choiceValue(outIndex, InnerIndex, name, valueId) {
+
+    /**
+     * outIndex:外部索引项
+     * InnerIndex：内部索引项
+     * valueId:sku属性值id
+     * value:sku的属性值
+     */
+    choiceValue(outIndex, InnerIndex, name, valueId, value) {
       // 修改可用的类目状态和不可用的类目显示
       // 解析出用户点击某一个类目后的其他有效类目的数据
-      this.parseSku(valueId, name);
+      this.parseSku(valueId, name, value);
       if (!this.propsValues[outIndex].sku_values[InnerIndex].is_choice) {
         // 当前类目值未被选中
         if (!this.chosePropsList.includes(outIndex)) {
           this.chosePropsList.push(outIndex); // 避免重复添加
-          this.preDict[name] = valueId; // 向前缀字典中添加键值对，{name:valueId}
+          this.preDict[name] = value; // 向前缀字典中添加键值对，{name:value}
+          this.preDictId[name] = valueId; // 添加{name:valueId}
         }
         // index为choiceMap的下标,name为属性名
         this.$set(this.choiceMap, name, InnerIndex); // 修改选中样式
@@ -182,19 +193,22 @@ export default {
     },
 
     // 解析获取每一组可能的sku，组合成一个字典，判断当前sku记录是否满足前缀条件
-    parseSku(valueId, key) {
+    parseSku(valueId, key, value) {
       // valueId表示每个sku属性值的id， key表示每个sku属性名
       // 遍历skuList
 
       // 如果前缀字典中有key，先删除，方便同类目下切换属性值
-      if (this.preDict.hasOwnProperty(key)) delete this.preDict[key];
+      if (this.preDict.hasOwnProperty(key)) {
+        delete this.preDict[key];
+        delete this.preDictId[key];
+      }
 
       this.skuValuesMap = {};
       for (let i = 0; i < this.skuList.length; i++) {
         let flag = true; // 满足要求
         let properties = this.skuList[i].properties_r;
         // 校验每一个可能的sku中对应key的value值是否等于用户点击的value值
-        if (properties[key] === valueId) {
+        if (properties[key] === value) {
           // 如果等于，遍历时需要考虑其所有前缀
           for (let preKey in this.preDict) {
             if (
@@ -230,7 +244,7 @@ export default {
           favourablePrice: element.favourable_price,
           price: element.price,
           stock: element.stock,
-          pk: element.pk,
+          pk: element.id,
         };
       });
     },
@@ -246,12 +260,12 @@ export default {
         for (let j = 0; j < skuValues.length; j++) {
           this.propsValues[i].sku_values[j].status = false;
         }
-        // 如果有效类目数组存在于skuValuesMap字典中，则将其类目下的有效属性值的状态设置为true
+        // 如果有效类目数组存在于skuValuesMap有效sku字典中，则将其类目下的有效属性值的状态设置为true
         for (let m = 0; m < skuValues.length; m++) {
           if (this.skuValuesMap[name] != null) {
             for (let n = 0; n < this.skuValuesMap[name].length; n++) {
-              if (skuValues[m].id == this.skuValuesMap[name][n]) {
-                // 如果id存在并且库存>0
+              if (skuValues[m].value == this.skuValuesMap[name][n]) {
+                // 如果value存在并且库存>0
                 this.propsValues[i].sku_values[m].status = true;
               }
             }
@@ -298,8 +312,7 @@ export default {
       // 获取用户选中的类目值, 拼接成sid
       let sidList = new Array();
       for (let key in this.choiceMap) {
-        if (this.preDict[key] != null)
-          sidList.push(this.preDict[key].toString());
+        if (this.preDictId[key] != null) sidList.push(this.preDictId[key]);
       }
       let sid = sidList.sort().join("-");
       if (this.skuSidRelation.hasOwnProperty(sid)) {
@@ -332,6 +345,12 @@ export default {
             let data = res.data;
             if (data.code === 1068) {
               this.$toast.success("加入成功！ ");
+              this.$router.push({
+                name: "Cart",
+                query: {
+                  previous: this.$route.path + "/?id=" + this.$route.query.id,
+                },
+              });
             }
           })
           .catch((err) => {
@@ -358,9 +377,8 @@ export default {
     // 收集用户选中的sku信息
     collectSku() {
       let sidList = new Array();
-      for (let key in this.preDict) {
-        if (this.preDict[key] != null)
-          sidList.push(this.preDict[key].toString());
+      for (let key in this.preDictId) {
+        if (this.preDictId[key] != null) sidList.push(this.preDictId[key]);
       }
       let sid = sidList.sort().join("-");
       let data = {

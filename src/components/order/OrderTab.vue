@@ -15,7 +15,11 @@
         :key="index"
         :title="status"
       >
+        <div v-if="orderList.length === 0" class="null-order">
+          该状态下尚无订单，快去购物吧～
+        </div>
         <div
+          v-else
           class="card"
           v-for="(order, keyOrder, index) in orderStoreCommodityMap"
           :key="index"
@@ -111,11 +115,18 @@ export default {
     };
   },
   created() {
-    this.choiceStatus("0", "全部");
+    // 根据query参数进入指定的tab
+    console.log(this.$route.query);
+    if (this.$route.query.active != null) {
+      this.active = parseInt(this.$route.query.active);
+      this.choiceStatus(this.$route.query.active);
+    } else {
+      this.choiceStatus("0");
+    }
   },
   methods: {
     // 根据不同状态显示不同订单信息
-    choiceStatus(name, title) {
+    choiceStatus(name) {
       displayOrder(name)
         .then((res) => {
           this.orderList = res.data;
@@ -128,7 +139,7 @@ export default {
 
     // 解析数据-->以订单号为大类分类，然后在大类中按照店铺进行分类
     parseData() {
-      this.orderStoreCommodityMap = {}  // 先清空
+      this.orderStoreCommodityMap = {}; // 先清空
       for (let index in this.orderList) {
         let orderItem = this.orderList[index];
         let orderDetails = orderItem.order_details;
@@ -258,5 +269,11 @@ export default {
   margin-top: 15px;
   margin-bottom: 20px;
   text-align: right;
+}
+
+.null-order {
+  text-align: center;
+  color: grey;
+  margin-top: 50%;
 }
 </style>

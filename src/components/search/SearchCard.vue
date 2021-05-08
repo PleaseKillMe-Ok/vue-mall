@@ -15,11 +15,15 @@
       </template>
     </van-nav-bar>
     <div class="body">
-      <van-row v-for="(item, index) in commodityList" :key="index">
+      <van-row
+        v-for="(item, index) in commodityList"
+        :key="index"
+        @click="toCommodityDetail(item.pk)"
+      >
         <van-col span="10">
           <van-image
-            width="150"
-            height="150"
+            width="140"
+            height="140"
             lazy-load
             src="https://img01.yzcdn.cn/vant/cat.jpeg"
             radius="10px"
@@ -44,7 +48,6 @@
             >
             <span class="pay">{{ item.sell_counts }}+人付款</span>
           </div>
-          <p>进店></p>
         </van-col>
       </van-row>
     </div>
@@ -76,6 +79,11 @@ export default {
         .catch((err) => {
           this.$toast.fail("获取数据失败，服务器开了会小差～");
         });
+    },
+
+    // 进入商品详情页
+    toCommodityDetail(pk) {
+      this.$router.push({ name: "CommodityDetail", query: { id: pk } });
     },
 
     // 进入搜索界面
