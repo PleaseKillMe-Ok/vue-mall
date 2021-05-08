@@ -37,3 +37,10 @@ export function getTopCategory() {
 export function getSecondLeftCategroy(id) {
     return axios.get('/goods/chsc/apis/' + id + '/second-category/');
 }
+
+/**
+ * 获取所有商品信息
+ */
+export function getAllCommodity() {
+    return axios.get('/goods/chsc/apis/all/');
+}
