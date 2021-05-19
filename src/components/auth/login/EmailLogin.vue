@@ -202,10 +202,12 @@ export default {
         message: "请求中...",
         forbidClick: true,
       });
+      let login_key = this.isEmail ? values.email : values.username;
+      let way = this.isEmail ? "email" : "username";
       let postData = {
-        login_key: values.email,
+        login_key: login_key,
         is_remember: this.isRemember,
-        way: "email",
+        way: way,
         password: values.password,
       };
       login(postData)

@@ -19,7 +19,7 @@
     <!-- 轮播图 -->
     <van-swipe class="swipe">
       <van-swipe-item v-for="(image, index) in swipeImage" :key="index">
-        <img v-lazy="image" class="head-image" />
+        <img v-lazy="image" width="100%" height="100%" />
       </van-swipe-item>
     </van-swipe>
 
@@ -114,19 +114,16 @@
           <span style="color: #c36e23; font-weight: 500">查看全部</span>
         </template>
       </van-cell>
-
+      <!--       
       <ul>
         <li v-for="(item, index) in remarkList" :key="index">
           <van-row>
-            <!-- 头像 -->
             <van-col span="3">
               <img v-lazy="item.head_image" class="head-image" />
             </van-col>
-            <!-- 用户名 -->
             <van-col span="4" class="consumer">
               {{ item.consumer }}
             </van-col>
-            <!-- 评论时间 -->
             <van-col span="18" class="reward-time">
               {{ item.reward_time }}
             </van-col>
@@ -138,7 +135,7 @@
             </van-col>
           </van-row>
         </li>
-      </ul>
+      </ul> -->
     </div>
 
     <!-- 店铺介绍 -->
@@ -151,7 +148,7 @@
         <!-- 店铺名+店铺等级-->
         <van-col span="12">
           <span class="store-name">{{ store.name }}</span>
-          <span>{{ store.rank }}</span>
+          <span>店铺等级:{{ store.rank }}</span>
         </van-col>
         <!-- 店铺分数 -->
         <van-col span="7">
@@ -245,8 +242,8 @@ export default {
       remarkCount: 0, // 评论个数
       storeDict: {}, // 店铺信息
       commodityImages: [
-        "https://img01.yzcdn.cn/vant/apple-1.jpg",
-        "https://img01.yzcdn.cn/vant/apple-2.jpg",
+        "https://vue-e-mall.oss-cn-beijing.aliyuncs.com/%E5%B7%A5%E8%A3%85%E8%A3%A4%E5%AD%90.jpg",
+        "https://vue-e-mall.oss-cn-beijing.aliyuncs.com/%E5%B7%A5%E8%A3%85%E8%A3%A4%E5%AD%902.jpg",
       ], // 商品详情大图
       showSkuProps: false, // 是否开启sku属性面板
       propsValues: [], // 商品sku键值对
@@ -260,7 +257,7 @@ export default {
   created() {
     this.swipeImage = swipeImage;
     this.remarkList = remarkDict.data;
-    this.remarkCount = remarkDict.count;
+    this.remarkCount = 0;
     this.storeDict = storeDict;
     this.getCommodityDetail();
     this.getDefaultAddress();

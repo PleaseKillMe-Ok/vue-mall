@@ -207,10 +207,9 @@ export default {
         sendLogin(data)
           .then((res) => {
             let data = res.data;
-            if (data.code === 7 && data.status === "error")
-              this.$toast.fail(data.msg);
-            else if (data.code === 41 && data.status === "success")
+            if (data.code === 1070 && res.status === 200)
               this.$toast.success(data.msg);
+            else this.$toast.fail(data.msg);
           })
           .catch((err) => {
             this.$toast.fail("服务器开开了会小差~");

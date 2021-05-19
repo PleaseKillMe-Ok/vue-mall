@@ -116,6 +116,10 @@ const OrderGeneration = () =>
 const OrderTab = () =>
     import ('@/components/order/OrderTab')
 
+// 测试上传
+const UploadOSS = () =>
+    import ('@/components/user/UploadOSS')
+
 Vue.use(VueRouter)
 
 // 允许重定向到自身页面
@@ -158,6 +162,11 @@ export default new VueRouter({
                         loginRequire: true,
                         title: "商品详情"
                     }
+                }, {
+                    // 测试oss上传文件
+                    path: 'upload-oss',
+                    name: 'UploadOSS',
+                    component: UploadOSS,
                 }
             ],
         },

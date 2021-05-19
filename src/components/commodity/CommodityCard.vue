@@ -2,19 +2,17 @@
   <!-- 商品小卡片 -->
   <div id="CommodityCard">
     <!-- 根据奇偶左右排序 -->
-    <div
-      v-for="(item, index) in commoditys"
-      :key="index"
-      class="tiles-wrap"
-      style="display: block; height: 100%"
-    >
-     <!-- 懒加载图片 -->
-      <li class="half-left-card">
+    <div v-for="(item, index) in commoditys" :key="index" class="tiles-wrap">
+      <!-- 懒加载图片 -->
+      <li
+        class="half-left-card"
+        :class="index == commoditys.length - 1 ? 'last-good' : ''"
+      >
         <img
           width="100%"
           height="auto"
           v-lazy="item.little_image"
-          @click="toDetail(item.id)"
+          @click="toDetail(item.pk)"
         />
         <div class="info">
           <div class="intro">
@@ -32,19 +30,36 @@
 </template>
 
 <script>
-import { commodityCardDemo } from "@/demo/commoditycarddemo";
+import { getAllCommodity } from "@/api/commodity";
 export default {
   name: "CommodityCard",
-  components: { commodityCardDemo },
   data() {
     return {
       commoditys: [],
     };
   },
   created() {
-    this.commoditys = commodityCardDemo;
+    this.getCommodity();
   },
   methods: {
+    // 获取商品信息
+    getCommodity() {
+      let load = this.$toast.loading({
+        message: "加载中...",
+        forbidClick: true,
+      });
+      getAllCommodity()
+        .then((res) => {
+          this.commoditys = res.data.data;
+          load.clear();
+        })
+        .catch((err) => {
+          this.$toast.success({
+            message: "加载商品数据失败",
+          });
+          load.clear();
+        });
+    },
     // 根据id进入商品详情页
     toDetail(id) {
       this.$router.push({ name: "CommodityDetail", query: { id: id } });
@@ -54,6 +69,13 @@ export default {
 </script>
 
 <style scoped>
+.last-good {
+  margin-bottom: 80px;
+}
+.tiles-wrap {
+  display: block;
+  height: 100%;
+}
 /* 商品流式布局 */
 .tiles-wrap li {
   -moz-box-sizing: border-box;

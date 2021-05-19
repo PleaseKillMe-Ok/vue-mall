@@ -5,11 +5,11 @@
     <!-- 轮播图组件 -->
     <Swipe></Swipe>
     <!-- 领红包优惠卷组件 -->
-    <Voucher></Voucher>
+    <!-- <Voucher></Voucher> -->
     <!-- 抢红包组件 -->
-    <Seckill></Seckill>
+    <!-- <Seckill></Seckill> -->
     <!-- 每日优惠商品组件 -->
-    <Bargain></Bargain>
+    <!-- <Bargain></Bargain> -->
     <!-- 商品组件 -->
     <CommodityCard></CommodityCard>
   </div>

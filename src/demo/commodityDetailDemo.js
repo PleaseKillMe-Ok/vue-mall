@@ -1,6 +1,6 @@
 var swipeImage = [
-    "https://img01.yzcdn.cn/vant/apple-1.jpg",
-    "https://img01.yzcdn.cn/vant/apple-2.jpg",
+    "https://vue-e-mall.oss-cn-beijing.aliyuncs.com/%E5%B7%A5%E8%A3%85%E8%A3%A4%E5%AD%90.jpg",
+    "https://vue-e-mall.oss-cn-beijing.aliyuncs.com/%E5%B7%A5%E8%A3%85%E8%A3%A4%E5%AD%902.jpg",
 ]
 
 var remarkDict = {

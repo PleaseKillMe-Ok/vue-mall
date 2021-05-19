@@ -381,6 +381,7 @@ export default {
         if (this.preDictId[key] != null) sidList.push(this.preDictId[key]);
       }
       let sid = sidList.sort().join("-");
+      console.log(sid)
       let data = {
         sku: this.skuSidRelation[sid].pk, // sku的id
         count: this.buyCount, // 选择的数量
